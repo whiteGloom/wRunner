@@ -31,6 +31,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "jsdom": "^15.1.1"
   },
   "contributors": [
     "whiteGloom <karabin.m@yandex.ru> (https://github.com/whiteGloom)"

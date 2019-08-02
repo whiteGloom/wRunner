@@ -1,56 +1,200 @@
 var wRunner = {};
 
-// MODEL
-wRunner.model = function() {
-	// -Defaults-
-	this.minValue = 0;
-	this.maxValue = 100;
-	this.valuesCount = 100;
-	this.value = 50;
-	this.progress = 50;
+wRunner.helper = {
+	isNumber: function(value, exceps) {
+		var exceps = exceps ? exceps : [];
+		for (var i = 0; i < exceps.length; i++) {
+			if (typeof value === exceps[i]) return true
+		};
+
+		if (typeof value === 'number' && !Number.isNaN(+value) || typeof value === 'string' && typeof +value === 'number' && !Number.isNaN(+value)) return true;
+
+		return false
+	},
+
+	toNumber: function(value) {
+		if (typeof value === 'number' && !Number.isNaN(+value) || typeof value === 'string' && typeof +value === 'number' && !Number.isNaN(+value)) return +value;
+		return false
+	},
+
+	isDomEl: function(el) {
+		if (typeof el !== 'object' || Number.isNaN(el) || el === null) return false;
+		return 'ownerDocument' in el ? true : false;
+	},
+
+	isObject: function(el) {
+		if (typeof el === 'object' && el !== null && !Number.isNaN(el)) return true;
+		return false
+	},
+
+	isArray: function(el) {
+		if (typeof el === 'object' && el !== null && !Number.isNaN(el) && el.length) return true;
+		return false
+	}
 };
 
-wRunner.model.prototype = {
+// Observer
+wRunner.makeEvent = function () {
+	// List of a handlers that will process a event.
+	var handlers = [];
 
-	setRange: function(min, max) {
-		var min = min != undefined ? min : this.minValue,
-			max = max != undefined ? max : this.maxValue;
+	// Add a new handler.
+	var addHandler = function(handler) {
+		if (typeof handler !== 'function') {
+			console.log('The handler must be a function');
+			return
+		};
+	
+		for (var i = 0; i < handlers.length; i++) {
+			if (handlers[i] === handler) {
+				console.log('The handler already in the list');
+				return
+			}
+		};
 
+		handlers.push(handler);
+	};
+
+	// Remove a handler.
+	var removeHandler = function(handler) {
+		for (var i = 0; i < handlers.length; i++) {
+			if (handlers[i] === handler) {
+				handlers.splice(i, 1);
+				return;
+			}
+		}
+		console.log('could not find observer in list of observers');
+	};
+
+
+	// Trigger a event and notify handlers.
+	var trigger = function(data) {
+		var handlersClone = handlers.slice(0);
+		for (var i = 0; i < handlersClone.length; i++) {
+			handlersClone[i](data);
+		}
+	};
+
+	// Methods of new event.
+	return {
+		addHandler: addHandler,
+		removeHandler: removeHandler,
+		trigger: trigger,
+	};
+};
+
+// MODEL
+wRunner.Model = function() {
+	// Defaults
+	this.minValue = 0;
+	this.maxValue = 100;
+	this.valuesCount = this.maxValue - this.minValue;
+	this.value = 50;
+	this.progress = (this.value - this.minValue) / this.valuesCount * 100;
+	this.step = 1;
+
+	this.valueByProgressCalculatedEvent = wRunner.makeEvent()
+	this.valueUpdatedEvent = wRunner.makeEvent();
+	this.rangeUpdatedEvent = wRunner.makeEvent();
+};
+
+wRunner.Model.prototype = {
+	setRange: function(min, max, auto) {
+		// If any argument does not fit, it will take a current value.
+		var min = wRunner.helper.isNumber(min) ? +min : this.minValue,
+			max = wRunner.helper.isNumber(max) ? +max : this.maxValue;
+
+		// If minValue < maxValue, it will reverse them.
 		if (min <= max) {
 			this.minValue = min;
 			this.maxValue = max;
-		}
-
-		if (min > max) {
+		} else {
 			this.minValue = max;
 			this.maxValue = min;
-			console.log('Values have been reversed, because the minimum value is less than the maximum value.')
+			if (!auto) console.log('Values have been reversed, because the minimum value is less than the maximum value.');
 		}
 
+		// Update count of values.
 		this.valuesCount = this.maxValue - this.minValue;
+
+		this.rangeUpdatedEvent.trigger({
+			minValue: this.minValue,
+			maxValue: this.maxValue,
+			valuesCount: this.valuesCount
+		})
+
+		return {
+			minValue: this.minValue,
+			maxValue: this.maxValue,
+			valuesCount: this.valuesCount
+		}
 	},
 
-	setValue: function(value) {
-		if (value < this.minValue) {
+	getRange: function() {
+		return {
+			minValue: this.minValue,
+			maxValue: this.maxValue,
+			valuesCount: this.valuesCount
+		}
+	},
+
+	setValue: function(newValue, auto) {
+		var newValue = wRunner.helper.isNumber(newValue) ? +newValue : this.value;
+		var steppedValue = this.value - Math.round((this.value - newValue) / this.step) * this.step;
+
+		if (steppedValue < this.minValue) {
 			this.value = this.minValue;
-			console.log('The value was equated to the minimum, because it is less than the minimum value.');
-		} else if (value > this.maxValue) {
+			if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
+		} else if (steppedValue > this.maxValue) {
 			this.value = this.maxValue;
-			console.log('The value was equated to the maximum, because it is more than the maximum value.');
+			if (!auto) console.log('The value was equated to the maximum, because it is more than the maximum value.');
 		} else {
-			this.value = value;
+			this.value = +steppedValue;
 		};
 
 		this.progress = (this.value - this.minValue) / this.valuesCount * 100;
-	}
+		this.valueUpdatedEvent.trigger({value: this.value, progress: this.progress})
+
+		return {
+			value: this.value,
+			progress: this.progress
+		}
+	},
+
+	getValue: function() {
+		return {
+			value: this.value,
+			progress: this.progress
+		}
+	},
+
+	setStep: function(newStep) {
+		if (!wRunner.helper.isNumber(newStep) || newStep <= 0) return;
+		this.step = +newStep;
+		return this.step;
+	},
+
+	getStep: function() {
+		return this.step;
+	},
+
+	// Function that calculating new value by click or drag;
+	calculateValueByProgress: function(progress) {
+		if (!wRunner.helper.isNumber(progress)) return;
+
+		var value = Math.round(this.valuesCount * +progress / 100 + this.minValue);
+
+		this.valueByProgressCalculatedEvent.trigger(value);
+	},
 };
 
 
 //VIEW
-wRunner.view = function() {
-	// -Defaults-
+wRunner.View = function() {
+	// Defaults
 	this.roots = document.body;
 	this.divisionsCount = 5;
+	this.valueNoteDisplay = true;
 	this.styles = {
 		theme: {
 			value: 'default',
@@ -63,61 +207,153 @@ wRunner.view = function() {
 			sign: 'direction',
 			oldValue: null
 		},
-	}
+	};
 
-	// -Lists of els-
+	// Lists of els
 	this.stableElsList = [];
 	this.divisionsList = [];
 	this.els = [];
 
-	// -Generating stable elements-
-	// --Base--
+	// Stable elements
+	// Base
 	this.base = document.createElement('div');
-	this.base.classList.add('wrunner');
+	this.stableElsList.push(this.base);
 
-	// --Outer--
+	// Outer
 	this.outer = document.createElement('div');
-	this.outer.classList.add('wrunner__outer');
 	this.stableElsList.push(this.outer);
 
-	// --Path--
+	// Path
 	this.path = document.createElement('div');
-	this.path.classList.add('wrunner__path');
 	this.stableElsList.push(this.path);
 
-	// --Passed path--
+	// Passed path
 	this.pathPassed = document.createElement('div');
-	this.pathPassed.classList.add('wrunner__pathPassed');
 	this.stableElsList.push(this.pathPassed);
 
-	// --Path handle--
+	// Path handle
 	this.handle = document.createElement('div');
-	this.handle.classList.add('wrunner__handle');
 	this.stableElsList.push(this.handle);
 
-	// --Path value--
-	this.value = document.createElement('div');
-	this.value.classList.add('wrunner__value');
-	this.stableElsList.push(this.value);
+	// Path value
+	this.valueNote = document.createElement('div');
+	this.stableElsList.push(this.valueNote);
 
-	// --Division's container--
+	// Division's container
 	this.divisions = document.createElement('div');
-	this.divisions.classList.add('wrunner__divisions');
 	this.stableElsList.push(this.divisions);
 
 
-	// -Default tree of stable elements-
-	this.base.appendChild(this.outer);
-	this.outer.appendChild(this.path);
-	this.path.appendChild(this.pathPassed);
-	this.outer.appendChild(this.handle);
-	this.outer.appendChild(this.value);
-	this.outer.appendChild(this.divisions);
+	// EVENTS
+	this.mouseDownEvent = wRunner.makeEvent();
+	this.draggEvent = wRunner.makeEvent();
+	this.clickEvent = wRunner.makeEvent();
+	this.calculatedValueToUpdateEvent = wRunner.makeEvent();
+
+	// Listenners
+	this.path.addEventListener('mousedown', function(event) {
+		this.mouseDownEvent.trigger(event);
+	}.bind(this))
+
+
+	// FUNCTIONS
+	this.mouseDown = function(event) {
+		var	dragged = false,
+			draggBind = dragg.bind(this);
+
+		// The handler that indicates that the handle has been dragged.
+		document.body.addEventListener('mousemove', () => dragged = true, {once: true});
+		document.body.addEventListener('mousemove', draggBind);
+
+		// The handler that called after click's end.
+		document.body.addEventListener('mouseup', function(upEvent) {
+			// Removing bind.
+			document.body.removeEventListener('mousemove', draggBind);
+			if (dragged) return;
+
+			click.call(this, upEvent);
+		}.bind(this), {once: true});
+	};
+
+	// Function that called if user has changed the value by dragging.
+	var dragg = function(event) {
+		var scale, min, max, pos;
+
+		if (this.styles.direction.value == 'horizontal') {
+			scale = this.path.offsetWidth;
+			min = this.path.getBoundingClientRect().left;
+			max = min + scale;
+			pos = event.clientX;
+		}
+
+		// If the dragg is out of slider's range, the function stops.
+		if (pos < min - 10 || pos > max + 10) return;
+		this.calculatedValueToUpdateEvent.trigger((pos - min) / scale * 100)
+
+		this.draggEvent.trigger(event);
+	};
+
+	// Function that called if user has changed the value by clicking.
+	var click = function(event) {
+		if (event.target == this.handle) return;
+		var pos, scale;
+
+		if (this.styles.direction.value == 'horizontal') {
+			pos = event.layerX;
+			scale = this.path.offsetWidth;
+		}
+
+		this.calculatedValueToUpdateEvent.trigger(pos / scale * 100)
+
+		this.clickEvent.trigger(event)
+	};
 };
 
-wRunner.view.prototype = {
+wRunner.View.prototype = {
+	generateDOM: function() {
+		// Base
+		this.base.classList.add('wrunner');
+
+		// Outer
+		this.outer.classList.add('wrunner__outer');
+
+		// Path
+		this.path.classList.add('wrunner__path');
+
+		// Passed path
+		this.pathPassed.classList.add('wrunner__pathPassed');
+
+		// Path handle
+		this.handle.classList.add('wrunner__handle');
+
+		// Path value
+		this.valueNote.classList.add('wrunner__valueNote');
+
+		// Division's container
+		this.divisions.classList.add('wrunner__divisions');
+
+		// Default tree of stable elements
+		this.base.appendChild(this.outer);
+		this.outer.appendChild(this.path);
+		this.path.appendChild(this.pathPassed);
+		this.path.appendChild(this.handle);
+		this.outer.appendChild(this.valueNote);
+		this.outer.appendChild(this.divisions);
+	},
+
 	append: function() {
 		this.roots.appendChild(this.base);
+		return this.roots;
+	},
+
+	setRoots: function(roots) {
+		if (!wRunner.helper.isDomEl(roots)) return;
+		this.roots = roots;
+		return this.roots;
+	},
+
+	getRoots: function() {
+		return this.roots;
 	},
 
 	generateDivisions: function() {
@@ -132,39 +368,61 @@ wRunner.view.prototype = {
 		}
 
 		this.els = this.divisionsList.concat(this.stableElsList);
+		return this.divisionsList
 	},
 
-	drawValue: function(options) {
-		var options = options ? options : {};
+	setDivisionsCount: function(count, auto) {
+		if (wRunner.helper.isNumber(count) && count >= 0){
+			if (count == 1) {
+				count++;
+				if(!auto) console.log('Count was increased by one, cause it may not be equal to one.')
+			};
+			this.divisionsCount = +count;
+			return this.divisionsCount
+		}
+		return undefined
+	},
 
-		var value = options.value,
-			progr = options.progress;
+	drawValue: function(value, progress) {
+		// Passed path
+		this.pathPassed.style.width = progress + '%';
 
-		// -Passed path-
-		this.pathPassed.style.width = progr + '%';
+		// Handle
+		this.handle.style.left = progress + '%';
 
-		// -Handle-
-		this.handle.style.left = progr + '%';
-
-		// -Value-
-		this.value.innerHTML = value;
+		// Value
+		this.valueNote.innerHTML = value;
 
 		var pathW = this.path.offsetWidth;
-		var valueW = this.value.offsetWidth;
+		var valueW = this.valueNote.offsetWidth;
 
-		this.value.style.left = (pathW * progr / 100 - valueW / 2) / pathW * 100 + '%';
+		this.valueNote.style.left = (pathW * progress / 100 - valueW / 2) / pathW * 100 + '%';
+		return progress
 	},
 
 	setStyles: function(newStyles) {
-		for(prop in newStyles) {
-			var it = this.styles[prop];
+		if (!wRunner.helper.isObject(newStyles)) return;
 
-			if (newStyles[prop].value !== undefined){
-				it.oldValue = it.value;
-				it.value = newStyles[prop].value;
+		var changedStyles = {};
+		for(prop in newStyles) {
+			if(!(prop in this.styles)) continue;
+			var mutable = this.styles[prop];
+			var wasChanged = false;
+
+			if (newStyles[prop].value !== undefined) {
+				mutable.oldValue = mutable.value;
+				mutable.value = newStyles[prop].value;
+				wasChanged = true;
 			}
-			if (newStyles[prop].sign) it.sign = newStyles[prop].sign;
+
+			if (typeof newStyles[prop].sign == 'string') {
+				mutable.sign = newStyles[prop].sign;
+				wasChanged = true;
+			}
+
+			if (wasChanged) changedStyles[prop] = mutable;
 		}
+		return changedStyles
 	},
 
 	applyStyles: function() {
@@ -178,42 +436,88 @@ wRunner.view.prototype = {
 					oldValue 	= styles[prop].oldValue,
 					value 		= styles[prop].value;
 
-				if (oldValue) el.classList.remove(mark + '_' + styles[prop].sign + '_' + oldValue)
-				if (value) el.classList.add(mark + '_' + styles[prop].sign + '_' + value)
+				if (oldValue) el.classList.remove(mark + '_' + styles[prop].sign + '_' + oldValue);
+				if (value) el.classList.add(mark + '_' + styles[prop].sign + '_' + value);
 			}
 		}
+		return styles
 	},
 
 	addStyles: function(addedStyles) {
+		if (!wRunner.helper.isObject(addedStyles)) return;
+
 		var styles = this.styles;
 		for(prop in addedStyles) {
-			styles[prop] = addedStyles[prop];
+			if(!addedStyles[prop].value) continue;
+
+			styles[prop] = {};
+			styles[prop].value = addedStyles[prop].value;
 			styles[prop].oldValue = null;
-			if (!addedStyles[prop].sign) styles[prop].sign = prop;
+
+			if (!addedStyles[prop].sign) {
+				styles[prop].sign = prop;
+			} else {
+				styles[prop].sign = addedStyles[prop].sign;
+			}
 		}
+		return styles;
 	},
 
 	removeStyles: function(list) {
+		if (!wRunner.helper.isArray(list)) return;
 		for(var i = 0; i < list.length; i++) {
 			delete this.styles[list[i]];
 		}
+
+		return this.styles
 	},
 
-	setDivisionsCount: function(count) {
-		if (count >= 0) this.divisionsCount = count;
-	}
+	setValueNoteDisplay: function(value) {
+		if (typeof value !== 'boolean') return;
+		this.valueNoteDisplay = value;
+
+		var mark = this.valueNote.classList[0];
+		this.valueNote.classList.remove(mark + '_display_' + (!this.valueNoteDisplay ? 'visible' : 'hidden'));
+		this.valueNote.classList.add(mark + '_display_' + (this.valueNoteDisplay ? 'visible' : 'hidden'));
+
+		return this.valueNoteDisplay;
+	},
+
+	getValueNoteDisplay: function() {
+		return this.valueNoteDisplay;
+	},
 };
 
 
 // PRESENTER
-wRunner.presenter = function(options) {
+wRunner.Presenter = function(options) {
 	var options = options ? options : {};
 
 	this.model = options.model;
 	this.view = options.view;
+
+	this.model.valueByProgressCalculatedEvent.addHandler(function(value) {
+		this.model.setValue(value, true);
+	}.bind(this));
+
+	this.view.mouseDownEvent.addHandler(function(event) {
+		this.view.mouseDown(event)
+	}.bind(this))
+
+	this.view.calculatedValueToUpdateEvent.addHandler(function(event){
+		this.model.calculateValueByProgress(event)
+	}.bind(this))
+
+	this.model.valueUpdatedEvent.addHandler(function(data){
+		this.view.drawValue(data.value, data.progress)
+	}.bind(this))
+
+	this.model.rangeUpdatedEvent.addHandler(function(data){
+		this.model.setValue(null, true);
+	}.bind(this))
 };
 
-wRunner.presenter.prototype = {
+wRunner.Presenter.prototype = {
 	create: function(options) {
 		var options = options ? options : {};
 	},
@@ -224,11 +528,12 @@ wRunner.presenter.prototype = {
 		this.view.append();
 		this.view.generateDivisions();
 		this.view.applyStyles();
-		this.view.drawValue({progress: this.model.progress, value: this.model.value});
+		this.view.setValueNoteDisplay();
+		this.view.drawValue(this.model.value, this.model.progress);
 	},
 
 	appendTo: function(roots) {
-		this.view.roots = roots;
+		this.view.setRoots(roots);
 		this.view.append();
 	},
 
@@ -250,21 +555,27 @@ wRunner.presenter.prototype = {
 		this.view.removeStyles(list);
 	},
 
-	setValue: function(value){
-		this.model.setValue(value);
-		this.view.drawValue({value: this.model.value, progress: this.model.progress})
+	setValue: function(value, auto) {
+		this.model.setValue(value, auto);
+		this.view.drawValue(this.model.value, this.model.progress)
 	},
 
-	setValues: function(options) {
-		var options = options ? options : {};
-
-		if (options.minValue || options.maxValue) this.model.setRange(options.minValue, options.maxValue);
-		if (options.value) this.model.setValue(options.value);
-		this.view.drawValue({value: this.model.value, progress: this.model.progress})
+	setRange: function(min, max, auto) {
+		this.model.setRange(min, max, auto);
+		this.view.drawValue(this.model.value, this.model.progress)
 	},
 
 	setDivisionsCount: function(count) {
 		this.view.setDivisionsCount(count);
+	},
+
+	setStep: function(newStep) {
+		this.model.setStep(newStep);
+	},
+
+	setValueNoteDisplay: function(value) {
+		this.view.setValueNoteDisplay(value);
+		this.view.drawValue(this.model.value, this.model.progress)
 	}
 };
 

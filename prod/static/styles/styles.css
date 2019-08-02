@@ -72,6 +72,7 @@ body {
 .wrunner__path {
   background-color: rgba(205,205,205,0.75);
   border-radius: 0.25rem;
+  cursor: pointer;
 }
 
 .wrunner__pathPassed_direction_horizontal {
@@ -84,12 +85,11 @@ body {
   border-radius: 0.25rem;
 }
 
-.wrunner__value_direction_horizontal {
+.wrunner__valueNote_direction_horizontal {
   top: 0;
   min-width: 1.5rem;
-/*margin-left: -1.1rem*/
 }
-.wrunner__value_direction_horizontal::after {
+.wrunner__valueNote_direction_horizontal::after {
   left: 50%;
   margin-left: -0.25rem;
   bottom: -0.5rem;
@@ -97,7 +97,15 @@ body {
 }
 
 
-.wrunner__value {
+.wrunner__valueNote_display_hidden {
+  display: none;
+}
+
+.wrunner__valueNote_display_visible {
+  display: block;
+}
+
+.wrunner__valueNote {
   position: absolute;
   padding: 0.35rem;
   border-radius: 0.8rem 0.3rem 0.8rem 0.3rem;
@@ -109,7 +117,7 @@ body {
   font-weight: 900;
   cursor: default;
 }
-.wrunner__value::after {
+.wrunner__valueNote::after {
   content: '';
   position: absolute;
   display: block;

@@ -151,9 +151,11 @@ var map = {
 	"./wrunnerDefaultTheme/__pathPassed/_direction/wrunner__pathPassed_direction_horizontal.styl": "./dev/static/wrunnerDefaultTheme/__pathPassed/_direction/wrunner__pathPassed_direction_horizontal.styl",
 	"./wrunnerDefaultTheme/__pathPassed/_direction/wrunner__pathPassed_direction_vertical.styl": "./dev/static/wrunnerDefaultTheme/__pathPassed/_direction/wrunner__pathPassed_direction_vertical.styl",
 	"./wrunnerDefaultTheme/__pathPassed/wrunner__pathPassed.styl": "./dev/static/wrunnerDefaultTheme/__pathPassed/wrunner__pathPassed.styl",
-	"./wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_horizontal.styl": "./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_horizontal.styl",
-	"./wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_vertical.styl": "./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_vertical.styl",
-	"./wrunnerDefaultTheme/__value/wrunner__value.styl": "./dev/static/wrunnerDefaultTheme/__value/wrunner__value.styl",
+	"./wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_horizontal.styl": "./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_horizontal.styl",
+	"./wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_vertical.styl": "./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_vertical.styl",
+	"./wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_hidden.styl": "./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_hidden.styl",
+	"./wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_visible.styl": "./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_visible.styl",
+	"./wrunnerDefaultTheme/__valueNote/wrunner__value.styl": "./dev/static/wrunnerDefaultTheme/__valueNote/wrunner__value.styl",
 	"./wrunnerDefaultTheme/wrunner.styl": "./dev/static/wrunnerDefaultTheme/wrunner.styl"
 };
 
@@ -793,15 +795,75 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_horizontal.styl":
+/***/ "./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_horizontal.styl":
+/*!************************************************************************************************************!*\
+  !*** ./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_horizontal.styl ***!
+  \************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../../node_modules/css-loader/dist/cjs.js??ref--6-2!../../../../../node_modules/stylus-relative-loader!./wrunner__valueNote_direction_horizontal.styl */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_horizontal.styl");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_vertical.styl":
+/*!**********************************************************************************************************!*\
+  !*** ./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_vertical.styl ***!
+  \**********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../../node_modules/css-loader/dist/cjs.js??ref--6-2!../../../../../node_modules/stylus-relative-loader!./wrunner__valueNote_direction_vertical.styl */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_vertical.styl");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_hidden.styl":
 /*!****************************************************************************************************!*\
-  !*** ./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_horizontal.styl ***!
+  !*** ./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_hidden.styl ***!
   \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../../node_modules/css-loader/dist/cjs.js??ref--6-2!../../../../../node_modules/stylus-relative-loader!./wrunner__value_direction_horizontal.styl */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_horizontal.styl");
+var content = __webpack_require__(/*! !../../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../../node_modules/css-loader/dist/cjs.js??ref--6-2!../../../../../node_modules/stylus-relative-loader!./wrunner__valueNote_display_hidden.styl */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_hidden.styl");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -823,15 +885,15 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_vertical.styl":
-/*!**************************************************************************************************!*\
-  !*** ./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_vertical.styl ***!
-  \**************************************************************************************************/
+/***/ "./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_visible.styl":
+/*!*****************************************************************************************************!*\
+  !*** ./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_visible.styl ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../../node_modules/css-loader/dist/cjs.js??ref--6-2!../../../../../node_modules/stylus-relative-loader!./wrunner__value_direction_vertical.styl */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_vertical.styl");
+var content = __webpack_require__(/*! !../../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../../node_modules/css-loader/dist/cjs.js??ref--6-2!../../../../../node_modules/stylus-relative-loader!./wrunner__valueNote_display_visible.styl */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_visible.styl");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -853,15 +915,15 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./dev/static/wrunnerDefaultTheme/__value/wrunner__value.styl":
-/*!********************************************************************!*\
-  !*** ./dev/static/wrunnerDefaultTheme/__value/wrunner__value.styl ***!
-  \********************************************************************/
+/***/ "./dev/static/wrunnerDefaultTheme/__valueNote/wrunner__value.styl":
+/*!************************************************************************!*\
+  !*** ./dev/static/wrunnerDefaultTheme/__valueNote/wrunner__value.styl ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../node_modules/css-loader/dist/cjs.js??ref--6-2!../../../../node_modules/stylus-relative-loader!./wrunner__value.styl */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__value/wrunner__value.styl");
+var content = __webpack_require__(/*! !../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../node_modules/css-loader/dist/cjs.js??ref--6-2!../../../../node_modules/stylus-relative-loader!./wrunner__value.styl */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/wrunner__value.styl");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1122,9 +1184,31 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_horizontal.styl":
+/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_horizontal.styl":
+/*!********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ref--6-2!./node_modules/stylus-relative-loader!./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_horizontal.styl ***!
+  \********************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+
+/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_vertical.styl":
+/*!******************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ref--6-2!./node_modules/stylus-relative-loader!./dev/static/wrunnerDefaultTheme/__valueNote/_direction/wrunner__valueNote_direction_vertical.styl ***!
+  \******************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+
+/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_hidden.styl":
 /*!************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ref--6-2!./node_modules/stylus-relative-loader!./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_horizontal.styl ***!
+  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ref--6-2!./node_modules/stylus-relative-loader!./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_hidden.styl ***!
   \************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -1133,10 +1217,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_vertical.styl":
-/*!**********************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ref--6-2!./node_modules/stylus-relative-loader!./dev/static/wrunnerDefaultTheme/__value/_direction/wrunner__value_direction_vertical.styl ***!
-  \**********************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_visible.styl":
+/*!*************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ref--6-2!./node_modules/stylus-relative-loader!./dev/static/wrunnerDefaultTheme/__valueNote/_display/wrunner__valueNote_display_visible.styl ***!
+  \*************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1144,10 +1228,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__value/wrunner__value.styl":
-/*!****************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ref--6-2!./node_modules/stylus-relative-loader!./dev/static/wrunnerDefaultTheme/__value/wrunner__value.styl ***!
-  \****************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js?!./node_modules/stylus-relative-loader/index.js!./dev/static/wrunnerDefaultTheme/__valueNote/wrunner__value.styl":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js??ref--6-2!./node_modules/stylus-relative-loader!./dev/static/wrunnerDefaultTheme/__valueNote/wrunner__value.styl ***!
+  \********************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
