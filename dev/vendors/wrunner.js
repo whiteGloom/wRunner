@@ -1,4 +1,10 @@
-var wRunner = {};
+var wRunner = function() {
+	this.structure = function(){
+		this.model = function(){};
+		this.view = function(){};
+		this.presenter = function(model, view){};
+	}
+};
 
 wRunner.helper = {
 	isNumber: function(value, exceps) {
@@ -86,91 +92,177 @@ wRunner.makeEvent = function () {
 // MODEL
 wRunner.Model = function() {
 	// Defaults
-	this.minValue = 0;
-	this.maxValue = 100;
-	this.valuesCount = this.maxValue - this.minValue;
-	this.value = 50;
-	this.progress = (this.value - this.minValue) / this.valuesCount * 100;
+	this.minLimit = 0;
+	this.maxLimit = 100;
+	this.valuesCount = this.maxLimit - this.minLimit;
+	this.singleValue = 50;
+	this.rangeMinValue = 20;
+	this.rangeMaxValue = 80;
+	this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
+	this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100;
 	this.step = 1;
+	this.type = 'single';
+	this.typeConsts = {
+		singleValue: 'single',
+		rangeValue: 'range',
+	}
 
 	this.valueByProgressCalculatedEvent = wRunner.makeEvent()
-	this.valueUpdatedEvent = wRunner.makeEvent();
-	this.rangeUpdatedEvent = wRunner.makeEvent();
+	this.valueChangedEvent = wRunner.makeEvent();
+	this.rangeChangedEvent = wRunner.makeEvent();
+	this.stepChangedEvent = wRunner.makeEvent();
+	this.percentageChangedEvent = wRunner.makeEvent();
+	this.typeChangedEvent = wRunner.makeEvent();
 };
 
 wRunner.Model.prototype = {
 	setRange: function(min, max, auto) {
 		// If any argument does not fit, it will take a current value.
-		var min = wRunner.helper.isNumber(min) ? +min : this.minValue,
-			max = wRunner.helper.isNumber(max) ? +max : this.maxValue;
+		var min = wRunner.helper.isNumber(min) ? +min : this.minLimit,
+			max = wRunner.helper.isNumber(max) ? +max : this.maxLimit;
 
-		// If minValue < maxValue, it will reverse them.
+		// If minLimit > maxLimit, it will reverse them.
 		if (min <= max) {
-			this.minValue = min;
-			this.maxValue = max;
+			this.minLimit = min;
+			this.maxLimit = max;
 		} else {
-			this.minValue = max;
-			this.maxValue = min;
+			this.minLimit = max;
+			this.maxLimit = min;
 			if (!auto) console.log('Values have been reversed, because the minimum value is less than the maximum value.');
 		}
 
 		// Update count of values.
-		this.valuesCount = this.maxValue - this.minValue;
+		this.valuesCount = this.maxLimit - this.minLimit;
 
-		this.rangeUpdatedEvent.trigger({
-			minValue: this.minValue,
-			maxValue: this.maxValue,
+		this.rangeChangedEvent.trigger({
+			minLimit: this.rangeMinValue,
+			maxLimit: this.maxLimit,
 			valuesCount: this.valuesCount
 		})
 
 		return {
-			minValue: this.minValue,
-			maxValue: this.maxValue,
+			minLimit: this.minLimit,
+			maxLimit: this.maxLimit,
 			valuesCount: this.valuesCount
 		}
 	},
 
 	getRange: function() {
 		return {
-			minValue: this.minValue,
-			maxValue: this.maxValue,
+			minLimit: this.minLimit,
+			maxLimit: this.maxLimit,
 			valuesCount: this.valuesCount
 		}
 	},
 
 	setValue: function(newValue, auto) {
-		var newValue = wRunner.helper.isNumber(newValue) ? +newValue : this.value;
-		var steppedValue = this.value - Math.round((this.value - newValue) / this.step) * this.step;
+		var set = setTo.bind(this);
 
-		if (steppedValue < this.minValue) {
-			this.value = this.minValue;
-			if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
-		} else if (steppedValue > this.maxValue) {
-			this.value = this.maxValue;
-			if (!auto) console.log('The value was equated to the maximum, because it is more than the maximum value.');
-		} else {
-			this.value = +steppedValue;
-		};
+		if(this.type == this.typeConsts.singleValue) {
+			var val = wRunner.helper.isNumber(newValue) ? +newValue : this.singleValue;
+			set(val, 'singleValue');
 
-		this.progress = (this.value - this.minValue) / this.valuesCount * 100;
-		this.valueUpdatedEvent.trigger({value: this.value, progress: this.progress})
+			// Update selected
+			this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
 
-		return {
-			value: this.value,
-			progress: this.progress
+			// Returns
+			this.valueChangedEvent.trigger({
+				value: this.singleValue,
+				selected: this.singleSelected
+			})
+			return ({
+				value: this.singleValue,
+				selected: this.singleSelected
+			})
+		}
+
+		if (this.type == this.typeConsts.rangeValue) {
+			// If new value is a object
+			if (wRunner.helper.isObject(newValue)) {
+				var min = wRunner.helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
+				var max = wRunner.helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+
+				if (min > max) {
+					let clone = max;
+					max = min;
+					min = clone;
+				}
+
+				set(min, 'rangeMinValue');
+				set(max, 'rangeMaxValue');
+			}
+
+			// If new value is a number
+			if (wRunner.helper.isNumber(newValue)) {
+				// Choosing a value to set 
+				if (newValue < (this.rangeMaxValue + this.rangeMinValue) / 2) {
+					set(+newValue, 'rangeMinValue');
+				} else {
+					set(+newValue, 'rangeMaxValue');
+				}			
+			}
+
+			// Update selected
+			this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100;
+
+			// Returns
+			this.valueChangedEvent.trigger({
+				minValue: this.rangeMinValue,
+				maxValue: this.rangeMaxValue,
+				selected: this.rangeSelected,
+			});
+			return {
+				minValue: this.rangeMinValue,
+				maxValue: this.rangeMaxValue,
+				selected: this.rangeSelected,
+			}
+		}
+
+		// Setter
+		function setTo(newValue, mutable) {
+			var stepped;
+
+			// Calculating stepped value.
+			if (+newValue != this[mutable]) {
+				stepped = this[mutable] - Math.round((this[mutable] - +newValue) / this.step) * this.step;
+			} else {
+				stepped = Math.round(this[mutable] / this.step) * this.step;
+			}
+
+			if (stepped < this.minLimit) {
+				this[mutable] = this.minLimit;
+				if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
+			} else if (stepped > this.maxLimit) {
+				this[mutable] = this.maxLimit;
+				if (!auto) console.log('The value was equated to the maximum, because it is more than the maximum value.');
+			} else {
+				this[mutable] = stepped;
+			};
 		}
 	},
 
 	getValue: function() {
-		return {
-			value: this.value,
-			progress: this.progress
+		if(this.type == this.typeConsts.singleValue) {
+			return {
+				value: this.singleValue,
+				selected: this.singleSelected,
+			}
+		}
+
+		if(this.type == this.typeConsts.rangeValue) {
+			return {
+				minValue: this.rangeMinValue,
+				maxValue: this.rangeMaxValue,
+				selected: this.rangeSelected,
+			}
 		}
 	},
 
 	setStep: function(newStep) {
 		if (!wRunner.helper.isNumber(newStep) || newStep <= 0) return;
 		this.step = +newStep;
+
+		this.stepChangedEvent.trigger(this.step);
 		return this.step;
 	},
 
@@ -178,18 +270,38 @@ wRunner.Model.prototype = {
 		return this.step;
 	},
 
-	// Function that calculating new value by click or drag;
-	calculateValueByProgress: function(progress) {
+	// Function that calculating new value by click or drag.
+	setValueByProgress: function(progress) {
 		if (!wRunner.helper.isNumber(progress)) return;
 
-		var value = Math.round(this.valuesCount * +progress / 100 + this.minValue);
+		var value = Math.round(this.valuesCount * +progress / 100 + this.minLimit);
 
 		this.valueByProgressCalculatedEvent.trigger(value);
+		return value
 	},
+
+	setType: function(type) {
+		if (type !== this.typeConsts.singleValue && type !== this.typeConsts.rangeValue) return;
+		this.type = type;
+
+		this.typeChangedEvent.trigger(this.type);
+		return this.type
+	},
+
+	getType: function() {
+		return {
+			type: this.type,
+			typeConsts: this.typeConsts
+		};
+	},
+
+	getValuesCount: function() {
+		return this.valuesCount
+	}
 };
 
 
-//VIEW
+// VIEW
 wRunner.View = function() {
 	// Defaults
 	this.roots = document.body;
@@ -208,6 +320,12 @@ wRunner.View = function() {
 			oldValue: null
 		},
 	};
+	this.stylesConsts = {
+		direction: {
+			horizontalValue: 'horizontal', 
+			verticalValue: 'vertical'
+		}
+	}
 
 	// Lists of els
 	this.stableElsList = [];
@@ -231,13 +349,21 @@ wRunner.View = function() {
 	this.pathPassed = document.createElement('div');
 	this.stableElsList.push(this.pathPassed);
 
-	// Path handle
+	// Path handles
 	this.handle = document.createElement('div');
 	this.stableElsList.push(this.handle);
+	this.handleMin = document.createElement('div');
+	this.stableElsList.push(this.handleMin);
+	this.handleMax = document.createElement('div');
+	this.stableElsList.push(this.handleMax);
 
-	// Path value
+	// Path values
 	this.valueNote = document.createElement('div');
 	this.stableElsList.push(this.valueNote);
+	this.valueMinNote = document.createElement('div');
+	this.stableElsList.push(this.valueMinNote);
+	this.valueMaxNote = document.createElement('div');
+	this.stableElsList.push(this.valueMaxNote);
 
 	// Division's container
 	this.divisions = document.createElement('div');
@@ -249,68 +375,23 @@ wRunner.View = function() {
 	this.draggEvent = wRunner.makeEvent();
 	this.clickEvent = wRunner.makeEvent();
 	this.calculatedValueToUpdateEvent = wRunner.makeEvent();
+	this.stylesChangedEvent = wRunner.makeEvent();
+	this.stylesAppliedEvent = wRunner.makeEvent();
+	this.valueNoteDisplayChangedEvent = wRunner.makeEvent();
+	this.rootsChangedEvent = wRunner.makeEvent();
+	this.divisionsCountChangedEvent = wRunner.makeEvent();
+	this.valueNoteDisplayAppliedEvent = wRunner.makeEvent();
+	this.baseDOMGeneratedEvent = wRunner.makeEvent();
+	this.DOMUpdatedEvent = wRunner.makeEvent();
 
 	// Listenners
 	this.path.addEventListener('mousedown', function(event) {
 		this.mouseDownEvent.trigger(event);
 	}.bind(this))
-
-
-	// FUNCTIONS
-	this.mouseDown = function(event) {
-		var	dragged = false,
-			draggBind = dragg.bind(this);
-
-		// The handler that indicates that the handle has been dragged.
-		document.body.addEventListener('mousemove', () => dragged = true, {once: true});
-		document.body.addEventListener('mousemove', draggBind);
-
-		// The handler that called after click's end.
-		document.body.addEventListener('mouseup', function(upEvent) {
-			// Removing bind.
-			document.body.removeEventListener('mousemove', draggBind);
-			if (dragged) return;
-
-			click.call(this, upEvent);
-		}.bind(this), {once: true});
-	};
-
-	// Function that called if user has changed the value by dragging.
-	var dragg = function(event) {
-		var scale, min, max, pos;
-
-		if (this.styles.direction.value == 'horizontal') {
-			scale = this.path.offsetWidth;
-			min = this.path.getBoundingClientRect().left;
-			max = min + scale;
-			pos = event.clientX;
-		}
-
-		// If the dragg is out of slider's range, the function stops.
-		if (pos < min - 10 || pos > max + 10) return;
-		this.calculatedValueToUpdateEvent.trigger((pos - min) / scale * 100)
-
-		this.draggEvent.trigger(event);
-	};
-
-	// Function that called if user has changed the value by clicking.
-	var click = function(event) {
-		if (event.target == this.handle) return;
-		var pos, scale;
-
-		if (this.styles.direction.value == 'horizontal') {
-			pos = event.layerX;
-			scale = this.path.offsetWidth;
-		}
-
-		this.calculatedValueToUpdateEvent.trigger(pos / scale * 100)
-
-		this.clickEvent.trigger(event)
-	};
 };
 
 wRunner.View.prototype = {
-	generateDOM: function() {
+	generateBaseDOM: function() {
 		// Base
 		this.base.classList.add('wrunner');
 
@@ -323,22 +404,101 @@ wRunner.View.prototype = {
 		// Passed path
 		this.pathPassed.classList.add('wrunner__pathPassed');
 
-		// Path handle
+		// Path handles
 		this.handle.classList.add('wrunner__handle');
+		this.handleMin.classList.add('wrunner__handle');
+		this.handleMax.classList.add('wrunner__handle');
 
-		// Path value
+		// Path values
 		this.valueNote.classList.add('wrunner__valueNote');
+		this.valueMinNote.classList.add('wrunner__valueNote');
+		this.valueMaxNote.classList.add('wrunner__valueNote');
 
 		// Division's container
 		this.divisions.classList.add('wrunner__divisions');
 
-		// Default tree of stable elements
+		this.baseDOMGeneratedEvent.trigger();
+	},
+
+	updateDOM: function(type) {
+		this.path.innerHTML = '';
+		this.outer.innerHTML = '';
+
 		this.base.appendChild(this.outer);
 		this.outer.appendChild(this.path);
 		this.path.appendChild(this.pathPassed);
-		this.path.appendChild(this.handle);
-		this.outer.appendChild(this.valueNote);
 		this.outer.appendChild(this.divisions);
+
+		if(type.type == type.typeConsts.singleValue) {
+				this.path.appendChild(this.handle);
+				this.outer.appendChild(this.valueNote);
+		}
+		if(type.type == type.typeConsts.rangeValue) {
+				this.path.appendChild(this.handleMin);
+				this.path.appendChild(this.handleMax);
+				this.outer.appendChild(this.valueMinNote);
+				this.outer.appendChild(this.valueMaxNote);
+		}
+
+		this.DOMUpdatedEvent.trigger();
+	},
+
+	action: function(event) {
+		var	dragged = false,
+			moveBind = move.bind(this);
+
+		// The handler that indicates that the handle has been dragged.
+		document.body.addEventListener('mousemove', () => dragged = true, {once: true});
+		document.body.addEventListener('mousemove', moveBind);
+
+		// The handler that called after click's end.
+		document.body.addEventListener('mouseup', function(upEvent) {
+			let targ = upEvent.target;
+			// Removing bind.
+			document.body.removeEventListener('mousemove', moveBind);
+			// If handle was dragged, stop the function.
+			if (dragged) return;
+			if (targ == this.handle || targ == this.handleMin || targ == this.handleMax) return;
+
+			// Else trigger a click
+			hanlder.call(this, upEvent);
+			this.clickEvent.trigger();
+		}.bind(this), {once: true});
+
+
+		// Helpers
+		function move(eventMove) {
+			hanlder.call(this, eventMove);
+			this.draggEvent.trigger(event);
+		};
+
+		function hanlder(event) {
+			var scale, min, max, pos;
+			var dir = this.styles.direction.value;
+
+			if(dir == this.stylesConsts.direction.horizontalValue) {
+				scale = this.path.offsetWidth;
+				min = this.path.getBoundingClientRect().left;
+				pos = event.clientX;
+			}
+			if(dir ==  this.stylesConsts.direction.verticalValue) {
+				scale = this.path.offsetHeight;
+				min = this.path.getBoundingClientRect().top;
+				pos = event.clientY;
+			}
+
+			max = min + scale;
+
+			// If the dragg is out of slider's range, the function stops.
+			if (pos < min - 10 || pos > max + 10) return;
+
+			if(dir == this.stylesConsts.direction.horizontalValue) {
+				this.calculatedValueToUpdateEvent.trigger((pos - min) / scale * 100)
+			}
+			if(dir == this.stylesConsts.direction.verticalValue){
+				this.calculatedValueToUpdateEvent.trigger(100 - (pos - min) / scale * 100)
+			}
+		};
 	},
 
 	append: function() {
@@ -349,6 +509,8 @@ wRunner.View.prototype = {
 	setRoots: function(roots) {
 		if (!wRunner.helper.isDomEl(roots)) return;
 		this.roots = roots;
+
+		this.rootsChangedEvent.trigger();
 		return this.roots;
 	},
 
@@ -372,32 +534,104 @@ wRunner.View.prototype = {
 	},
 
 	setDivisionsCount: function(count, auto) {
-		if (wRunner.helper.isNumber(count) && count >= 0){
-			if (count == 1) {
-				count++;
-				if(!auto) console.log('Count was increased by one, cause it may not be equal to one.')
-			};
-			this.divisionsCount = +count;
-			return this.divisionsCount
-		}
-		return undefined
+		if (!wRunner.helper.isNumber(count) || count < 0) return;
+
+		if (count == 1) {
+			count++;
+			if(!auto) console.log('Count was increased by one, cause it may not be equal to one.')
+		};
+		this.divisionsCount = +count;
+
+		this.divisionsCountChangedEvent.trigger(this.divisionsCount);
+		return this.divisionsCount;
 	},
 
-	drawValue: function(value, progress) {
-		// Passed path
-		this.pathPassed.style.width = progress + '%';
+	drawValue: function(value, limits, currentType) {
+		var pathScale, valueNoteScale;
+		var selected = value.selected;
+		
+		var dir = this.styles.direction.value,
+			dirConsts = this.stylesConsts.direction;
+		var type = currentType.type,
+			typeConsts = currentType.typeConsts;
 
-		// Handle
-		this.handle.style.left = progress + '%';
+		this.pathPassed.style.cssText = "";
+		this.handle.style.cssText = "";
+		this.handleMin.style.cssText = "";
+		this.handleMax.style.cssText = "";
+		this.valueNote.style.cssText = "";
+		this.valueMinNote.style.cssText = "";
+		this.valueMaxNote.style.cssText = "";
 
-		// Value
-		this.valueNote.innerHTML = value;
+		// Value Note
+		this.valueNote.innerHTML = value.value;
+		this.valueMinNote.innerHTML = value.minValue;
+		this.valueMaxNote.innerHTML = value.maxValue;
 
-		var pathW = this.path.offsetWidth;
-		var valueW = this.valueNote.offsetWidth;
+		if(type == typeConsts.singleValue) {
 
-		this.valueNote.style.left = (pathW * progress / 100 - valueW / 2) / pathW * 100 + '%';
-		return progress
+			if(dir == dirConsts.horizontalValue) {
+				// Passed path
+				this.pathPassed.style.width = selected + '%';
+
+				// Handle
+				this.handle.style.left = selected + '%';
+
+				pathScale = this.path.offsetWidth; valueNoteScale = this.valueNote.offsetWidth;
+
+				this.valueNote.style.left = (pathScale * selected / 100 - valueNoteScale / 2) / pathScale * 100 + '%';
+			}
+
+			if(dir == dirConsts.verticalValue) {
+				// Passed path
+				this.pathPassed.style.height = selected + '%';
+
+				// Handle
+				this.handle.style.top = 100 - selected + '%';
+
+				pathScale = this.path.offsetHeight;	valueNoteScale = this.valueNote.offsetHeight;
+
+				this.valueNote.style.top = 100 - (pathScale * selected / 100 + valueNoteScale / 2) / pathScale * 100 + '%';
+			}
+		}
+
+		if (type == typeConsts.rangeValue) {
+			var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
+
+			if(dir == dirConsts.horizontalValue) {
+	
+					// Passed path
+					this.pathPassed.style.width = selected + '%';
+					this.pathPassed.style.left = start + '%';
+	
+					// Handle
+					this.handleMin.style.left = start + '%';
+					this.handleMax.style.left = start + selected +'%';
+	
+					pathScale = this.path.offsetWidth;
+					valueMinNoteScale = this.valueMinNote.offsetWidth; valueMaxNoteScale = this.valueMaxNote.offsetWidth;
+	
+					this.valueMinNote.style.left = (pathScale * start / 100 - valueMinNoteScale / 2) / pathScale * 100 + '%';
+					this.valueMaxNote.style.left = (pathScale * (start + selected) / 100 - valueMaxNoteScale / 2) / pathScale * 100 + '%';
+			}
+
+			if(dir == dirConsts.verticalValue) {
+				this.pathPassed.style.height = selected + '%';
+				this.pathPassed.style.top = 100 - selected - start + '%';
+
+				// Handle
+				this.handleMax.style.top = 100 - start - selected + '%';
+				this.handleMin.style.top = 100 - start  +'%';
+
+				pathScale = this.path.offsetHeight;
+				valueMinNoteScale = this.valueMinNote.offsetHeight; valueMaxNoteScale = this.valueMaxNote.offsetHeight;
+
+				this.valueMinNote.style.top = 100 - (pathScale * start / 100 + valueMinNoteScale / 2) / pathScale * 100 + '%';
+				this.valueMaxNote.style.top = 100 - (pathScale * (start + selected) / 100 + valueMaxNoteScale / 2) / pathScale * 100 + '%';
+			}
+		}
+
+		return value
 	},
 
 	setStyles: function(newStyles) {
@@ -410,9 +644,16 @@ wRunner.View.prototype = {
 			var wasChanged = false;
 
 			if (newStyles[prop].value !== undefined) {
-				mutable.oldValue = mutable.value;
-				mutable.value = newStyles[prop].value;
-				wasChanged = true;
+				if (this.stylesConsts[prop]) {
+					for (var defs in this.stylesConsts[prop]) {
+						if (newStyles[prop].value == this.stylesConsts[prop][defs]){
+							mutable.oldValue = mutable.value;
+							mutable.value = newStyles[prop].value;
+							wasChanged = true;
+							break;
+						}
+					}
+				}
 			}
 
 			if (typeof newStyles[prop].sign == 'string') {
@@ -422,7 +663,9 @@ wRunner.View.prototype = {
 
 			if (wasChanged) changedStyles[prop] = mutable;
 		}
-		return changedStyles
+
+		this.stylesChangedEvent.trigger(this.styles);
+		return this.styles
 	},
 
 	applyStyles: function() {
@@ -440,7 +683,9 @@ wRunner.View.prototype = {
 				if (value) el.classList.add(mark + '_' + styles[prop].sign + '_' + value);
 			}
 		}
-		return styles
+
+		this.stylesAppliedEvent.trigger(this.styles)
+		return this.styles
 	},
 
 	addStyles: function(addedStyles) {
@@ -460,7 +705,9 @@ wRunner.View.prototype = {
 				styles[prop].sign = addedStyles[prop].sign;
 			}
 		}
-		return styles;
+
+		this.stylesChangedEvent.trigger(this.styles);
+		return this.styles;
 	},
 
 	removeStyles: function(list) {
@@ -469,17 +716,28 @@ wRunner.View.prototype = {
 			delete this.styles[list[i]];
 		}
 
+		this.stylesChangedEvent.trigger(this.styles);
 		return this.styles
+	},
+
+	applyValueNoteDisplay: function() {
+		var mark = this.valueNote.classList[0];
+		var els = [this.valueNote, this.valueMinNote, this.valueMaxNote];
+
+		for (var i = els.length - 1; i >= 0; i--) {
+			els[i].classList.remove(mark + '_display_' + (!this.valueNoteDisplay ? 'visible' : 'hidden'));
+			els[i].classList.add(mark + '_display_' + (this.valueNoteDisplay ? 'visible' : 'hidden'));
+		}
+
+		this.valueNoteDisplayAppliedEvent.trigger(this.valueNoteDisplay);
+		return this.valueNoteDisplay
 	},
 
 	setValueNoteDisplay: function(value) {
 		if (typeof value !== 'boolean') return;
 		this.valueNoteDisplay = value;
 
-		var mark = this.valueNote.classList[0];
-		this.valueNote.classList.remove(mark + '_display_' + (!this.valueNoteDisplay ? 'visible' : 'hidden'));
-		this.valueNote.classList.add(mark + '_display_' + (this.valueNoteDisplay ? 'visible' : 'hidden'));
-
+		this.valueNoteDisplayChangedEvent.trigger(this.valueNoteDisplay);
 		return this.valueNoteDisplay;
 	},
 
@@ -496,55 +754,73 @@ wRunner.Presenter = function(options) {
 	this.model = options.model;
 	this.view = options.view;
 
-	this.model.valueByProgressCalculatedEvent.addHandler(function(value) {
-		this.model.setValue(value, true);
+	// Model events
+	this.model.stepChangedEvent.addHandler(function(data) {
+		this.model.setValue(null, true)
+	}.bind(this))
+
+	this.model.valueByProgressCalculatedEvent.addHandler(function(data) {
+		this.model.setValue(data, true);
 	}.bind(this));
 
-	this.view.mouseDownEvent.addHandler(function(event) {
-		this.view.mouseDown(event)
+	this.model.valueChangedEvent.addHandler(function(data) {
+		this.view.drawValue(this.model.getValue(), this.model.getRange(), this.model.getType())
 	}.bind(this))
 
-	this.view.calculatedValueToUpdateEvent.addHandler(function(event){
-		this.model.calculateValueByProgress(event)
-	}.bind(this))
-
-	this.model.valueUpdatedEvent.addHandler(function(data){
-		this.view.drawValue(data.value, data.progress)
-	}.bind(this))
-
-	this.model.rangeUpdatedEvent.addHandler(function(data){
+	this.model.rangeChangedEvent.addHandler(function(data) {
 		this.model.setValue(null, true);
+	}.bind(this))
+
+	this.model.typeChangedEvent.addHandler(function(data) {
+		this.view.updateDOM(this.model.getType());
+	}.bind(this))
+
+
+	// View events
+	this.view.baseDOMGeneratedEvent.addHandler(function(data) {
+		this.view.updateDOM(this.model.getType());
+	}.bind(this))
+
+	this.view.DOMUpdatedEvent.addHandler(function(data) {
+		this.view.drawValue(this.model.getValue(), this.model.getRange(), this.model.getType())
+	}.bind(this))
+
+	this.view.mouseDownEvent.addHandler(function(data) {
+		this.view.action(data)
+	}.bind(this))
+
+	this.view.calculatedValueToUpdateEvent.addHandler(function(data) {
+		this.model.setValueByProgress(data, true)
+	}.bind(this))
+
+	this.view.stylesChangedEvent.addHandler(function(data) {
+		this.view.applyStyles();
+		this.view.drawValue(this.model.getValue(), this.model.getRange(), this.model.getType())
+	}.bind(this))
+
+	this.view.valueNoteDisplayChangedEvent.addHandler(function(data) {
+		this.view.applyValueNoteDisplay();
+		this.view.drawValue(this.model.getValue(), this.model.getRange(), this.model.getType())
+	}.bind(this))
+
+	this.view.rootsChangedEvent.addHandler(function(data) {
+		this.view.append();
+	}.bind(this))
+
+	this.view.divisionsCountChangedEvent.addHandler(function(data) {
+		this.view.generateDivisions();
 	}.bind(this))
 };
 
 wRunner.Presenter.prototype = {
-	create: function(options) {
-		var options = options ? options : {};
-	},
-
 	draw: function(options) {
 		options = options ? options : {};
 
 		this.view.append();
 		this.view.generateDivisions();
 		this.view.applyStyles();
-		this.view.setValueNoteDisplay();
-		this.view.drawValue(this.model.value, this.model.progress);
-	},
-
-	appendTo: function(roots) {
-		this.view.setRoots(roots);
-		this.view.append();
-	},
-
-	setStyles: function(styles) {
-		this.view.setStyles(styles)
-		this.view.applyStyles();
-	},
-
-	addStyles: function(addedStyles) {
-		this.view.addStyles(addedStyles);
-		this.view.applyStyles();
+		this.view.applyValueNoteDisplay();
+		this.view.drawValue(this.model.getValue(), this.model.getRange(), this.model.getType())
 	},
 
 	removeStyles: function(list) {
@@ -554,36 +830,7 @@ wRunner.Presenter.prototype = {
 		this.view.applyStyles();
 		this.view.removeStyles(list);
 	},
-
-	setValue: function(value, auto) {
-		this.model.setValue(value, auto);
-		this.view.drawValue(this.model.value, this.model.progress)
-	},
-
-	setRange: function(min, max, auto) {
-		this.model.setRange(min, max, auto);
-		this.view.drawValue(this.model.value, this.model.progress)
-	},
-
-	setDivisionsCount: function(count) {
-		this.view.setDivisionsCount(count);
-	},
-
-	setStep: function(newStep) {
-		this.model.setStep(newStep);
-	},
-
-	setValueNoteDisplay: function(value) {
-		this.view.setValueNoteDisplay(value);
-		this.view.drawValue(this.model.value, this.model.progress)
-	}
 };
 
 // EXPORT
 module.exports = wRunner;
-
-
-//init
-//draw
-//change
-//wrunner

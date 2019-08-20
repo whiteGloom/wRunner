@@ -192,8 +192,8 @@ function test() {
     model: wrModel,
     view: wrView
   });
-  wrView.generateDOM();
-  wrPresenter.appendTo(document.getElementById('exm1'));
+  wrView.generateBaseDOM();
+  wrView.setRoots(document.getElementById('exm1'));
   wrPresenter.draw();
   var wrModel2 = new wRunner.Model();
   var wrView2 = new wRunner.View();
@@ -201,12 +201,19 @@ function test() {
     model: wrModel2,
     view: wrView2
   });
-  wrView2.generateDOM();
-  wrPresenter2.appendTo(document.getElementById('exm2'));
+  wrView2.generateBaseDOM();
+  wrView2.setStyles({
+    direction: {
+      value: 'vertical'
+    }
+  });
+  wrView2.setRoots(document.getElementById('exm2'));
   wrPresenter2.draw();
-  wrPresenter2.setStep(5); // Для проверок.
+  wrModel2.setStep(5);
+  wrModel2.setType('range'); // Для проверок.
 
-  setTimeout(function () {}, 3000);
+  setTimeout(function () {//wrModel2.setValue({minValue: 75, maxValue: 25}, true)
+  }, 3000);
 }
 
 /***/ })

@@ -91,8 +91,8 @@ describe("wRunner.model", () => {
 				it('Changing slider\'s range of values, returns a object with keys that keeps new values: minValue, maxValue, valuesCount.', () => {
 					var res = md.setRange(min, max, true);
 
-					expect(res.minValue).toEqual(+min);
-					expect(res.maxValue).toEqual(+max);
+					expect(res.minLimit).toEqual(+min);
+					expect(res.maxLimit).toEqual(+max);
 					expect(res.valuesCount).toEqual(+max - +min);
 				});
 			}
@@ -101,8 +101,8 @@ describe("wRunner.model", () => {
 				it('If you try to set range with min value more that max value, it will reverse them.', () => {
 					var res = md.setRange(min, max, true);
 
-					expect(res.minValue).toEqual(+max);
-					expect(res.maxValue).toEqual(+min);
+					expect(res.minLimit).toEqual(+max);
+					expect(res.maxLimit).toEqual(+min);
 					expect(res.valuesCount).toEqual(+min - +max);
 				});
 			}
@@ -111,8 +111,8 @@ describe("wRunner.model", () => {
 				it('If argument is undefined or not a number or a string that may be turned into number, it will take a current value of argument.', () => {
 					var res = md.setRange(min, max, true);
 
-					expect(isNumber(res.minValue)).toBeTruthy();
-					expect(isNumber(res.maxValue)).toBeTruthy();
+					expect(isNumber(res.minLimit)).toBeTruthy();
+					expect(isNumber(res.maxLimit)).toBeTruthy();
 					expect(isNumber(res.valuesCount)).toBeTruthy();
 				});
 			};
@@ -124,8 +124,8 @@ describe("wRunner.model", () => {
 		it('Returns object with keys: minValue, maxValue, valuesCount.', () => {
 			var res = md.getRange()
 
-			expect(isNumber(res.minValue)).toBeTruthy();
-			expect(isNumber(res.maxValue)).toBeTruthy();
+			expect(isNumber(res.minLimit)).toBeTruthy();
+			expect(isNumber(res.maxLimit)).toBeTruthy();
 			expect(isNumber(res.valuesCount)).toBeTruthy();
 		});
 	});
@@ -254,13 +254,10 @@ describe('wRunner.view', () => {
 	});
 
 	describe('setStyles method.', () => {
-		it('Changing value of styles, returns updated styles.', () => {
-			// Normal values
+		it('Changing value of styles, returns list of styles.', () => {
 			expect(vw.setStyles({theme: {value: 'default'}}).theme.value).toEqual('default')
 			expect(vw.setStyles({theme: {value: 'default', sign: 'kurwa'}}).theme.value).toEqual('default')
 			expect(vw.setStyles({theme: {value: 'default', sign: 'kurwa'}}).theme.sign).toEqual('kurwa')
-			// Non-existing styles
-			expect(vw.setStyles({NotDefined: {What: 'the'}})).toEqual({})
 		});
 
 		it('If you try to transfer not a object, it will returns undefined.', () => {
@@ -341,3 +338,79 @@ describe('wRunner.view', () => {
 		}
 	})
 });
+
+
+
+calculateValue: function(newValue, auto) {
+	var newValue = wRunner.helper.isNumber(newValue) ? +newValue : this.value;
+	var steppedValue, mutable;
+
+	if (this.type == 'single') {
+		var val = wRunner.isNumber(newValue) ? newValue : this.value;
+		calculateByLimits(calculateValueByStep(newValue), 'value');
+	} else {
+		if (wRunner.isObject(newValue)) {
+			if (newValue.minValue) {
+				var min = wRunner.isNumber(newValue.minValue) ? newValue.minValue : this.minValue;
+				calculateByLimits(calculateValueByStep(min), 'minValue');
+			}
+			if (newValue.maxValue) {
+				var max = wRunner.isNumber(newValue.maxValue) ? newValue.maxValue : this.maxValue;
+				calculateByLimits(calculateValueByStep(max), 'maxValue');
+			}
+		}
+	}
+
+	function calculateByLimits(val, mutable) {
+		if (val < this.minLimit) {
+			this[mutable] = this.minLimit;
+			if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
+		} else if (val > this.maxLimit) {
+			this[mutable] = this.maxLimit;
+			if (!auto) console.log('The value was equated to the maximum, because it is more than the maximum value.');
+		} else {
+			this[mutable] = +val;
+		};
+	}
+
+	function calculateValueByStep(val, mutable) {
+		if (val != this[mutable]) {
+			return this[mutable] - Math.round((this[mutable] - val) / this.step) * this.step;
+		} else {
+			return Math.round(this[mutable] / this.step) * this.step;
+		}
+	}
+
+	this.valueChangedEvent.trigger(this[mutable])
+	return this[mutable]
+},
+
+calculateValue: function(newValue, auto) {
+	var newValue = wRunner.helper.isNumber(newValue) ? +newValue : this.value;
+	var steppedValue, mutable;
+
+	if (newValue != this.value) {
+		steppedValue = this.value - Math.round((this.value - newValue) / this.step) * this.step;
+	} else {
+		steppedValue = Math.round(this.value / this.step) * this.step;
+	}
+
+	if (this.type == 'single') {
+		mutable = 'value';
+	} else {
+		mutable = steppedValue < (this.maxValue + this.minValue) / 2 ? 'minValue' : 'maxValue';
+	}
+
+	if (steppedValue < this.minLimit) {
+		this[mutable] = this.minLimit;
+		if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
+	} else if (steppedValue > this.maxLimit) {
+		this[mutable] = this.maxLimit;
+		if (!auto) console.log('The value was equated to the maximum, because it is more than the maximum value.');
+	} else {
+		this[mutable] = +steppedValue;
+	};
+
+	this.valueChangedEvent.trigger(this[mutable])
+	return this[mutable]
+},
