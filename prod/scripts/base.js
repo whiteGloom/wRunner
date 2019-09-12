@@ -186,35 +186,24 @@ __webpack_require__(/*! ./scripts/scripts.js */ "./dev/scripts/scripts.js");
 document.addEventListener("DOMContentLoaded", test);
 
 function test() {
-  var wrModel = new wRunner.Model();
-  var wrView = new wRunner.View();
-  var wrPresenter = new wRunner.Presenter({
-    model: wrModel,
-    view: wrView
+  var sliderOne = wRunner({
+    roots: document.getElementById('exm1')
   });
-  wrView.generateBaseDOM();
-  wrView.setRoots(document.getElementById('exm1'));
-  wrPresenter.draw();
-  var wrModel2 = new wRunner.Model();
-  var wrView2 = new wRunner.View();
-  var wrPresenter2 = new wRunner.Presenter({
-    model: wrModel2,
-    view: wrView2
-  });
-  wrView2.generateBaseDOM();
-  wrView2.setStyles({
-    direction: {
-      value: 'vertical'
-    }
-  });
-  wrView2.setRoots(document.getElementById('exm2'));
-  wrPresenter2.draw();
-  wrModel2.setStep(5);
-  wrModel2.setType('range'); // Для проверок.
+  var sliderTwo = wRunner({
+    roots: document.getElementById('exm2'),
+    styles: {
+      direction: {
+        value: 'vertical'
+      }
+    },
+    step: 5,
+    type: 'range'
+  }); // Для проверок.
 
-  setTimeout(function () {//wrModel2.setValue({minValue: 75, maxValue: 25}, true)
-  }, 3000);
+  setTimeout(function () {}, 3000);
 }
+
+;
 
 /***/ })
 
