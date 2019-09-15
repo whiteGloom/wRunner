@@ -1,0 +1,30 @@
+mixin sampleMix(options)
+	-
+		var options = options ? options : {};
+		var title = options.title ? options.title : '';
+	.sample
+		if title
+			h1.sample__title= title
+		.sample__body
+			block
+
+mixin sampleDataMix(options)
+	.sample__data
+		block
+
+mixin sampleInstanceMix(options)
+	-
+		var options = options ? options : {};
+		var id = options.id ? options.id : '';
+	.sample__instance(id = id)
+		block
+
+mixin parameter(options)
+	-
+		var options = options ? options : {};
+		var id = options.id ? options.id : '';
+		var name = options.name ? options.name : 'name';
+		var type = options.type ? options.type : 'text';
+	.parameterName= name
+	.parameterValue(id = id)
+		block

@@ -20,11 +20,20 @@ module.exports = function(options) {
         },
         plugins: [
 			new HTMLWebpackPlugin({
-				template: base + "/dev/views/index.pug",
+				template: base + "/src/showcase/views/index.pug",
 				filename: 'index.html',
 				inject: false,
 				minify: false
-			})
+			}),
+	        new HtmlBeautifyPlugin({
+		        config: {
+		            html: {
+		                indent_with_tabs: true,
+		                inline: [],
+		                unformatted: ['p', 'i', 'b', 'span']
+		            }
+		        }
+		    })
 		]
     }
 };

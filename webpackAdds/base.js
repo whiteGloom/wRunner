@@ -8,12 +8,28 @@ module.exports = function(options) {
 	return {
 		mode: 'development',
 		entry: {
-			'base': base + '/dev/index.js',
-			'static': base + '/dev/static.js'
+			'showcase': base + '/src/showcase/index.js',
+			'styles': base + '/src/showcase/static.js',
+			'wrunner-native': base + '/src/wrunner-native.js',
+			'wrunner-jquery': base + '/src/wrunner-jquery.js',
+			'wrunner-defalut-theme': base + '/src/wrunner-default-theme.js',
 		},
 		output: {
 			path: base + '/prod/',
-			filename: 'scripts/[name].js'
+			filename: (data) => {
+				switch(data.chunk.name) {
+					case 'styles':
+					case 'wrunner-defalut-theme':
+						return;
+						break;
+					case 'showcase':
+						return 'scripts/scripts.js';
+						break;
+					default: 
+						return '[name].js';
+						break;
+				}
+			}
 		},
 	    module: {
 	        rules: [
@@ -26,11 +42,12 @@ module.exports = function(options) {
 	    optimization: {
     		splitChunks: {
 				cacheGroups: {
-					commons: {
+					vendors: {
+						test: /[\\/](vendors|node_modules)[\\/]/,
 						name: 'vendors',
-						chunks: 'all',
-						test: /[\\/]vendors[\\/]/
-					}
+						chunks: 'all'
+					},
+					default: false
 				}
 			}
 		},

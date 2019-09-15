@@ -22,7 +22,9 @@ module.exports = function(options) {
             ]
         },
         plugins: [
-            new MiniCssExtractPlugin({filename: "static/styles/styles.css"})
+            new MiniCssExtractPlugin({
+                filename: "static/styles/[name].css"
+            })
         ]
     }
 };

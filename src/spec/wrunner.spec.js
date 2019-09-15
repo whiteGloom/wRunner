@@ -1,6 +1,6 @@
 // Requirements
 const jsdom = require("jsdom");
-wRunner = require('../wrunner');
+wRunner = require('../wrunner-native');
 
 const {JSDOM} = jsdom;
 const window = (new JSDOM('<body><div id="root"></div></body>', { runScripts: "outside-only" })).window;
@@ -9,9 +9,6 @@ global.document = window.document;
 
 
 // PREPARATIONS
-// Not standart variables, that may be used.
-var zeros = [null, undefined, true, false, 'test', '50', NaN]
-
 // Helper functions.
 function isNumber(value, exceps) {
 	var exceps = exceps ? exceps : [];

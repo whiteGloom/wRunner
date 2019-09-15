@@ -8,7 +8,8 @@ module.exports = function(options) {
     return {
         resolve : {
             alias: {
-            	'wrunner': base + '/dev/vendors/wrunner'
+                'wrunner-nat': base + '/src/wrunner-native',
+                'wrunner-jq': base + '/src/wrunner-jquery'
             }
         }
     }

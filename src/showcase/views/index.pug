@@ -1,0 +1,28 @@
+include ../static/BEM/mixinsList
+
+doctype html
+html
+	head
+		title wRunner. Slider example
+		meta(charset='utf8')
+		link(rel="stylesheet" type="text/css" href="static/styles/styles.css")
+		script(src='./vendors.js')
+		script(src='./scripts/scripts.js')
+	body
+		+pageMix
+			+pageElMix
+				+sampleMix({title: 'Js native'})
+					+sampleInstanceMix({id: 'exm1'})
+					+sampleDataMix
+			+pageElMix
+				+sampleMix({title: 'Js native'})
+					+sampleInstanceMix({id: 'exm2'})
+					+sampleDataMix
+			+pageElMix
+				+sampleMix({title: 'jQuery'})
+					+sampleInstanceMix({id: 'exm3'})
+					+sampleDataMix
+			+pageElMix
+				+sampleMix({title: 'jQuery'})
+					+sampleInstanceMix({id: 'exm4'})
+					+sampleDataMix

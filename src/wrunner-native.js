@@ -393,8 +393,10 @@ var wRunner = function(options) {
 				// The handler that called after click's end.
 				document.body.addEventListener('mouseup', function(upEvent) {
 					var targ = upEvent.target;
+
 					// Removing bind.
 					document.body.removeEventListener('mousemove', moveBind);
+
 					// If handle was dragged, stop the function.
 					if (dragged) return;
 					if (targ == this.handle || targ == this.handleMin || targ == this.handleMax) return;
@@ -463,10 +465,10 @@ var wRunner = function(options) {
 				this.divisionsList.length = 0;
 
 				for(var i = this.divisionsCount; i > 0; i--) {
-					var a = document.createElement('div');
-					a.classList.add('wrunner__division');
-					this.divisionsList.push(a);
-					this.divisions.appendChild(a);
+					var instance = document.createElement('div');
+					instance.classList.add('wrunner__division');
+					this.divisionsList.push(instance);
+					this.divisions.appendChild(instance);
 				}
 
 				this.els = this.divisionsList.concat(this.stableElsList);
@@ -509,12 +511,8 @@ var wRunner = function(options) {
 				this.valueMinNote.style.cssText = "";
 				this.valueMaxNote.style.cssText = "";
 
-				// Value Note
-				this.valueNote.innerHTML = value.value;
-				this.valueMinNote.innerHTML = value.minValue;
-				this.valueMaxNote.innerHTML = value.maxValue;
-
 				if(type == typeConstants.singleValue) {
+					this.valueNote.innerHTML = value.value;
 
 					if(dir == dirConsts.horizontalValue) {
 						// Passed path
@@ -543,6 +541,9 @@ var wRunner = function(options) {
 
 				if (type == typeConstants.rangeValue) {
 					var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
+
+					this.valueMinNote.innerHTML = value.minValue;
+					this.valueMaxNote.innerHTML = value.maxValue;
 
 					if(dir == dirConsts.horizontalValue) {
 			
