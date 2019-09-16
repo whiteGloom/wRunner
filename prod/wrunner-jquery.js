@@ -165,8 +165,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             this.minLimit = max;
             this.maxLimit = min;
             if (!auto) console.log('Values have been reversed, because the minimum value is less than the maximum value.');
-          } // Update count of values.
+          }
 
+          ; // Update count of values.
 
           this.valuesCount = this.maxLimit - this.minLimit;
           this.limitsUpdateEvent.trigger({
@@ -206,6 +207,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             };
           }
 
+          ;
+
           if (this.type == this.typeConstants.rangeValue) {
             // If new value is a object
             if (helper.isObject(newValue) || newValue == null) {
@@ -217,16 +220,20 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
                 var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
               }
 
+              ;
+
               if (min > max) {
                 var clone = max;
                 max = min;
                 min = clone;
               }
 
+              ;
               set(min, 'rangeMinValue');
               set(max, 'rangeMaxValue');
-            } // If new value is a number
+            }
 
+            ; // If new value is a number
 
             if (helper.isNumber(newValue)) {
               // Choosing a value to set 
@@ -235,8 +242,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
               } else {
                 set(+newValue, 'rangeMaxValue');
               }
-            } // Update selected
+            }
 
+            ; // Update selected
 
             this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100; // Returns
 
@@ -262,6 +270,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
               stepped = Math.round(this[mutable] / this.step) * this.step;
             }
 
+            ;
+
             if (stepped < this.minLimit) {
               this[mutable] = this.minLimit;
               if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
@@ -283,6 +293,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             };
           }
 
+          ;
+
           if (this.type == this.typeConstants.rangeValue) {
             return {
               minValue: this.rangeMinValue,
@@ -290,6 +302,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
               selected: this.rangeSelected
             };
           }
+
+          ;
         },
         setStep: function setStep(newStep) {
           if (!helper.isNumber(newStep) || newStep <= 0) return;
@@ -367,9 +381,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           direction: {
             horizontalValue: 'horizontal',
             verticalValue: 'vertical'
-          } // Lists of els
+          }
+        }; // Lists of els
 
-        };
         this.stableElsList = [];
         this.divisionsList = [];
         this.els = []; // Stable elements
@@ -623,12 +637,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         },
         setStyles: function setStyles(newStyles) {
           if (!helper.isObject(newStyles)) return;
-          var changedStyles = {};
+          var changed = false;
 
           for (prop in newStyles) {
             if (!(prop in this.styles)) continue;
             var mutable = this.styles[prop];
-            var wasChanged = false;
 
             if (newStyles[prop].value !== undefined) {
               if (this.stylesConstants[prop]) {
@@ -636,25 +649,24 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
                   if (newStyles[prop].value == this.stylesConstants[prop][defs]) {
                     mutable.oldValue = mutable.value;
                     mutable.value = newStyles[prop].value;
-                    wasChanged = true;
+                    changed = true;
                     break;
                   }
                 }
               } else {
                 mutable.oldValue = mutable.value;
                 mutable.value = newStyles[prop].value;
-                wasChanged = true;
+                changed = true;
               }
             }
 
             if (typeof newStyles[prop].className == 'string') {
               mutable.className = newStyles[prop].className;
-              wasChanged = true;
+              changed = true;
             }
-
-            if (wasChanged) changedStyles[prop] = mutable;
           }
 
+          if (!changed) return;
           this.stylesUpdateEvent.trigger(Object.assign({}, this.styles));
           return Object.assign({}, this.styles);
         },

@@ -12,14 +12,14 @@ module.exports = function(options) {
 			'styles': base + '/src/showcase/static.js',
 			'wrunner-native': base + '/src/wrunner-native.js',
 			'wrunner-jquery': base + '/src/wrunner-jquery.js',
-			'wrunner-defalut-theme': base + '/src/wrunner-default-theme.js',
+			'wrunner-default-theme': base + '/src/wrunner-default-theme.js',
 		},
 		output: {
 			path: base + '/prod/',
 			filename: (data) => {
 				switch(data.chunk.name) {
 					case 'styles':
-					case 'wrunner-defalut-theme':
+					case 'wrunner-default-theme':
 						return;
 						break;
 					case 'showcase':

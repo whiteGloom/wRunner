@@ -166,4 +166,19 @@
   width: 0;
 }
 
+.wrunner_direction_horizontal {
+  width: 100%;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  box-sizing: border-box;
+}
+
+.wrunner_direction_vertical {
+  height: 100%;
+  width: max-content;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  box-sizing: border-box;
+}
+
 

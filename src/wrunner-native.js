@@ -74,7 +74,7 @@ var wRunner = function(options) {
 					this.minLimit = max;
 					this.maxLimit = min;
 					if (!auto) console.log('Values have been reversed, because the minimum value is less than the maximum value.');
-				}
+				};
 
 				// Update count of values.
 				this.valuesCount = this.maxLimit - this.minLimit;
@@ -83,7 +83,7 @@ var wRunner = function(options) {
 					minLimit: this.minLimit,
 					maxLimit: this.maxLimit,
 					valuesCount: this.valuesCount
-				})
+				});
 
 				return {
 					minLimit: this.minLimit,
@@ -119,7 +119,7 @@ var wRunner = function(options) {
 						value: this.singleValue,
 						selected: this.singleSelected
 					}
-				}
+				};
 
 				if (this.type == this.typeConstants.rangeValue) {
 					// If new value is a object
@@ -130,17 +130,17 @@ var wRunner = function(options) {
 						} else {
 							var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
 							var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
-						}
+						};
 
 						if (min > max) {
 							let clone = max;
 							max = min;
 							min = clone;
-						}
+						};
 
 						set(min, 'rangeMinValue');
 						set(max, 'rangeMaxValue');
-					}
+					};
 
 					// If new value is a number
 					if (helper.isNumber(newValue)) {
@@ -149,8 +149,8 @@ var wRunner = function(options) {
 							set(+newValue, 'rangeMinValue');
 						} else {
 							set(+newValue, 'rangeMaxValue');
-						}			
-					}
+						};
+					};
 
 					// Update selected
 					this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100;
@@ -177,7 +177,7 @@ var wRunner = function(options) {
 						stepped = this[mutable] - Math.round((this[mutable] - +newValue) / this.step) * this.step;
 					} else {
 						stepped = Math.round(this[mutable] / this.step) * this.step;
-					}
+					};
 
 					if (stepped < this.minLimit) {
 						this[mutable] = this.minLimit;
@@ -197,7 +197,7 @@ var wRunner = function(options) {
 						value: this.singleValue,
 						selected: this.singleSelected,
 					}
-				}
+				};
 
 				if(this.type == this.typeConstants.rangeValue) {
 					return {
@@ -205,7 +205,7 @@ var wRunner = function(options) {
 						maxValue: this.rangeMaxValue,
 						selected: this.rangeSelected,
 					}
-				}
+				};
 			},
 
 			setStep: function(newStep) {
@@ -291,7 +291,7 @@ var wRunner = function(options) {
 					horizontalValue: 'horizontal', 
 					verticalValue: 'vertical'
 				}
-			}
+			};
 
 			// Lists of els
 			this.stableElsList = [];
@@ -395,14 +395,14 @@ var wRunner = function(options) {
 				this.outer.appendChild(this.divisions);
 
 				if(type.type == type.typeConstants.singleValue) {
-						this.path.appendChild(this.handle);
-						this.outer.appendChild(this.valueNote);
+					this.path.appendChild(this.handle);
+					this.outer.appendChild(this.valueNote);
 				}
 				if(type.type == type.typeConstants.rangeValue) {
-						this.path.appendChild(this.handleMin);
-						this.path.appendChild(this.handleMax);
-						this.outer.appendChild(this.valueMinNote);
-						this.outer.appendChild(this.valueMaxNote);
+					this.path.appendChild(this.handleMin);
+					this.path.appendChild(this.handleMax);
+					this.outer.appendChild(this.valueMinNote);
+					this.outer.appendChild(this.valueMaxNote);
 				}
 
 				this.DOMUpdateEvent.trigger();

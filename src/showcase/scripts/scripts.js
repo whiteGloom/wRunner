@@ -34,10 +34,10 @@ function test() {
 			},
 
 			onValueUpdate: function(value) {
-				if (value.value) {
+				if (value.value !== undefined) {
 					controllers[index]['slider' + index + 'Value'].value = value.value
 				}
-				if (value.minValue || value.maxValue) {
+				if (value.minValue && value.minValue !== undefined || value.maxValue && value.maxValue !== undefined) {
 					controllers[index]['slider' + index + 'MinValue'].value = value.minValue
 					controllers[index]['slider' + index + 'MaxValue'].value = value.maxValue
 				}

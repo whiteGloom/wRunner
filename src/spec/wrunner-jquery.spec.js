@@ -1,12 +1,13 @@
 // Requirements
 const jsdom = require("jsdom");
-wRunner = require('../wrunner-native');
 
 const {JSDOM} = jsdom;
 const window = (new JSDOM('<body><div id="root"></div></body>', { runScripts: "outside-only" })).window;
 global.window = window;
 global.document = window.document;
 
+$ = require('jquery');
+require('../wrunner-jquery');
 
 // PREPARATIONS
 // Helper functions.
@@ -33,7 +34,7 @@ function isString(value) {
 
 
 // Plugin itself.
-var slider = wRunner();
+var slider = $(document.body).wRunner();
 
 // SPECS
 // getType method.

@@ -53,7 +53,7 @@
 				this.typeConstants = {
 					singleValue: 'single',
 					rangeValue: 'range',
-				}
+				};
 
 				this.valueByProgressUpdateEvent = makeEvent();
 				this.valueUpdateEvent = makeEvent();
@@ -76,7 +76,7 @@
 						this.minLimit = max;
 						this.maxLimit = min;
 						if (!auto) console.log('Values have been reversed, because the minimum value is less than the maximum value.');
-					}
+					};
 
 					// Update count of values.
 					this.valuesCount = this.maxLimit - this.minLimit;
@@ -85,13 +85,13 @@
 						minLimit: this.minLimit,
 						maxLimit: this.maxLimit,
 						valuesCount: this.valuesCount
-					})
+					});
 
 					return {
 						minLimit: this.minLimit,
 						maxLimit: this.maxLimit,
 						valuesCount: this.valuesCount
-					}
+					};
 				},
 
 				getLimits: function() {
@@ -121,7 +121,7 @@
 							value: this.singleValue,
 							selected: this.singleSelected
 						}
-					}
+					};
 
 					if (this.type == this.typeConstants.rangeValue) {
 						// If new value is a object
@@ -132,17 +132,17 @@
 							} else {
 								var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
 								var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
-							}
+							};
 
 							if (min > max) {
 								let clone = max;
 								max = min;
 								min = clone;
-							}
+							};
 
 							set(min, 'rangeMinValue');
 							set(max, 'rangeMaxValue');
-						}
+						};
 
 						// If new value is a number
 						if (helper.isNumber(newValue)) {
@@ -152,7 +152,7 @@
 							} else {
 								set(+newValue, 'rangeMaxValue');
 							}			
-						}
+						};
 
 						// Update selected
 						this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100;
@@ -179,7 +179,7 @@
 							stepped = this[mutable] - Math.round((this[mutable] - +newValue) / this.step) * this.step;
 						} else {
 							stepped = Math.round(this[mutable] / this.step) * this.step;
-						}
+						};
 
 						if (stepped < this.minLimit) {
 							this[mutable] = this.minLimit;
@@ -199,7 +199,7 @@
 							value: this.singleValue,
 							selected: this.singleSelected,
 						}
-					}
+					};
 
 					if(this.type == this.typeConstants.rangeValue) {
 						return {
@@ -207,7 +207,7 @@
 							maxValue: this.rangeMaxValue,
 							selected: this.rangeSelected,
 						}
-					}
+					};
 				},
 
 				setStep: function(newStep) {
@@ -293,7 +293,7 @@
 						horizontalValue: 'horizontal', 
 						verticalValue: 'vertical'
 					}
-				}
+				};
 
 				// Lists of els
 				this.stableElsList = [];
@@ -360,22 +360,22 @@
 			this.View.prototype = {
 				updateDOM: function(type) {
 					if(type.type == type.typeConstants.singleValue) {
-							$(this.handleMin).detach();
-							$(this.handleMax).detach();
-							$(this.valueMinNote).detach();
-							$(this.valueMaxNote).detach();
+						$(this.handleMin).detach();
+						$(this.handleMax).detach();
+						$(this.valueMinNote).detach();
+						$(this.valueMaxNote).detach();
 
-							$(this.handle).appendTo($(this.path));
-							$(this.valueNote).appendTo($(this.outer));
+						$(this.handle).appendTo($(this.path));
+						$(this.valueNote).appendTo($(this.outer));
 					}
 					if(type.type == type.typeConstants.rangeValue) {
-							$(this.handle).detach();
-							$(this.valueNote).detach();
+						$(this.handle).detach();
+						$(this.valueNote).detach();
 
-							$(this.handleMin).appendTo($(this.path));
-							$(this.handleMax).appendTo($(this.path));
-							$(this.valueMinNote).appendTo($(this.outer));
-							$(this.valueMaxNote).appendTo($(this.outer));
+						$(this.handleMin).appendTo($(this.path));
+						$(this.handleMax).appendTo($(this.path));
+						$(this.valueMinNote).appendTo($(this.outer));
+						$(this.valueMaxNote).appendTo($(this.outer));
 					}
 
 					this.DOMUpdateEvent.trigger();
@@ -418,12 +418,12 @@
 
 						if(dir == this.stylesConstants.direction.horizontalValue) {
 							scale = $(this.path).outerWidth();
-						min = this.path.getBoundingClientRect().left;
+							min = this.path.getBoundingClientRect().left;
 							pos = event.clientX;
 						}
 						if(dir ==  this.stylesConstants.direction.verticalValue) {
 							scale = $(this.path).outerHeight();
-						min = this.path.getBoundingClientRect().top;
+							min = this.path.getBoundingClientRect().top;
 							pos = event.clientY;
 						}
 
@@ -582,11 +582,10 @@
 				setStyles: function(newStyles) {
 					if (!helper.isObject(newStyles)) return;
 
-					var changedStyles = {};
+					var changed = false;
 					for(prop in newStyles) {
 						if(!(prop in this.styles)) continue;
 						var mutable = this.styles[prop];
-						var wasChanged = false;
 
 						if (newStyles[prop].value !== undefined) {
 							if (this.stylesConstants[prop]) {
@@ -594,24 +593,24 @@
 									if (newStyles[prop].value == this.stylesConstants[prop][defs]){
 										mutable.oldValue = mutable.value;
 										mutable.value = newStyles[prop].value;
-										wasChanged = true;
+										changed = true;
 										break;
 									}
 								}
 							} else {
 								mutable.oldValue = mutable.value;
 								mutable.value = newStyles[prop].value;
-								wasChanged = true;
+								changed = true;
 							}
 						}
 
 						if (typeof newStyles[prop].className == 'string') {
 							mutable.className = newStyles[prop].className;
-							wasChanged = true;
+							changed = true;
 						}
-
-						if (wasChanged) changedStyles[prop] = mutable;
 					}
+
+					if(!changed) return;
 
 					this.stylesUpdateEvent.trigger(Object.assign({}, this.styles));
 					return Object.assign({}, this.styles)

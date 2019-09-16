@@ -161,8 +161,9 @@ var wRunner = function wRunner(options) {
           this.minLimit = max;
           this.maxLimit = min;
           if (!auto) console.log('Values have been reversed, because the minimum value is less than the maximum value.');
-        } // Update count of values.
+        }
 
+        ; // Update count of values.
 
         this.valuesCount = this.maxLimit - this.minLimit;
         this.limitsUpdateEvent.trigger({
@@ -202,6 +203,8 @@ var wRunner = function wRunner(options) {
           };
         }
 
+        ;
+
         if (this.type == this.typeConstants.rangeValue) {
           // If new value is a object
           if (helper.isObject(newValue) || newValue == null) {
@@ -213,16 +216,20 @@ var wRunner = function wRunner(options) {
               var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
             }
 
+            ;
+
             if (min > max) {
               var clone = max;
               max = min;
               min = clone;
             }
 
+            ;
             set(min, 'rangeMinValue');
             set(max, 'rangeMaxValue');
-          } // If new value is a number
+          }
 
+          ; // If new value is a number
 
           if (helper.isNumber(newValue)) {
             // Choosing a value to set 
@@ -231,8 +238,11 @@ var wRunner = function wRunner(options) {
             } else {
               set(+newValue, 'rangeMaxValue');
             }
-          } // Update selected
 
+            ;
+          }
+
+          ; // Update selected
 
           this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100; // Returns
 
@@ -258,6 +268,8 @@ var wRunner = function wRunner(options) {
             stepped = Math.round(this[mutable] / this.step) * this.step;
           }
 
+          ;
+
           if (stepped < this.minLimit) {
             this[mutable] = this.minLimit;
             if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
@@ -279,6 +291,8 @@ var wRunner = function wRunner(options) {
           };
         }
 
+        ;
+
         if (this.type == this.typeConstants.rangeValue) {
           return {
             minValue: this.rangeMinValue,
@@ -286,6 +300,8 @@ var wRunner = function wRunner(options) {
             selected: this.rangeSelected
           };
         }
+
+        ;
       },
       setStep: function setStep(newStep) {
         if (!helper.isNumber(newStep) || newStep <= 0) return;
@@ -363,9 +379,9 @@ var wRunner = function wRunner(options) {
         direction: {
           horizontalValue: 'horizontal',
           verticalValue: 'vertical'
-        } // Lists of els
+        }
+      }; // Lists of els
 
-      };
       this.stableElsList = [];
       this.divisionsList = [];
       this.els = []; // Stable elements
