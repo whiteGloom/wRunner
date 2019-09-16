@@ -188,11 +188,133 @@ __webpack_require__(/*! ./scripts/scripts.js */ "./src/showcase/scripts/scripts.
 document.addEventListener("DOMContentLoaded", test);
 
 function test() {
-  var sliderOne = wRunnerNative({
-    roots: document.getElementById('exm1')
-  });
-  var sliderTwo = wRunnerNative({
-    roots: document.getElementById('exm2'),
+  var controllers = [];
+
+  for (var i = 0; i < 4; i++) {
+    var data = {};
+    data['slider' + i + 'Step'] = document.getElementById('slider' + i + 'Step');
+    data['slider' + i + 'MinLimit'] = document.getElementById('slider' + i + 'MinLimit');
+    data['slider' + i + 'MaxLimit'] = document.getElementById('slider' + i + 'MaxLimit');
+    data['slider' + i + 'Value'] = document.getElementById('slider' + i + 'Value');
+    data['slider' + i + 'MinValue'] = document.getElementById('slider' + i + 'MinValue');
+    data['slider' + i + 'MaxValue'] = document.getElementById('slider' + i + 'MaxValue');
+    data['slider' + i + 'Type'] = document.getElementById('slider' + i + 'Type');
+    data['slider' + i + 'DivisionsCount'] = document.getElementById('slider' + i + 'DivisionsCount');
+    data['slider' + i + 'ValueNoteDisplay'] = document.getElementById('slider' + i + 'ValueNoteDisplay');
+    data['slider' + i + 'Roots'] = document.getElementById('slider' + i + 'Roots');
+    data['slider' + i + 'Direction'] = document.getElementById('slider' + i + 'Direction');
+    controllers.push(data);
+  }
+
+  var sliders = [];
+
+  function makeSlider(index, options, type) {
+    var data = Object.assign(options, {
+      onStepUpdate: function onStepUpdate(step) {
+        controllers[index]['slider' + index + 'Step'].value = step;
+      },
+      onLimitsUpdate: function onLimitsUpdate(limits) {
+        controllers[index]['slider' + index + 'MinLimit'].value = limits.minLimit;
+        controllers[index]['slider' + index + 'MaxLimit'].value = limits.maxLimit;
+      },
+      onValueUpdate: function onValueUpdate(value) {
+        if (value.value) {
+          controllers[index]['slider' + index + 'Value'].value = value.value;
+        }
+
+        if (value.minValue || value.maxValue) {
+          controllers[index]['slider' + index + 'MinValue'].value = value.minValue;
+          controllers[index]['slider' + index + 'MaxValue'].value = value.maxValue;
+        }
+      },
+      onTypeUpdate: function onTypeUpdate(type) {
+        controllers[index]['slider' + index + 'Type'].value = type;
+      },
+      onDivisionsCountUpdate: function onDivisionsCountUpdate(count) {
+        controllers[index]['slider' + index + 'DivisionsCount'].value = count;
+      },
+      onValueNoteDisplayUpdate: function onValueNoteDisplayUpdate(value) {
+        controllers[index]['slider' + index + 'ValueNoteDisplay'].checked = value;
+      },
+      onRootsUpdate: function onRootsUpdate(roots) {
+        var str = '#' + roots.id;
+
+        for (var i = 0; i < roots.classList.length; i++) {
+          str += '.' + roots.classList[i];
+        }
+
+        controllers[index]['slider' + index + 'Roots'].value = str;
+      },
+      onStylesUpdate: function onStylesUpdate(styles) {
+        controllers[index]['slider' + index + 'Direction'].value = styles.direction.value;
+      }
+    });
+
+    if (type == 'native') {
+      sliders[index] = wRunnerNative(data);
+    } else {
+      sliders[index] = $('#exm' + index).wRunner(data);
+    }
+
+    controllers[index]['slider' + index + 'Step'].addEventListener('input', function (e) {
+      sliders[index].setStep(controllers[index]['slider' + index + 'Step'].value);
+    });
+    controllers[index]['slider' + index + 'MinLimit'].addEventListener('input', function (e) {
+      sliders[index].setLimits({
+        minLimit: controllers[index]['slider' + index + 'MinLimit'].value
+      });
+    });
+    controllers[index]['slider' + index + 'MaxLimit'].addEventListener('input', function (e) {
+      sliders[index].setLimits({
+        maxLimit: controllers[index]['slider' + index + 'MaxLimit'].value
+      });
+    });
+    controllers[index]['slider' + index + 'Value'].addEventListener('input', function (e) {
+      sliders[index].setValue(controllers[index]['slider' + index + 'Value'].value);
+    });
+    controllers[index]['slider' + index + 'MinValue'].addEventListener('input', function (e) {
+      sliders[index].setValue({
+        minValue: controllers[index]['slider' + index + 'MinValue'].value
+      });
+    });
+    controllers[index]['slider' + index + 'MaxValue'].addEventListener('input', function (e) {
+      sliders[index].setValue({
+        maxValue: controllers[index]['slider' + index + 'MaxValue'].value
+      });
+    });
+    controllers[index]['slider' + index + 'Type'].addEventListener('input', function (e) {
+      sliders[index].setType(controllers[index]['slider' + index + 'Type'].value);
+    });
+    controllers[index]['slider' + index + 'DivisionsCount'].addEventListener('input', function (e) {
+      sliders[index].setDivisionsCount(controllers[index]['slider' + index + 'DivisionsCount'].value);
+    });
+    controllers[index]['slider' + index + 'ValueNoteDisplay'].addEventListener('input', function (e) {
+      sliders[index].setValueNoteDisplay(controllers[index]['slider' + index + 'ValueNoteDisplay'].checked);
+    });
+    controllers[index]['slider' + index + 'Direction'].addEventListener('input', function (e) {
+      sliders[index].setStyles({
+        direction: {
+          value: controllers[index]['slider' + index + 'Direction'].value
+        }
+      });
+    });
+  }
+
+  makeSlider(0, {
+    roots: document.getElementById('exm0')
+  }, 'native');
+  makeSlider(1, {
+    roots: document.getElementById('exm1'),
+    styles: {
+      direction: {
+        value: 'vertical'
+      }
+    },
+    step: 5,
+    type: 'range'
+  }, 'native');
+  makeSlider(2, {
+    divisionsCount: 16,
     styles: {
       direction: {
         value: 'vertical'
@@ -201,19 +323,9 @@ function test() {
     step: 5,
     type: 'range'
   });
-  var sliderThree = $('#exm3').wRunner({
-    roots: document.getElementById('exm2'),
-    styles: {
-      direction: {
-        value: 'vertical'
-      }
-    },
-    step: 5,
-    type: 'range'
-  });
-  var sliderThree = $('#exm4').wRunner({
-    divisionsCount: 2,
-    type: 'range'
+  makeSlider(3, {
+    valueNoteDisplay: false,
+    divisionsCount: 0
   }); // Для проверок.
 
   setTimeout(function () {}, 3000);
@@ -345,9 +457,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
           if (this.type == this.typeConstants.rangeValue) {
             // If new value is a object
-            if (helper.isObject(newValue)) {
-              var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
-              var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+            if (helper.isObject(newValue) || newValue == null) {
+              if (newValue == null) {
+                var min = this.rangeMinValue;
+                var max = this.rangeMaxValue;
+              } else {
+                var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
+                var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+              }
 
               if (min > max) {
                 var clone = max;
@@ -440,9 +557,34 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           return value;
         },
         setType: function setType(type) {
-          if (type !== this.typeConstants.singleValue && type !== this.typeConstants.rangeValue) return;
+          var exist = false;
+
+          for (var constant in this.typeConstants) {
+            if (type === this.typeConstants[constant]) {
+              exist = true;
+              break;
+            }
+          }
+
+          if (!exist) return;
           this.type = type;
           this.typeUpdateEvent.trigger(this.type);
+
+          if (this.type == this.typeConstants.singleValue) {
+            this.valueUpdateEvent.trigger({
+              value: this.value,
+              selected: this.singleSelected
+            });
+          }
+
+          if (this.type == this.typeConstants.rangeValue) {
+            this.valueUpdateEvent.trigger({
+              minValue: this.minValue,
+              maxValue: this.maxValue,
+              selected: this.rangeSelected
+            });
+          }
+
           return this.type;
         },
         getType: function getType() {
@@ -585,13 +727,13 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
             if (dir == this.stylesConstants.direction.horizontalValue) {
               scale = $(this.path).outerWidth();
-              min = $(this.path).offset().left;
+              min = this.path.getBoundingClientRect().left;
               pos = event.clientX;
             }
 
             if (dir == this.stylesConstants.direction.verticalValue) {
               scale = $(this.path).outerHeight();
-              min = $(this.path).offset().top;
+              min = this.path.getBoundingClientRect().top;
               pos = event.clientY;
             }
 
@@ -880,7 +1022,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         onRootsUpdate: function onRootsUpdate(handler) {
           this.view.rootsUpdateEvent.addHandler(handler);
         },
-        onDivisionCountUpdate: function onDivisionCountUpdate(handler) {
+        onDivisionsCountUpdate: function onDivisionsCountUpdate(handler) {
           this.view.divisionsCountUpdateEvent.addHandler(handler);
         } // Event handler
 
@@ -950,6 +1092,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       runInstance();
       view.setRoots(roots);
       applyOptions();
+      triggerEvents();
       return {
         setType: model.setType.bind(model),
         setLimits: model.setLimits.bind(model),
@@ -974,7 +1117,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         onStepUpdate: presenter.onStepUpdate.bind(presenter),
         onLimitsUpdate: presenter.onLimitsUpdate.bind(presenter),
         onTypeUpdate: presenter.onTypeUpdate.bind(presenter),
-        onDivisionCountUpdate: presenter.onDivisionCountUpdate.bind(presenter)
+        onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter)
       };
 
       function runInstance() {
@@ -987,26 +1130,62 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         view.drawValue(model.getValue(), model.getLimits(), model.getType());
       }
 
+      ;
+
       function applyOptions() {
         // Model
-        if (options.step) model.setStep(options.step);
-        if (options.type) model.setType(options.type);
-        if (options.limits) model.setLimits(options.limits);
-        if (options.value) model.setValue(options.value); // View
+        if (options.step !== undefined) model.setStep(options.step);
+        if (options.type !== undefined) model.setType(options.type);
+        if (options.limits !== undefined) model.setLimits(options.limits);
+        if (options.value !== undefined) model.setValue(options.value); // View
 
-        if (options.divisionsCount) view.setDivisionsCount(options.divisionsCount);
-        if (options.valueNoteDisplay) view.setValueNoteDisplay(options.valueNoteDisplay);
-        if (options.styles) view.setStyles(options.styles); // Events
+        if (options.divisionsCount !== undefined) view.setDivisionsCount(options.divisionsCount);
+        if (options.valueNoteDisplay !== undefined) view.setValueNoteDisplay(options.valueNoteDisplay);
+        if (options.styles !== undefined) view.setStyles(options.styles); // Events
 
-        if (options.onValueUpdate) presenter.onValueUpdate(options.onValueUpdate);
-        if (options.onStylesUpdate) presenter.onStylesUpdate(options.onStylesUpdate);
-        if (options.onValueNoteDisplayUpdate) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
-        if (options.onRootsUpdate) presenter.onRootsUpdate(options.onRootsUpdate);
-        if (options.onStepUpdate) presenter.onStepUpdate(options.onStepUpdate);
-        if (options.onLimitsUpdate) presenter.onLimitsUpdate(options.onLimitsUpdate);
-        if (options.onTypeUpdate) presenter.onTypeUpdate(options.onTypeUpdate);
-        if (options.onDivisionCountUpdate) presenter.onDivisionCountUpdate(options.onDivisionCountUpdate);
+        if (options.onStepUpdate !== undefined) presenter.onStepUpdate(options.onStepUpdate);
+        if (options.onTypeUpdate !== undefined) presenter.onTypeUpdate(options.onTypeUpdate);
+        if (options.onLimitsUpdate !== undefined) presenter.onLimitsUpdate(options.onLimitsUpdate);
+        if (options.onValueUpdate !== undefined) presenter.onValueUpdate(options.onValueUpdate);
+        if (options.onRootsUpdate !== undefined) presenter.onRootsUpdate(options.onRootsUpdate);
+        if (options.onDivisionsCountUpdate !== undefined) presenter.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+        if (options.onValueNoteDisplayUpdate !== undefined) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
+        if (options.onStylesUpdate !== undefined) presenter.onStylesUpdate(options.onStylesUpdate);
       }
+
+      ;
+
+      function triggerEvents() {
+        if (model.type == model.typeConstants.singleValue) {
+          model.valueUpdateEvent.trigger({
+            value: model.value,
+            selected: model.singleSelected
+          });
+        }
+
+        if (model.type == model.typeConstants.rangeValue) {
+          model.valueUpdateEvent.trigger({
+            minValue: model.minValue,
+            maxValue: model.maxValue,
+            selected: model.rangeSelected
+          });
+        }
+
+        model.typeUpdateEvent.trigger(model.type);
+        model.stepUpdateEvent.trigger(model.step);
+        ;
+        model.limitsUpdateEvent.trigger({
+          minLimit: model.minLimit,
+          maxLimit: model.maxLimit,
+          valuesCount: model.valuesCount
+        });
+        view.stylesUpdateEvent.trigger(Object.assign({}, view.styles));
+        view.valueNoteDisplayUpdateEvent.trigger(view.valueNoteDisplay);
+        view.rootsUpdateEvent.trigger(view.roots);
+        view.divisionsCountUpdateEvent.trigger(view.divisionsCount);
+      }
+
+      ;
     }
 
     ;
@@ -1133,9 +1312,14 @@ var wRunner = function wRunner(options) {
 
         if (this.type == this.typeConstants.rangeValue) {
           // If new value is a object
-          if (helper.isObject(newValue)) {
-            var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
-            var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+          if (helper.isObject(newValue) || newValue == null) {
+            if (newValue == null) {
+              var min = this.rangeMinValue;
+              var max = this.rangeMaxValue;
+            } else {
+              var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
+              var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+            }
 
             if (min > max) {
               var clone = max;
@@ -1228,9 +1412,34 @@ var wRunner = function wRunner(options) {
         return value;
       },
       setType: function setType(type) {
-        if (type !== this.typeConstants.singleValue && type !== this.typeConstants.rangeValue) return;
+        var exist = false;
+
+        for (var constant in this.typeConstants) {
+          if (type === this.typeConstants[constant]) {
+            exist = true;
+            break;
+          }
+        }
+
+        if (!exist) return;
         this.type = type;
         this.typeUpdateEvent.trigger(this.type);
+
+        if (this.type == this.typeConstants.singleValue) {
+          this.valueUpdateEvent.trigger({
+            value: this.value,
+            selected: this.singleSelected
+          });
+        }
+
+        if (this.type == this.typeConstants.rangeValue) {
+          this.valueUpdateEvent.trigger({
+            minValue: this.minValue,
+            maxValue: this.maxValue,
+            selected: this.rangeSelected
+          });
+        }
+
         return this.type;
       },
       getType: function getType() {
@@ -1545,12 +1754,11 @@ var wRunner = function wRunner(options) {
       },
       setStyles: function setStyles(newStyles) {
         if (!helper.isObject(newStyles)) return;
-        var changedStyles = {};
+        var changed = false;
 
         for (prop in newStyles) {
           if (!(prop in this.styles)) continue;
           var mutable = this.styles[prop];
-          var wasChanged = false;
 
           if (newStyles[prop].value !== undefined) {
             if (this.stylesConstants[prop]) {
@@ -1558,25 +1766,24 @@ var wRunner = function wRunner(options) {
                 if (newStyles[prop].value == this.stylesConstants[prop][defs]) {
                   mutable.oldValue = mutable.value;
                   mutable.value = newStyles[prop].value;
-                  wasChanged = true;
+                  changed = true;
                   break;
                 }
               }
             } else {
               mutable.oldValue = mutable.value;
               mutable.value = newStyles[prop].value;
-              wasChanged = true;
+              changed = true;
             }
           }
 
           if (typeof newStyles[prop].className == 'string') {
             mutable.className = newStyles[prop].className;
-            wasChanged = true;
+            changed = true;
           }
-
-          if (wasChanged) changedStyles[prop] = mutable;
         }
 
+        if (!changed) return;
         this.stylesUpdateEvent.trigger(Object.assign({}, this.styles));
         return Object.assign({}, this.styles);
       },
@@ -1699,7 +1906,7 @@ var wRunner = function wRunner(options) {
       onRootsUpdate: function onRootsUpdate(handler) {
         this.view.rootsUpdateEvent.addHandler(handler);
       },
-      onDivisionCountUpdate: function onDivisionCountUpdate(handler) {
+      onDivisionsCountUpdate: function onDivisionsCountUpdate(handler) {
         this.view.divisionsCountUpdateEvent.addHandler(handler);
       } // Event handler
 
@@ -1768,6 +1975,7 @@ var wRunner = function wRunner(options) {
     });
     runInstance();
     applyOptions();
+    triggerEvents();
     return {
       setType: model.setType.bind(model),
       setLimits: model.setLimits.bind(model),
@@ -1792,7 +2000,7 @@ var wRunner = function wRunner(options) {
       onStepUpdate: presenter.onStepUpdate.bind(presenter),
       onLimitsUpdate: presenter.onLimitsUpdate.bind(presenter),
       onTypeUpdate: presenter.onTypeUpdate.bind(presenter),
-      onDivisionCountUpdate: presenter.onDivisionCountUpdate.bind(presenter)
+      onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter)
     };
 
     function runInstance() {
@@ -1805,27 +2013,63 @@ var wRunner = function wRunner(options) {
       view.drawValue(model.getValue(), model.getLimits(), model.getType());
     }
 
+    ;
+
     function applyOptions() {
       // Model
-      if (options.step) model.setStep(options.step);
-      if (options.type) model.setType(options.type);
-      if (options.limits) model.setLimits(options.limits);
-      if (options.value) model.setValue(options.value); // View
+      if (options.step !== undefined) model.setStep(options.step);
+      if (options.type !== undefined) model.setType(options.type);
+      if (options.limits !== undefined) model.setLimits(options.limits);
+      if (options.value !== undefined) model.setValue(options.value); // View
 
-      if (options.roots) view.setRoots(options.roots);
-      if (options.divisionsCount) view.setDivisionsCount(options.divisionsCount);
-      if (options.valueNoteDisplay) view.setValueNoteDisplay(options.valueNoteDisplay);
-      if (options.styles) view.setStyles(options.styles); // Events
+      if (options.roots !== undefined) view.setRoots(options.roots);
+      if (options.divisionsCount !== undefined) view.setDivisionsCount(options.divisionsCount);
+      if (options.valueNoteDisplay !== undefined) view.setValueNoteDisplay(options.valueNoteDisplay);
+      if (options.styles !== undefined) view.setStyles(options.styles); // Events
 
-      if (options.onValueUpdate) presenter.onValueUpdate(options.onValueUpdate);
-      if (options.onStylesUpdate) presenter.onStylesUpdate(options.onStylesUpdate);
-      if (options.onValueNoteDisplayUpdate) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
-      if (options.onRootsUpdate) presenter.onRootsUpdate(options.onRootsUpdate);
-      if (options.onStepUpdate) presenter.onStepUpdate(options.onStepUpdate);
-      if (options.onLimitsUpdate) presenter.onLimitsUpdate(options.onLimitsUpdate);
-      if (options.onTypeUpdate) presenter.onTypeUpdate(options.onTypeUpdate);
-      if (options.onDivisionCountUpdate) presenter.onDivisionCountUpdate(options.onDivisionCountUpdate);
+      if (options.onStepUpdate !== undefined) presenter.onStepUpdate(options.onStepUpdate);
+      if (options.onTypeUpdate !== undefined) presenter.onTypeUpdate(options.onTypeUpdate);
+      if (options.onLimitsUpdate !== undefined) presenter.onLimitsUpdate(options.onLimitsUpdate);
+      if (options.onValueUpdate !== undefined) presenter.onValueUpdate(options.onValueUpdate);
+      if (options.onRootsUpdate !== undefined) presenter.onRootsUpdate(options.onRootsUpdate);
+      if (options.onDivisionsCountUpdate !== undefined) presenter.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+      if (options.onValueNoteDisplayUpdate !== undefined) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
+      if (options.onStylesUpdate !== undefined) presenter.onStylesUpdate(options.onStylesUpdate);
     }
+
+    ;
+
+    function triggerEvents() {
+      if (model.type == model.typeConstants.singleValue) {
+        model.valueUpdateEvent.trigger({
+          value: model.value,
+          selected: model.singleSelected
+        });
+      }
+
+      if (model.type == model.typeConstants.rangeValue) {
+        model.valueUpdateEvent.trigger({
+          minValue: model.minValue,
+          maxValue: model.maxValue,
+          selected: model.rangeSelected
+        });
+      }
+
+      model.typeUpdateEvent.trigger(model.type);
+      model.stepUpdateEvent.trigger(model.step);
+      ;
+      model.limitsUpdateEvent.trigger({
+        minLimit: model.minLimit,
+        maxLimit: model.maxLimit,
+        valuesCount: model.valuesCount
+      });
+      view.stylesUpdateEvent.trigger(Object.assign({}, view.styles));
+      view.valueNoteDisplayUpdateEvent.trigger(view.valueNoteDisplay);
+      view.rootsUpdateEvent.trigger(view.roots);
+      view.divisionsCountUpdateEvent.trigger(view.divisionsCount);
+    }
+
+    ;
   }
 
   ;

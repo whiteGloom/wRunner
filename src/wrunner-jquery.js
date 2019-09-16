@@ -125,9 +125,14 @@
 
 					if (this.type == this.typeConstants.rangeValue) {
 						// If new value is a object
-						if (helper.isObject(newValue)) {
-							var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
-							var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+						if (helper.isObject(newValue) || newValue == null) {
+							if(newValue == null) {
+								var min = this.rangeMinValue;
+								var max = this.rangeMaxValue;
+							} else {
+								var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
+								var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+							}
 
 							if (min > max) {
 								let clone = max;
@@ -228,10 +233,31 @@
 				},
 
 				setType: function(type) {
-					if (type !== this.typeConstants.singleValue && type !== this.typeConstants.rangeValue) return;
+					var exist = false;
+					for (var constant in this.typeConstants) {
+						if (type === this.typeConstants[constant]) {
+							exist = true;
+							break;
+						}
+					}
+
+					if (!exist) return;
 					this.type = type;
 
 					this.typeUpdateEvent.trigger(this.type);
+					if (this.type == this.typeConstants.singleValue) {
+						this.valueUpdateEvent.trigger({
+							value: this.value,
+							selected: this.singleSelected
+						});
+					}
+					if (this.type == this.typeConstants.rangeValue) {
+						this.valueUpdateEvent.trigger({
+							minValue: this.minValue,
+							maxValue: this.maxValue,
+							selected: this.rangeSelected
+						})
+					}
 					return this.type
 				},
 
@@ -392,12 +418,12 @@
 
 						if(dir == this.stylesConstants.direction.horizontalValue) {
 							scale = $(this.path).outerWidth();
-							min = $(this.path).offset().left;
+						min = this.path.getBoundingClientRect().left;
 							pos = event.clientX;
 						}
 						if(dir ==  this.stylesConstants.direction.verticalValue) {
 							scale = $(this.path).outerHeight();
-							min = $(this.path).offset().top;
+						min = this.path.getBoundingClientRect().top;
 							pos = event.clientY;
 						}
 
@@ -736,7 +762,7 @@
 					this.view.rootsUpdateEvent.addHandler(handler);
 				},
 
-				onDivisionCountUpdate: function(handler) {
+				onDivisionsCountUpdate: function(handler) {
 					this.view.divisionsCountUpdateEvent.addHandler(handler);
 				},
 			}
@@ -803,10 +829,9 @@
 
 
 			runInstance();
-
 			view.setRoots(roots);
-			
 			applyOptions();
+			triggerEvents();
 
 			return {
 				setType: model.setType.bind(model),
@@ -836,7 +861,7 @@
 				onStepUpdate: presenter.onStepUpdate.bind(presenter),
 				onLimitsUpdate: presenter.onLimitsUpdate.bind(presenter),
 				onTypeUpdate: presenter.onTypeUpdate.bind(presenter),
-				onDivisionCountUpdate: presenter.onDivisionCountUpdate.bind(presenter)
+				onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter)
 			};
 
 
@@ -848,30 +873,60 @@
 				view.applyValueNoteDisplay();
 				view.applyStyles();
 				view.drawValue(model.getValue(), model.getLimits(), model.getType())
-			}
+			};
 
 			function applyOptions() {
 				// Model
-				if (options.step) model.setStep(options.step);
-				if (options.type) model.setType(options.type);
-				if (options.limits) model.setLimits(options.limits);
-				if (options.value) model.setValue(options.value);
+				if (options.step !== undefined) model.setStep(options.step);
+				if (options.type !== undefined) model.setType(options.type);
+				if (options.limits !== undefined) model.setLimits(options.limits);
+				if (options.value !== undefined) model.setValue(options.value);
 
 				// View
-				if (options.divisionsCount) view.setDivisionsCount(options.divisionsCount);
-				if (options.valueNoteDisplay) view.setValueNoteDisplay(options.valueNoteDisplay);
-				if (options.styles) view.setStyles(options.styles);
+				if (options.divisionsCount !== undefined) view.setDivisionsCount(options.divisionsCount);
+				if (options.valueNoteDisplay !== undefined) view.setValueNoteDisplay(options.valueNoteDisplay);
+				if (options.styles !== undefined) view.setStyles(options.styles);
 
 				// Events
-				if (options.onValueUpdate) presenter.onValueUpdate(options.onValueUpdate);
-				if (options.onStylesUpdate) presenter.onStylesUpdate(options.onStylesUpdate);
-				if (options.onValueNoteDisplayUpdate) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
-				if (options.onRootsUpdate) presenter.onRootsUpdate(options.onRootsUpdate);
-				if (options.onStepUpdate) presenter.onStepUpdate(options.onStepUpdate);
-				if (options.onLimitsUpdate) presenter.onLimitsUpdate(options.onLimitsUpdate);
-				if (options.onTypeUpdate) presenter.onTypeUpdate(options.onTypeUpdate);
-				if (options.onDivisionCountUpdate) presenter.onDivisionCountUpdate(options.onDivisionCountUpdate);
-			}
+				if (options.onStepUpdate !== undefined) presenter.onStepUpdate(options.onStepUpdate);
+				if (options.onTypeUpdate !== undefined) presenter.onTypeUpdate(options.onTypeUpdate);
+				if (options.onLimitsUpdate !== undefined) presenter.onLimitsUpdate(options.onLimitsUpdate);
+				if (options.onValueUpdate !== undefined) presenter.onValueUpdate(options.onValueUpdate);
+				
+				if (options.onRootsUpdate !== undefined) presenter.onRootsUpdate(options.onRootsUpdate);
+				if (options.onDivisionsCountUpdate !== undefined) presenter.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+				if (options.onValueNoteDisplayUpdate !== undefined) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
+				if (options.onStylesUpdate !== undefined) presenter.onStylesUpdate(options.onStylesUpdate);
+			};
+
+			function triggerEvents() {
+				if (model.type == model.typeConstants.singleValue) {
+					model.valueUpdateEvent.trigger({
+						value: model.value,
+						selected: model.singleSelected
+					});
+				}
+				if (model.type == model.typeConstants.rangeValue) {
+					model.valueUpdateEvent.trigger({
+						minValue: model.minValue,
+						maxValue: model.maxValue,
+						selected: model.rangeSelected
+					})
+				}
+
+				model.typeUpdateEvent.trigger(model.type);
+				model.stepUpdateEvent.trigger(model.step);;
+				model.limitsUpdateEvent.trigger({
+					minLimit: model.minLimit,
+					maxLimit: model.maxLimit,
+					valuesCount: model.valuesCount
+				});
+
+				view.stylesUpdateEvent.trigger(Object.assign({}, view.styles));
+				view.valueNoteDisplayUpdateEvent.trigger(view.valueNoteDisplay);
+				view.rootsUpdateEvent.trigger(view.roots);
+				view.divisionsCountUpdateEvent.trigger(view.divisionsCount);
+			};
 		};
 	};
 })($);

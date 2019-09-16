@@ -19,12 +19,11 @@ mixin sampleInstanceMix(options)
 	.sample__instance(id = id)
 		block
 
-mixin parameter(options)
+mixin sampleParameterMix(options)
 	-
 		var options = options ? options : {};
-		var id = options.id ? options.id : '';
-		var name = options.name ? options.name : 'name';
-		var type = options.type ? options.type : 'text';
-	.parameterName= name
-	.parameterValue(id = id)
-		block
+		var name = options.name ? options.name + ':' : 'name:';
+	.sample__parameter
+		em.sample__parameterName= name
+		.sample__parameterValue
+			block

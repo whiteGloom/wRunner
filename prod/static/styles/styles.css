@@ -19,23 +19,40 @@
   width: 50%;
   min-height: 5rem;
   padding: 0.25rem;
-  background-color: #ff0;
 }
 
 .sample__instance {
   width: 50%;
   min-height: 5rem;
   padding: 0.25rem;
-  background-color: #008000;
 }
 
+.sample__parameter {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+.sample__parameter:first-child {
+  margin-top: 0;
+}
 
+.sample__parameterName {
+  font-style: normal;
+  color: #fff;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-right: 1rem;
+}
+
+.sample__parameterValue {
+  width: 100%;
+}
 
 .sample__title {
   text-align: center;
   font-style: normal;
   margin: 0.2rem;
-  color: #ddd;
+  color: #fff;
 }
 
 

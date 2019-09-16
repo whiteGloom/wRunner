@@ -123,9 +123,14 @@ var wRunner = function(options) {
 
 				if (this.type == this.typeConstants.rangeValue) {
 					// If new value is a object
-					if (helper.isObject(newValue)) {
-						var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
-						var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+					if (helper.isObject(newValue) || newValue == null) {
+						if (newValue == null) {
+							var min = this.rangeMinValue;
+							var max = this.rangeMaxValue;
+						} else {
+							var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
+							var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
+						}
 
 						if (min > max) {
 							let clone = max;
@@ -226,10 +231,31 @@ var wRunner = function(options) {
 			},
 
 			setType: function(type) {
-				if (type !== this.typeConstants.singleValue && type !== this.typeConstants.rangeValue) return;
+				var exist = false;
+				for (var constant in this.typeConstants) {
+					if (type === this.typeConstants[constant]) {
+						exist = true;
+						break;
+					}
+				}
+
+				if (!exist) return;
 				this.type = type;
 
 				this.typeUpdateEvent.trigger(this.type);
+				if (this.type == this.typeConstants.singleValue) {
+					this.valueUpdateEvent.trigger({
+						value: this.value,
+						selected: this.singleSelected
+					});
+				}
+				if (this.type == this.typeConstants.rangeValue) {
+					this.valueUpdateEvent.trigger({
+						minValue: this.minValue,
+						maxValue: this.maxValue,
+						selected: this.rangeSelected
+					})
+				}
 				return this.type
 			},
 
@@ -584,11 +610,10 @@ var wRunner = function(options) {
 			setStyles: function(newStyles) {
 				if (!helper.isObject(newStyles)) return;
 
-				var changedStyles = {};
+				var changed = false;
 				for(prop in newStyles) {
 					if(!(prop in this.styles)) continue;
 					var mutable = this.styles[prop];
-					var wasChanged = false;
 
 					if (newStyles[prop].value !== undefined) {
 						if (this.stylesConstants[prop]) {
@@ -596,24 +621,24 @@ var wRunner = function(options) {
 								if (newStyles[prop].value == this.stylesConstants[prop][defs]){
 									mutable.oldValue = mutable.value;
 									mutable.value = newStyles[prop].value;
-									wasChanged = true;
+									changed = true;
 									break;
 								}
 							}
 						} else {
 							mutable.oldValue = mutable.value;
 							mutable.value = newStyles[prop].value;
-							wasChanged = true;
+							changed = true;
 						}
 					}
 
 					if (typeof newStyles[prop].className == 'string') {
 						mutable.className = newStyles[prop].className;
-						wasChanged = true;
+						changed = true;
 					}
-
-					if (wasChanged) changedStyles[prop] = mutable;
 				}
+
+				if(!changed) return;
 
 				this.stylesUpdateEvent.trigger(Object.assign({}, this.styles));
 				return Object.assign({}, this.styles)
@@ -767,7 +792,7 @@ var wRunner = function(options) {
 				this.view.rootsUpdateEvent.addHandler(handler);
 			},
 
-			onDivisionCountUpdate: function(handler) {
+			onDivisionsCountUpdate: function(handler) {
 				this.view.divisionsCountUpdateEvent.addHandler(handler);
 			},
 		}
@@ -834,6 +859,7 @@ var wRunner = function(options) {
 
 		runInstance();
 		applyOptions();
+		triggerEvents();
 
 		return {
 			setType: model.setType.bind(model),
@@ -863,7 +889,7 @@ var wRunner = function(options) {
 			onStepUpdate: presenter.onStepUpdate.bind(presenter),
 			onLimitsUpdate: presenter.onLimitsUpdate.bind(presenter),
 			onTypeUpdate: presenter.onTypeUpdate.bind(presenter),
-			onDivisionCountUpdate: presenter.onDivisionCountUpdate.bind(presenter)
+			onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter)
 		};
 
 
@@ -875,31 +901,61 @@ var wRunner = function(options) {
 			view.applyValueNoteDisplay();
 			view.applyStyles();
 			view.drawValue(model.getValue(), model.getLimits(), model.getType())
-		}
+		};
 
 		function applyOptions() {
 			// Model
-			if (options.step) model.setStep(options.step);
-			if (options.type) model.setType(options.type);
-			if (options.limits) model.setLimits(options.limits);
-			if (options.value) model.setValue(options.value);
+			if (options.step !== undefined) model.setStep(options.step);
+			if (options.type !== undefined) model.setType(options.type);
+			if (options.limits !== undefined) model.setLimits(options.limits);
+			if (options.value !== undefined) model.setValue(options.value);
 
 			// View
-			if (options.roots) view.setRoots(options.roots);
-			if (options.divisionsCount) view.setDivisionsCount(options.divisionsCount);
-			if (options.valueNoteDisplay) view.setValueNoteDisplay(options.valueNoteDisplay);
-			if (options.styles) view.setStyles(options.styles);
+			if (options.roots !== undefined) view.setRoots(options.roots);
+			if (options.divisionsCount !== undefined) view.setDivisionsCount(options.divisionsCount);
+			if (options.valueNoteDisplay !== undefined) view.setValueNoteDisplay(options.valueNoteDisplay);
+			if (options.styles !== undefined) view.setStyles(options.styles);
 
 			// Events
-			if (options.onValueUpdate) presenter.onValueUpdate(options.onValueUpdate);
-			if (options.onStylesUpdate) presenter.onStylesUpdate(options.onStylesUpdate);
-			if (options.onValueNoteDisplayUpdate) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
-			if (options.onRootsUpdate) presenter.onRootsUpdate(options.onRootsUpdate);
-			if (options.onStepUpdate) presenter.onStepUpdate(options.onStepUpdate);
-			if (options.onLimitsUpdate) presenter.onLimitsUpdate(options.onLimitsUpdate);
-			if (options.onTypeUpdate) presenter.onTypeUpdate(options.onTypeUpdate);
-			if (options.onDivisionCountUpdate) presenter.onDivisionCountUpdate(options.onDivisionCountUpdate);
-		}
+			if (options.onStepUpdate !== undefined) presenter.onStepUpdate(options.onStepUpdate);
+			if (options.onTypeUpdate !== undefined) presenter.onTypeUpdate(options.onTypeUpdate);
+			if (options.onLimitsUpdate !== undefined) presenter.onLimitsUpdate(options.onLimitsUpdate);
+			if (options.onValueUpdate !== undefined) presenter.onValueUpdate(options.onValueUpdate);
+
+			if (options.onRootsUpdate !== undefined) presenter.onRootsUpdate(options.onRootsUpdate);
+			if (options.onDivisionsCountUpdate !== undefined) presenter.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+			if (options.onValueNoteDisplayUpdate !== undefined) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
+			if (options.onStylesUpdate !== undefined) presenter.onStylesUpdate(options.onStylesUpdate);
+		};
+
+		function triggerEvents() {
+			if (model.type == model.typeConstants.singleValue) {
+				model.valueUpdateEvent.trigger({
+					value: model.value,
+					selected: model.singleSelected
+				});
+			}
+			if (model.type == model.typeConstants.rangeValue) {
+				model.valueUpdateEvent.trigger({
+					minValue: model.minValue,
+					maxValue: model.maxValue,
+					selected: model.rangeSelected
+				})
+			}
+
+			model.typeUpdateEvent.trigger(model.type);
+			model.stepUpdateEvent.trigger(model.step);;
+			model.limitsUpdateEvent.trigger({
+				minLimit: model.minLimit,
+				maxLimit: model.maxLimit,
+				valuesCount: model.valuesCount
+			});
+
+			view.stylesUpdateEvent.trigger(Object.assign({}, view.styles));
+			view.valueNoteDisplayUpdateEvent.trigger(view.valueNoteDisplay);
+			view.rootsUpdateEvent.trigger(view.roots);
+			view.divisionsCountUpdateEvent.trigger(view.divisionsCount);
+		};
 	};
 };
 
