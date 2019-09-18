@@ -8,6 +8,4 @@
 */
 
 $ = require('jquery');
-wRunnerNative = require('wrunner-nat');
-wRunnerJquery = require('wrunner-jq');
 require('./scripts/scripts.js');

@@ -7,8 +7,6 @@ html
 		meta(charset='utf8')
 		link(rel="stylesheet" type="text/css" href="static/styles/styles.css")
 		link(rel="stylesheet" type="text/css" href="static/styles/wrunner-default-theme.css")
-		script(src='./vendors.js')
-		script(src='./scripts/scripts.js')
 	body
 		+pageMix
 			each title, index in ['Js native', 'Js native', 'jQuery', 'jQuery']
@@ -38,3 +36,7 @@ html
 								input(type='text' id='slider' + index + 'Roots')
 							+sampleParameterMix({name: 'sliderDirection'})
 								input(type='text' id='slider' + index + 'Direction')
+		script(src='./vendors.js')
+		script(src='./scripts/scripts.js')
+		script(src='./wrunner-native.js')
+		script(src='./wrunner-jquery.js')

@@ -1,4 +1,4 @@
-var wRunner = function(options) {
+window.wRunner = function(options) {
 	var options = options ? options : {};
 
 	const helper = new function() {
@@ -62,6 +62,8 @@ var wRunner = function(options) {
 		};
 		this.Model.prototype = {
 			setLimits: function(newLimits, auto) {
+				var newLimits = newLimits ? newLimits : {};
+
 				// If any argument does not fit, it will take a current value.
 				var min = helper.isNumber(newLimits.minLimit) ? +newLimits.minLimit : this.minLimit,
 					max = helper.isNumber(newLimits.maxLimit) ? +newLimits.maxLimit : this.maxLimit;
@@ -147,7 +149,9 @@ var wRunner = function(options) {
 						// Choosing a value to set 
 						if (newValue < (this.rangeMaxValue + this.rangeMinValue) / 2) {
 							set(+newValue, 'rangeMinValue');
+							set(this.rangeMaxValue, 'rangeMaxValue');
 						} else {
+							set(this.rangeMinValue, 'rangeMinValue');
 							set(+newValue, 'rangeMaxValue');
 						};
 					};
@@ -521,7 +525,7 @@ var wRunner = function(options) {
 			},
 
 			drawValue: function(value, limits, currentType) {
-				var pathScale, valueNoteScale;
+				var pathScale, valueNoteScale, valueMinNoteScale, valueMaxNoteScale;
 				var selected = value.selected;
 				
 				var dir = this.styles.direction.value,
@@ -611,7 +615,7 @@ var wRunner = function(options) {
 				if (!helper.isObject(newStyles)) return;
 
 				var changed = false;
-				for(prop in newStyles) {
+				for(var prop in newStyles) {
 					if(!(prop in this.styles)) continue;
 					var mutable = this.styles[prop];
 
@@ -650,7 +654,7 @@ var wRunner = function(options) {
 				for (var i = this.els.length - 1; i >= 0; i--) {
 					var el = this.els[i];
 
-					for(prop in styles) {
+					for(var prop in styles) {
 						var mark = this.els[i].classList[0],
 							oldValue = styles[prop].oldValue,
 							value = styles[prop].value;
@@ -882,14 +886,15 @@ var wRunner = function(options) {
 			getValueNoteDisplay: view.getValueNoteDisplay.bind(view),
 			getDivisionsCount: view.getDivisionsCount.bind(view),
 
-			onValueUpdate: presenter.onValueUpdate.bind(presenter),
-			onStylesUpdate: presenter.onStylesUpdate.bind(presenter),
-			onValueNoteDisplayUpdate: presenter.onValueNoteDisplayUpdate.bind(presenter),
-			onRootsUpdate: presenter.onRootsUpdate.bind(presenter),
 			onStepUpdate: presenter.onStepUpdate.bind(presenter),
-			onLimitsUpdate: presenter.onLimitsUpdate.bind(presenter),
 			onTypeUpdate: presenter.onTypeUpdate.bind(presenter),
-			onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter)
+			onLimitsUpdate: presenter.onLimitsUpdate.bind(presenter),
+			onValueUpdate: presenter.onValueUpdate.bind(presenter),
+
+			onRootsUpdate: presenter.onRootsUpdate.bind(presenter),
+			onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter),
+			onValueNoteDisplayUpdate: presenter.onValueNoteDisplayUpdate.bind(presenter),
+			onStylesUpdate: presenter.onStylesUpdate.bind(presenter),
 		};
 
 
@@ -958,6 +963,3 @@ var wRunner = function(options) {
 		};
 	};
 };
-
-// EXPORT
-module.exports = wRunner;

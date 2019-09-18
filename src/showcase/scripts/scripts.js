@@ -69,7 +69,7 @@ function test() {
 		})
 
 		if (type == 'native') {
-			sliders[index] = wRunnerNative(data);
+			sliders[index] = wRunner(data);
 		} else {
 			sliders[index] = $('#exm' + index).wRunner(data)
 		}
