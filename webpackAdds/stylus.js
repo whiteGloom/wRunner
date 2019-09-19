@@ -28,5 +28,3 @@ module.exports = function(options) {
         ]
     }
 };
-
-// -whiteGloom

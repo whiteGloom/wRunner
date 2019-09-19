@@ -24,5 +24,3 @@ module.exports = function() {
 		aliases({base: folder})
 	])
 }
-
-// -whiteGloom

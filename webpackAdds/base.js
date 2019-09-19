@@ -20,7 +20,7 @@ module.exports = function(options) {
 				switch(data.chunk.name) {
 					case 'styles':
 					case 'wrunner-default-theme':
-						return;
+						return 'scripts/tmp/[name].js';
 						break;
 					case 'showcase':
 						return 'scripts/scripts.js';
@@ -54,8 +54,9 @@ module.exports = function(options) {
 	    resolve : {
 	    	
 	    },
-	    devtool: 'none'
+	    devtool: 'none',
+	    devServer: {
+		    stats: 'errors-only'
+		}
 	}
 }
-
-// -whiteGloom

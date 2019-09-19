@@ -702,16 +702,16 @@ window.wRunner = function(options) {
 		};
 
 		// Presenter
-		this.Presenter = function(parts) {
-			var parts = parts ? parts : {};
+		this.Presenter = function(data) {
+			var data = data ? data : {};
 
-			this.model = parts.model;
-			this.view = parts.view;
+			this.model = data.model;
+			this.view = data.view;
 
 			// Model events
 			this.model.stepUpdateEvent.addHandler(function(data) {
 				this.model.setValue(null, true)
-			}.bind(this))
+			}.bind(this));
 
 			this.model.valueByProgressUpdateEvent.addHandler(function(data) {
 				this.model.setValue(data, true);
@@ -719,55 +719,124 @@ window.wRunner = function(options) {
 
 			this.model.valueUpdateEvent.addHandler(function(data) {
 				this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType())
-			}.bind(this))
+			}.bind(this));
 
 			this.model.limitsUpdateEvent.addHandler(function(data) {
 				this.model.setValue(null, true);
-			}.bind(this))
+			}.bind(this));
 
 			this.model.typeUpdateEvent.addHandler(function(data) {
 				this.view.updateDOM(this.model.getType());
-			}.bind(this))
-
+			}.bind(this));
 
 			// View events
 			this.view.baseDOMGeneratedEvent.addHandler(function(data) {
 				this.view.updateDOM(this.model.getType());
-			}.bind(this))
+			}.bind(this));
 
 			this.view.DOMUpdateEvent.addHandler(function(data) {
 				this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType())
-			}.bind(this))
+			}.bind(this));
 
 			this.view.mouseDownEvent.addHandler(function(data) {
 				this.view.action(data)
-			}.bind(this))
+			}.bind(this));
 
 			this.view.UIValueActionEvent.addHandler(function(data) {
 				this.model.setValueByProgress(data, true)
-			}.bind(this))
+			}.bind(this));
 
 			this.view.stylesUpdateEvent.addHandler(function(data) {
 				this.view.applyStyles();
 				this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType())
-			}.bind(this))
+			}.bind(this));
 
 			this.view.valueNoteDisplayUpdateEvent.addHandler(function(data) {
 				this.view.applyValueNoteDisplay();
 				this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType())
-			}.bind(this))
+			}.bind(this));
 
 			this.view.rootsUpdateEvent.addHandler(function(data) {
 				this.view.append();
-			}.bind(this))
+			}.bind(this));
 
 			this.view.divisionsCountUpdateEvent.addHandler(function(data) {
 				this.view.generateDivisions();
 				this.view.applyStyles();
-			}.bind(this))
+			}.bind(this));
+
+			// Plugin load
+			this.runInstance();
+			this.applyOptions(data.options);
+			this.triggerEvents();
 		};
 
 		this.Presenter.prototype = {
+			runInstance: function() {
+				this.view.generateBaseDOM();
+				this.view.generateDivisions();
+				this.view.append();
+				this.view.applyValueNoteDisplay();
+				this.view.applyStyles();
+				this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+			},
+
+			applyOptions: function(options) {
+				var options = options ? options : {};
+
+				// Model
+				if (options.step !== undefined) this.model.setStep(options.step);
+				if (options.type !== undefined) this.model.setType(options.type);
+				if (options.limits !== undefined) this.model.setLimits(options.limits);
+				if (options.value !== undefined) this.model.setValue(options.value);
+
+				// View
+				if (options.roots !== undefined) this.view.setRoots(options.roots);
+				if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
+				if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
+				if (options.styles !== undefined) this.view.setStyles(options.styles);
+
+				// Events
+				if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
+				if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
+				if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
+				if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
+
+				if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
+				if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+				if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
+				if (options.onStylesUpdate !== undefined) this.onStylesUpdate(options.onStylesUpdate);
+			},
+
+			triggerEvents: function() {
+				if (this.model.type == this.model.typeConstants.singleValue) {
+					this.model.valueUpdateEvent.trigger({
+						value: this.model.value,
+						selected: this.model.singleSelected
+					});
+				}
+				if (this.model.type == this.model.typeConstants.rangeValue) {
+					this.model.valueUpdateEvent.trigger({
+						minValue: this.model.minValue,
+						maxValue: this.model.maxValue,
+						selected: this.model.rangeSelected
+					})
+				}
+
+				this.model.typeUpdateEvent.trigger(this.model.type);
+				this.model.stepUpdateEvent.trigger(this.model.step);;
+				this.model.limitsUpdateEvent.trigger({
+					minLimit: this.model.minLimit,
+					maxLimit: this.model.maxLimit,
+					valuesCount: this.model.valuesCount
+				});
+
+				this.view.stylesUpdateEvent.trigger(Object.assign({}, this.view.styles));
+				this.view.valueNoteDisplayUpdateEvent.trigger(this.view.valueNoteDisplay);
+				this.view.rootsUpdateEvent.trigger(this.view.roots);
+				this.view.divisionsCountUpdateEvent.trigger(this.view.divisionsCount);
+			},
+
 			onValueUpdate: function(handler) {
 				this.model.valueUpdateEvent.addHandler(handler);
 			},
@@ -856,14 +925,9 @@ window.wRunner = function(options) {
 
 
 	function newInstance() {
-
 		var model = new structure.Model(),
 			view = new structure.View(),
-			presenter = new structure.Presenter({model: model, view: view});
-
-		runInstance();
-		applyOptions();
-		triggerEvents();
+			presenter = new structure.Presenter({model: model, view: view, options: options});
 
 		return {
 			setType: model.setType.bind(model),
@@ -895,71 +959,6 @@ window.wRunner = function(options) {
 			onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter),
 			onValueNoteDisplayUpdate: presenter.onValueNoteDisplayUpdate.bind(presenter),
 			onStylesUpdate: presenter.onStylesUpdate.bind(presenter),
-		};
-
-
-		function runInstance() {
-			// View
-			view.generateBaseDOM();
-			view.generateDivisions();
-			view.append();
-			view.applyValueNoteDisplay();
-			view.applyStyles();
-			view.drawValue(model.getValue(), model.getLimits(), model.getType())
-		};
-
-		function applyOptions() {
-			// Model
-			if (options.step !== undefined) model.setStep(options.step);
-			if (options.type !== undefined) model.setType(options.type);
-			if (options.limits !== undefined) model.setLimits(options.limits);
-			if (options.value !== undefined) model.setValue(options.value);
-
-			// View
-			if (options.roots !== undefined) view.setRoots(options.roots);
-			if (options.divisionsCount !== undefined) view.setDivisionsCount(options.divisionsCount);
-			if (options.valueNoteDisplay !== undefined) view.setValueNoteDisplay(options.valueNoteDisplay);
-			if (options.styles !== undefined) view.setStyles(options.styles);
-
-			// Events
-			if (options.onStepUpdate !== undefined) presenter.onStepUpdate(options.onStepUpdate);
-			if (options.onTypeUpdate !== undefined) presenter.onTypeUpdate(options.onTypeUpdate);
-			if (options.onLimitsUpdate !== undefined) presenter.onLimitsUpdate(options.onLimitsUpdate);
-			if (options.onValueUpdate !== undefined) presenter.onValueUpdate(options.onValueUpdate);
-
-			if (options.onRootsUpdate !== undefined) presenter.onRootsUpdate(options.onRootsUpdate);
-			if (options.onDivisionsCountUpdate !== undefined) presenter.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
-			if (options.onValueNoteDisplayUpdate !== undefined) presenter.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
-			if (options.onStylesUpdate !== undefined) presenter.onStylesUpdate(options.onStylesUpdate);
-		};
-
-		function triggerEvents() {
-			if (model.type == model.typeConstants.singleValue) {
-				model.valueUpdateEvent.trigger({
-					value: model.value,
-					selected: model.singleSelected
-				});
-			}
-			if (model.type == model.typeConstants.rangeValue) {
-				model.valueUpdateEvent.trigger({
-					minValue: model.minValue,
-					maxValue: model.maxValue,
-					selected: model.rangeSelected
-				})
-			}
-
-			model.typeUpdateEvent.trigger(model.type);
-			model.stepUpdateEvent.trigger(model.step);;
-			model.limitsUpdateEvent.trigger({
-				minLimit: model.minLimit,
-				maxLimit: model.maxLimit,
-				valuesCount: model.valuesCount
-			});
-
-			view.stylesUpdateEvent.trigger(Object.assign({}, view.styles));
-			view.valueNoteDisplayUpdateEvent.trigger(view.valueNoteDisplay);
-			view.rootsUpdateEvent.trigger(view.roots);
-			view.divisionsCountUpdateEvent.trigger(view.divisionsCount);
 		};
 	};
 };
