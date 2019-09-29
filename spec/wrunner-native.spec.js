@@ -5,7 +5,9 @@ const window = (new JSDOM('<body><div id="root"></div></body>', { runScripts: "o
 global.window = window;
 global.document = window.document;
 
-wRunner = require('../wrunner-native');
+require('../prod/wrunner-native');
+
+var wRunner = window.wRunner;
 
 // PREPARATIONS
 // Helper functions.

@@ -10,9 +10,9 @@ module.exports = function(options) {
 		entry: {
 			'showcase': base + '/src/showcase/index.js',
 			'styles': base + '/src/showcase/static.js',
-			'wrunner-native': base + '/src/wrunner-native.js',
-			'wrunner-jquery': base + '/src/wrunner-jquery.js',
-			'wrunner-default-theme': base + '/src/wrunner-default-theme.js',
+			'wrunner-native': base + '/src/slider-js-native/wrunner-native.js',
+			'wrunner-jquery': base + '/src/slider-jquery/wrunner-jquery.js',
+			'wrunner-default-theme': base + '/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js',
 		},
 		output: {
 			path: base + '/prod/',

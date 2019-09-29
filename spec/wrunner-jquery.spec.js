@@ -7,7 +7,7 @@ global.window = window;
 global.document = window.document;
 
 $ = require('jquery');
-require('../wrunner-jquery');
+require('../prod/wrunner-jquery');
 
 // PREPARATIONS
 // Helper functions.
