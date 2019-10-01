@@ -1,10 +1,10 @@
 /*
-    Файл с основной информацией.
+	Файл с основной информацией.
 */
 
 module.exports = function(options) {
-    var options = options ? options : {};
-    var base = options.base;
+	var options = options ? options : {};
+	var base = options.base;
 	return {
 		mode: 'development',
 		entry: {
@@ -31,32 +31,33 @@ module.exports = function(options) {
 				}
 			}
 		},
-	    module: {
-	        rules: [
+		module: {
+			rules: [
 
-	        ]
-	    },
-	    plugins: [
-	    
-	    ],
-	    optimization: {
-    		splitChunks: {
+			]
+		},
+		plugins: [
+		
+		],
+		optimization: {
+			splitChunks: {
 				cacheGroups: {
 					vendors: {
 						test: /[\\/](vendors|node_modules)[\\/]/,
 						name: 'vendors',
+						filename: '[name].js',
 						chunks: 'all'
 					},
 					default: false
 				}
 			}
 		},
-	    resolve : {
-	    	
-	    },
-	    devtool: 'none',
-	    devServer: {
-		    stats: 'errors-only'
+		resolve : {
+			
+		},
+		devtool: 'none',
+		devServer: {
+			stats: 'errors-only'
 		}
 	}
 }
