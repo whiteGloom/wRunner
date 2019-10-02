@@ -2,8 +2,8 @@ import modelModule from './model/model.js';
 import viewModule from './view/view.js';
 import presenterModule from './presenter/presenter.js';
 
-window.wRunner = function(options) {
-	var options = options ? options : {};
+window.wRunner = function(instanceOptions) {
+	var instanceOptions = instanceOptions ? instanceOptions : {};
 
 	const structure = new function() {
 		// Model
@@ -22,12 +22,14 @@ window.wRunner = function(options) {
 	function newInstance() {
 		var model = new structure.Model(),
 			view = new structure.View(),
-			presenter = new structure.Presenter({model: model, view: view, options: options});
+			presenter = new structure.Presenter({model: model, view: view, instanceOptions: instanceOptions});
 
 		return {
 			setType: model.setType.bind(model),
 			setLimits: model.setLimits.bind(model),
-			setValue: model.setValue.bind(model),
+			setSingleValue: model.setSingleValue.bind(model),
+			setRangeValue: model.setRangeValue.bind(model),
+			setNearestValueViaPercents: model.setNearestValueViaPercents.bind(model),
 			setStep: model.setStep.bind(model),
 
 			getType: model.getType.bind(model),
@@ -53,7 +55,7 @@ window.wRunner = function(options) {
 			onRootsUpdate: presenter.onRootsUpdate.bind(presenter),
 			onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter),
 			onValueNoteDisplayUpdate: presenter.onValueNoteDisplayUpdate.bind(presenter),
-			onStylesUpdate: presenter.onStylesUpdate.bind(presenter),
+			onStylesUpdate: presenter.onStylesUpdate.bind(presenter)
 		};
 	};
 };

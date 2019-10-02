@@ -1,24 +1,30 @@
-import makeEvent from '../../event.js';
-import helper from '../../helper.js';
+import makeEventModule from '../../event.js';
+import helperModule from '../../helper.js';
+
+const helper = helperModule;
+const makeEvent = makeEventModule;
 
 function Model() {
 	// Defaults
 	this.minLimit = 0;
 	this.maxLimit = 100;
 	this.valuesCount = this.maxLimit - this.minLimit;
+
 	this.singleValue = 50;
 	this.rangeMinValue = 20;
 	this.rangeMaxValue = 80;
 	this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
 	this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100;
+
 	this.step = 1;
+	
 	this.type = 'single';
 	this.typeConstants = {
 		singleValue: 'single',
 		rangeValue: 'range',
 	};
 
-	this.valueByProgressUpdateEvent = makeEvent();
+
 	this.valueUpdateEvent = makeEvent();
 	this.limitsUpdateEvent = makeEvent();
 	this.stepUpdateEvent = makeEvent();
@@ -27,7 +33,7 @@ function Model() {
 };
 
 Model.prototype = {
-	setLimits: function(newLimits, auto) {
+	setLimits(newLimits, auto) {
 		var newLimits = newLimits ? newLimits : {}
 
 		// If any argument does not fit, it will take a current value.
@@ -60,7 +66,7 @@ Model.prototype = {
 		};
 	},
 
-	getLimits: function() {
+	getLimits() {
 		return {
 			minLimit: this.minLimit,
 			maxLimit: this.maxLimit,
@@ -68,100 +74,112 @@ Model.prototype = {
 		}
 	},
 
-	setValue: function(newValue, auto) {
-		var set = setTo.bind(this);
+	setSingleValue(value, auto){
+		var value = helper.isNumber(value) ? +value : this.singleValue;
+		this.setAValueTo(value, 'singleValue', true);
 
-		if(this.type == this.typeConstants.singleValue) {
-			var val = helper.isNumber(newValue) ? +newValue : this.singleValue;
-			set(val, 'singleValue');
+		// Update selected
+		this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
 
-			// Update selected
-			this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
+		// Returns
+		this.valueUpdateEvent.trigger({
+			value: this.singleValue,
+			selected: this.singleSelected
+		});
+		return {
+			value: this.singleValue,
+			selected: this.singleSelected
+		}
+	},
 
-			// Returns
-			this.valueUpdateEvent.trigger({
-				value: this.singleValue,
-				selected: this.singleSelected
-			});
-			return {
-				value: this.singleValue,
-				selected: this.singleSelected
-			}
+	setRangeValue(values, auto) {
+		if (typeof values !== 'object') return;
+
+		if (values == null) {
+			var min = this.rangeMinValue;
+			var max = this.rangeMaxValue;
+		} else {
+			var min = helper.isNumber(values.minValue) ? +values.minValue : this.rangeMinValue;
+			var max = helper.isNumber(values.maxValue) ? +values.maxValue : this.rangeMaxValue;
 		};
 
-		if (this.type == this.typeConstants.rangeValue) {
-			// If new value is a object
-			if (helper.isObject(newValue) || newValue == null) {
-				if(newValue == null) {
-					var min = this.rangeMinValue;
-					var max = this.rangeMaxValue;
-				} else {
-					var min = helper.isNumber(newValue.minValue) ? +newValue.minValue : this.rangeMinValue;
-					var max = helper.isNumber(newValue.maxValue) ? +newValue.maxValue : this.rangeMaxValue;
-				};
+		if (min > max) {
+			let clone = max;
+			max = min;
+			min = clone;
+		}
+		
+		this.setAValueTo(min, 'rangeMinValue');
+		this.setAValueTo(max, 'rangeMaxValue');
 
-				if (min > max) {
-					let clone = max;
-					max = min;
-					min = clone;
-				};
 
-				set(min, 'rangeMinValue');
-				set(max, 'rangeMaxValue');
-			};
+		// Update selected
+		this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100;
 
-			// If new value is a number
-			if (helper.isNumber(newValue)) {
-				// Choosing a value to set 
-				if (newValue < (this.rangeMaxValue + this.rangeMinValue) / 2) {
-					set(+newValue, 'rangeMinValue');
-					set(this.rangeMaxValue, 'rangeMaxValue');
-				} else {
-					set(this.rangeMinValue, 'rangeMinValue');
-					set(+newValue, 'rangeMaxValue');
-				}			
-			};
+		// Returns
+		this.valueUpdateEvent.trigger({
+			minValue: this.rangeMinValue,
+			maxValue: this.rangeMaxValue,
+			selected: this.rangeSelected,
+		});
+		return {
+			minValue: this.rangeMinValue,
+			maxValue: this.rangeMaxValue,
+			selected: this.rangeSelected,
+		}
+	},
 
-			// Update selected
-			this.rangeSelected = (this.rangeMaxValue - this.rangeMinValue) / this.valuesCount * 100;
-
-			// Returns
-			this.valueUpdateEvent.trigger({
-				minValue: this.rangeMinValue,
-				maxValue: this.rangeMaxValue,
-				selected: this.rangeSelected,
-			});
-			return {
-				minValue: this.rangeMinValue,
-				maxValue: this.rangeMaxValue,
-				selected: this.rangeSelected,
-			}
+	recalculateValue() {
+		if (this.type === this.typeConstants.singleValue) {
+			return this.setSingleValue(null, true);
 		}
 
-		// Setter
-		function setTo(newValue, mutable) {
-			var stepped;
+		if (this.type === this.typeConstants.rangeValue) {
+			return this.setRangeValue(null, true);
+		}
+	},
 
-			// Calculating stepped value.
-			if (+newValue != this[mutable]) {
-				stepped = this[mutable] - Math.round((this[mutable] - +newValue) / this.step) * this.step;
-			} else {
-				stepped = Math.round(this[mutable] / this.step) * this.step;
-			};
+	setNearestValueViaPercents(percents) {
+		if (!helper.isNumber(percents)) return;
 
-			if (stepped < this.minLimit) {
-				this[mutable] = this.minLimit;
-				if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
-			} else if (stepped > this.maxLimit) {
-				this[mutable] = this.maxLimit;
-				if (!auto) console.log('The value was equated to the maximum, because it is more than the maximum value.');
+		var value = Math.round(this.valuesCount * +percents / 100 + this.minLimit);
+
+		if (this.type === this.typeConstants.singleValue) {
+			return this.setSingleValue(value, true);
+		}
+
+		if (this.type === this.typeConstants.rangeValue) {
+			if (value < (this.rangeMinValue + this.rangeMaxValue) / 2) {
+				return this.setRangeValue({minValue: +value}, true);
 			} else {
-				this[mutable] = stepped;
+				return this.setRangeValue({maxValue: +value}, true);
 			};
 		}
 	},
 
-	getValue: function() {
+	setAValueTo(value, mutable, auto) {
+		var stepped;
+
+		// Calculating a stepped value.
+		if (+value !== this[mutable]) {
+			stepped = this[mutable] - Math.round((this[mutable] - +value) / this.step) * this.step;
+		} else {
+			stepped = Math.round(this[mutable] / this.step) * this.step;
+		};
+
+		// Changing a mutable value.
+		if (stepped < this.minLimit) {
+			this[mutable] = this.minLimit;
+			if (!auto) console.log('The value was equated to the minimum, because it is less than the minimum value.');
+		} else if (stepped > this.maxLimit) {
+			this[mutable] = this.maxLimit;
+			if (!auto) console.log('The value was equated to the maximum, because it is more than the maximum value.');
+		} else {
+			this[mutable] = stepped;
+		};
+	},
+
+	getValue() {
 		if(this.type == this.typeConstants.singleValue) {
 			return {
 				value: this.singleValue,
@@ -178,7 +196,7 @@ Model.prototype = {
 		};
 	},
 
-	setStep: function(newStep) {
+	setStep(newStep) {
 		if (!helper.isNumber(newStep) || newStep <= 0) return;
 		this.step = +newStep;
 
@@ -186,21 +204,11 @@ Model.prototype = {
 		return this.step;
 	},
 
-	getStep: function() {
+	getStep() {
 		return this.step;
 	},
 
-	// Function that calculating new value by click or drag.
-	setValueByProgress: function(progress) {
-		if (!helper.isNumber(progress)) return;
-
-		var value = Math.round(this.valuesCount * +progress / 100 + this.minLimit);
-
-		this.valueByProgressUpdateEvent.trigger(value);
-		return value
-	},
-
-	setType: function(type) {
+	setType(type) {
 		var exist = false;
 		for (var constant in this.typeConstants) {
 			if (type === this.typeConstants[constant]) {
@@ -229,7 +237,7 @@ Model.prototype = {
 		return this.type
 	},
 
-	getType: function() {
+	getType() {
 		return {
 			type: this.type,
 			typeConstants: Object.assign({}, this.typeConstants)

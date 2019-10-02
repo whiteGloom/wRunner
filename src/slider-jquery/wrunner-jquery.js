@@ -3,9 +3,9 @@ import viewModule from './view/view.js';
 import presenterModule from './presenter/presenter.js';
 
 ;(function($){
-	$.fn.wRunner = function(options) {
-		var options = options ? options : {};
-		options.roots = this[0];
+	$.fn.wRunner = function(instanceOptions) {
+		var instanceOptions = instanceOptions ? instanceOptions : {};
+		instanceOptions.roots = this[0];
 
 		const structure = new function() {
 			// Model
@@ -25,12 +25,14 @@ import presenterModule from './presenter/presenter.js';
 
 			var model = new structure.Model(),
 				view = new structure.View(),
-				presenter = new structure.Presenter({model: model, view: view, options: options});
+				presenter = new structure.Presenter({model: model, view: view, instanceOptions: instanceOptions});
 
 			return {
 				setType: model.setType.bind(model),
 				setLimits: model.setLimits.bind(model),
-				setValue: model.setValue.bind(model),
+				setSingleValue: model.setSingleValue.bind(model),
+				setRangeValue: model.setRangeValue.bind(model),
+				setNearestValueViaPercents: model.setNearestValueViaPercents.bind(model),
 				setStep: model.setStep.bind(model),
 
 				getType: model.getType.bind(model),
@@ -52,11 +54,11 @@ import presenterModule from './presenter/presenter.js';
 				onTypeUpdate: presenter.onTypeUpdate.bind(presenter),
 				onLimitsUpdate: presenter.onLimitsUpdate.bind(presenter),
 				onValueUpdate: presenter.onValueUpdate.bind(presenter),
-	
+
 				onRootsUpdate: presenter.onRootsUpdate.bind(presenter),
 				onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter),
 				onValueNoteDisplayUpdate: presenter.onValueNoteDisplayUpdate.bind(presenter),
-				onStylesUpdate: presenter.onStylesUpdate.bind(presenter),
+				onStylesUpdate: presenter.onStylesUpdate.bind(presenter)
 			};
 		};
 	};

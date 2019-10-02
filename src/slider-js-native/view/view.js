@@ -1,5 +1,8 @@
-import makeEvent from '../../event.js';
-import helper from '../../helper.js';
+import makeEventModule from '../../event.js';
+import helperModule from '../../helper.js';
+
+const makeEvent = makeEventModule;
+const helper = helperModule; 
 
 function View() {
 	// Defaults
@@ -90,7 +93,7 @@ function View() {
 };
 
 View.prototype = {
-	generateBaseDOM: function() {
+	generateBaseDOM() {
 		// Base
 		this.base.classList.add('wrunner');
 
@@ -119,7 +122,7 @@ View.prototype = {
 		this.baseDOMGeneratedEvent.trigger();
 	},
 
-	updateDOM: function(type) {
+	updateDOM(type) {
 		this.path.innerHTML = '';
 		this.outer.innerHTML = '';
 
@@ -142,7 +145,7 @@ View.prototype = {
 		this.DOMUpdateEvent.trigger();
 	},
 
-	action: function(event) {
+	action(event) {
 		var	dragged = false,
 			moveBind = move.bind(this);
 
@@ -202,12 +205,12 @@ View.prototype = {
 		};
 	},
 
-	append: function() {
+	append() {
 		this.roots.appendChild(this.base);
 		return this.roots;
 	},
 
-	setRoots: function(roots) {
+	setRoots(roots) {
 		if (!helper.isDomEl(roots)) return;
 		this.roots = roots;
 
@@ -216,11 +219,11 @@ View.prototype = {
 		return this.roots;
 	},
 
-	getRoots: function() {
+	getRoots() {
 		return this.roots;
 	},
 
-	generateDivisions: function() {
+	generateDivisions() {
 		this.divisions.innerHTML = '';
 		this.divisionsList.length = 0;
 
@@ -235,7 +238,7 @@ View.prototype = {
 		return this.divisionsList
 	},
 
-	setDivisionsCount: function(count, auto) {
+	setDivisionsCount(count, auto) {
 		if (!helper.isNumber(count) || count < 0) return;
 
 		var count = Math.round(count);
@@ -250,11 +253,11 @@ View.prototype = {
 		return this.divisionsCount;
 	},
 
-	getDivisionsCount: function() {
+	getDivisionsCount() {
 		return this.divisionsCount;
 	},
 
-	drawValue: function(value, limits, currentType) {
+	drawValue(value, limits, currentType) {
 		var pathScale, valueNoteScale, valueMinNoteScale, valueMaxNoteScale;
 		var selected = value.selected;
 		
@@ -341,7 +344,7 @@ View.prototype = {
 		return value
 	},
 
-	setStyles: function(newStyles) {
+	setStyles(newStyles) {
 		if (!helper.isObject(newStyles)) return;
 
 		var changed = false;
@@ -378,7 +381,7 @@ View.prototype = {
 		return Object.assign({}, this.styles)
 	},
 
-	applyStyles: function() {
+	applyStyles() {
 		var styles = this.styles;
 
 		for (var i = this.els.length - 1; i >= 0; i--) {
@@ -398,14 +401,14 @@ View.prototype = {
 		return Object.assign({}, this.styles)
 	},
 
-	getStyles: function() {
+	getStyles() {
 		return {
 			styles: Object.assign({}, this.styles),
 			stylesConstants: Object.assign({}, this.stylesConstants)
 		}
 	},
 
-	applyValueNoteDisplay: function() {
+	applyValueNoteDisplay() {
 		var mark = this.valueNote.classList[0];
 		var els = [this.valueNote, this.valueMinNote, this.valueMaxNote];
 
@@ -418,7 +421,7 @@ View.prototype = {
 		return this.valueNoteDisplay
 	},
 
-	setValueNoteDisplay: function(value) {
+	setValueNoteDisplay(value) {
 		if (typeof value !== 'boolean') return;
 		this.valueNoteDisplay = value;
 
@@ -426,7 +429,7 @@ View.prototype = {
 		return this.valueNoteDisplay;
 	},
 
-	getValueNoteDisplay: function() {
+	getValueNoteDisplay() {
 		return this.valueNoteDisplay;
 	},
 };

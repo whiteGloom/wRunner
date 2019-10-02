@@ -87,15 +87,15 @@ function test() {
 		});
 
 		controllers[index]['slider' + index + 'Value'].addEventListener('input', function(e){
-			sliders[index].setValue(controllers[index]['slider' + index + 'Value'].value)
+			sliders[index].setSingleValue(controllers[index]['slider' + index + 'Value'].value)
 		});
 
 		controllers[index]['slider' + index + 'MinValue'].addEventListener('input', function(e){
-			sliders[index].setValue({minValue: controllers[index]['slider' + index + 'MinValue'].value})
+			sliders[index].setRangeValue({minValue: controllers[index]['slider' + index + 'MinValue'].value})
 		});
 
 		controllers[index]['slider' + index + 'MaxValue'].addEventListener('input', function(e){
-			sliders[index].setValue({maxValue: controllers[index]['slider' + index + 'MaxValue'].value})
+			sliders[index].setRangeValue({maxValue: controllers[index]['slider' + index + 'MaxValue'].value})
 		});
 
 		controllers[index]['slider' + index + 'Type'].addEventListener('input', function(e) {
