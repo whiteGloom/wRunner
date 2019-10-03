@@ -1,5 +1,5 @@
-import makeEvent from '../../event.js';
-import helper from '../../helper.js';
+import makeEvent from 'event';
+import helper from 'helper';
 
 function Presenter(options) {
 	var options = options ? options : {};

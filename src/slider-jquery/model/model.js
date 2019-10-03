@@ -1,5 +1,5 @@
-import makeEventModule from '../../event.js';
-import helperModule from '../../helper.js';
+import makeEventModule from 'event';
+import helperModule from 'helper';
 
 const helper = helperModule;
 const makeEvent = makeEventModule;
