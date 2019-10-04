@@ -1,11 +1,5 @@
-import makeEventModule from 'event';
-import helperModule from 'helper';
-
-const makeEvent = makeEventModule;
-const helper = helperModule; 
-
 function Presenter(options) {
-	var options = options ? options : {};
+	options = options ? options : {};
 
 	this.model = options.model;
 	this.view = options.view;
@@ -15,7 +9,7 @@ function Presenter(options) {
 	this.initInstance();
 	this.applyOptions(options.instanceOptions);
 	this.triggerEvents();
-};
+}
 
 Presenter.prototype = {
 	initInstance() {
@@ -28,7 +22,7 @@ Presenter.prototype = {
 	},
 
 	applyOptions(options) {
-		var options = options ? options : {};
+		options = options ? options : {};
 
 		// Model
 		if (options.step !== undefined) this.model.setStep(options.step);
@@ -62,7 +56,7 @@ Presenter.prototype = {
 		}.bind(this));
 
 		this.model.valueUpdateEvent.addHandler(function(data) {
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType())
+			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 		}.bind(this));
 
 		this.model.limitsUpdateEvent.addHandler(function(data) {
@@ -81,25 +75,25 @@ Presenter.prototype = {
 		}.bind(this));
 
 		this.view.DOMUpdateEvent.addHandler(function(data) {
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType())
+			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 		}.bind(this));
 
 		this.view.mouseDownEvent.addHandler(function(data) {
-			this.view.action(data)
+			this.view.action(data);
 		}.bind(this));
 
 		this.view.UIValueActionEvent.addHandler(function(data) {
-			this.model.setNearestValueViaPercents(data, true)
+			this.model.setNearestValueViaPercents(data, true);
 		}.bind(this));
 
 		this.view.stylesUpdateEvent.addHandler(function(data) {
 			this.view.applyStyles();
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType())
+			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 		}.bind(this));
 
 		this.view.valueNoteDisplayUpdateEvent.addHandler(function(data) {
 			this.view.applyValueNoteDisplay();
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType())
+			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 		}.bind(this));
 
 		this.view.rootsUpdateEvent.addHandler(function(data) {
@@ -124,11 +118,11 @@ Presenter.prototype = {
 				minValue: this.model.minValue,
 				maxValue: this.model.maxValue,
 				selected: this.model.rangeSelected
-			})
+			});
 		}
 
 		this.model.typeUpdateEvent.trigger(this.model.type);
-		this.model.stepUpdateEvent.trigger(this.model.step);;
+		this.model.stepUpdateEvent.trigger(this.model.step);
 		this.model.limitsUpdateEvent.trigger({
 			minLimit: this.model.minLimit,
 			maxLimit: this.model.maxLimit,
@@ -171,7 +165,7 @@ Presenter.prototype = {
 
 	onDivisionsCountUpdate(handler) {
 		this.view.divisionsCountUpdateEvent.addHandler(handler);
-	},
-}
+	}
+};
 
-export default Presenter
+export default Presenter;

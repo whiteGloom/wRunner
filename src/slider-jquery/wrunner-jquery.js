@@ -1,10 +1,10 @@
-import modelModule from './model/model.js';
-import viewModule from './view/view.js';
-import presenterModule from './presenter/presenter.js';
+import modelModule from "./model/model.js";
+import viewModule from "./view/view.js";
+import presenterModule from "./presenter/presenter.js";
 
 ;(function($){
 	$.fn.wRunner = function(instanceOptions) {
-		var instanceOptions = instanceOptions ? instanceOptions : {};
+		instanceOptions = instanceOptions ? instanceOptions : {};
 		instanceOptions.roots = this[0];
 
 		const structure = new function() {
@@ -16,7 +16,7 @@ import presenterModule from './presenter/presenter.js';
 
 			// Presenter
 			this.Presenter = presenterModule;
-		}
+		};
 
 		return newInstance();
 
@@ -60,6 +60,6 @@ import presenterModule from './presenter/presenter.js';
 				onValueNoteDisplayUpdate: presenter.onValueNoteDisplayUpdate.bind(presenter),
 				onStylesUpdate: presenter.onStylesUpdate.bind(presenter)
 			};
-		};
+		}
 	};
 })($);

@@ -4,17 +4,17 @@ function makeEvent() {
 
 	// Add a new handler.
 	var addHandler = function(handler) {
-		if (typeof handler !== 'function') {
-			console.log('The handler must be a function');
-			return
-		};
+		if (typeof handler !== "function") {
+			console.log("The handler must be a function");
+			return;
+		}
 	
 		for (var i = 0; i < handlers.length; i++) {
 			if (handlers[i] === handler) {
-				console.log('The handler already in the list');
-				return
+				console.log("The handler already in the list");
+				return;
 			}
-		};
+		}
 
 		handlers.push(handler);
 	};
@@ -27,7 +27,7 @@ function makeEvent() {
 				return;
 			}
 		}
-		console.log('could not find observer in list of observers');
+		console.log("could not find observer in list of observers");
 	};
 
 
@@ -43,8 +43,8 @@ function makeEvent() {
 	return {
 		addHandler: addHandler,
 		removeHandler: removeHandler,
-		trigger: trigger,
+		trigger: trigger
 	};
 }
 
-export default makeEvent
+export default makeEvent;

@@ -1,18 +1,17 @@
-/*
-    Файл со списком сокращений.
-*/
+const package = require("../package.json");
 
 module.exports = function(options) {
-    var options = options ? options : {};
-    var base = options.base;
-    return {
-        resolve : {
-            alias: {
-                'helper': base + '/src/helper.js',
-                'event': base + '/src/event.js',
-                'wrunner-nat': base + '/src/wrunner-native',
-                'wrunner-jq': base + '/src/wrunner-jquery'
-            }
-        }
-    }
+	options = options ? options : {};
+	var base = options.base;
+
+	var aliases = {};
+	for(var key in package._moduleAliases){
+		aliases[key] = base + package._moduleAliases[key].slice(1)
+	};
+
+	return {
+		resolve: {
+			alias: aliases
+		}
+	};
 };

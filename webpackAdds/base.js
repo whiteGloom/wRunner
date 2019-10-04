@@ -1,33 +1,26 @@
-/*
-	Файл с основной информацией.
-*/
-
 module.exports = function(options) {
-	var options = options ? options : {};
+	options = options ? options : {};
 	var base = options.base;
 	return {
-		mode: 'development',
+		mode: "development",
 		entry: {
-			'showcase': base + '/src/showcase/index.js',
-			'styles': base + '/src/showcase/static.js',
-			'wrunner-native': base + '/src/slider-js-native/wrunner-native.js',
-			'wrunner-jquery': base + '/src/slider-jquery/wrunner-jquery.js',
-			'wrunner-default-theme': base + '/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js',
+			"showcase": base + "/src/showcase/index.js",
+			"styles": base + "/src/showcase/static.js",
+			"wrunner-native": base + "/src/slider-js-native/wrunner-native.js",
+			"wrunner-jquery": base + "/src/slider-jquery/wrunner-jquery.js",
+			"wrunner-default-theme": base + "/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js"
 		},
 		output: {
-			path: base + '/prod/',
+			path: base + "/prod/",
 			filename: (data) => {
 				switch(data.chunk.name) {
-					case 'styles':
-					case 'wrunner-default-theme':
-						return 'scripts/tmp/[name].js';
-						break;
-					case 'showcase':
-						return 'scripts/scripts.js';
-						break;
+					case "styles":
+					case "wrunner-default-theme":
+						return "scripts/tmp/[name].js";
+					case "showcase":
+						return "scripts/scripts.js";
 					default: 
-						return '[name].js';
-						break;
+						return "[name].js";
 				}
 			}
 		},
@@ -44,9 +37,9 @@ module.exports = function(options) {
 				cacheGroups: {
 					vendors: {
 						test: /[\\/](vendors|node_modules)[\\/]/,
-						name: 'vendors',
-						filename: '[name].js',
-						chunks: 'all'
+						name: "vendors",
+						filename: "[name].js",
+						chunks: "all"
 					},
 					default: false
 				}
@@ -55,9 +48,9 @@ module.exports = function(options) {
 		resolve : {
 			
 		},
-		devtool: 'none',
+		devtool: "none",
 		devServer: {
-			stats: 'errors-only'
+			stats: "errors-only"
 		}
-	}
-}
+	};
+};

@@ -1,5 +1,5 @@
-import makeEventModule from 'event';
-import helperModule from 'helper';
+import makeEventModule from "@event";
+import helperModule from "@helper";
 
 const makeEvent = makeEventModule;
 const helper = helperModule; 
@@ -11,21 +11,21 @@ function View() {
 	this.valueNoteDisplay = true;
 	this.styles = {
 		theme: {
-			value: 'default',
-			className: 'theme',
+			value: "default",
+			className: "theme",
 			oldValue: null
 		},
 		
 		direction: {
-			value: 'horizontal',
-			className: 'direction',
+			value: "horizontal",
+			className: "direction",
 			oldValue: null
-		},
+		}
 	};
 	this.stylesConstants = {
 		direction: {
-			horizontalValue: 'horizontal', 
-			verticalValue: 'vertical'
+			horizontalValue: "horizontal", 
+			verticalValue: "vertical"
 		}
 	};
 
@@ -36,39 +36,39 @@ function View() {
 
 	// Stable elements
 	// Base
-	this.base = document.createElement('div');
+	this.base = document.createElement("div");
 	this.stableElsList.push(this.base);
 
 	// Outer
-	this.outer = document.createElement('div');
+	this.outer = document.createElement("div");
 	this.stableElsList.push(this.outer);
 
 	// Path
-	this.path = document.createElement('div');
+	this.path = document.createElement("div");
 	this.stableElsList.push(this.path);
 
 	// Passed path
-	this.pathPassed = document.createElement('div');
+	this.pathPassed = document.createElement("div");
 	this.stableElsList.push(this.pathPassed);
 
 	// Path handles
-	this.handle = document.createElement('div');
+	this.handle = document.createElement("div");
 	this.stableElsList.push(this.handle);
-	this.handleMin = document.createElement('div');
+	this.handleMin = document.createElement("div");
 	this.stableElsList.push(this.handleMin);
-	this.handleMax = document.createElement('div');
+	this.handleMax = document.createElement("div");
 	this.stableElsList.push(this.handleMax);
 
 	// Path values
-	this.valueNote = document.createElement('div');
+	this.valueNote = document.createElement("div");
 	this.stableElsList.push(this.valueNote);
-	this.valueMinNote = document.createElement('div');
+	this.valueMinNote = document.createElement("div");
 	this.stableElsList.push(this.valueMinNote);
-	this.valueMaxNote = document.createElement('div');
+	this.valueMaxNote = document.createElement("div");
 	this.stableElsList.push(this.valueMaxNote);
 
-	// Division's container
-	this.divisions = document.createElement('div');
+	// Division"s container
+	this.divisions = document.createElement("div");
 	this.stableElsList.push(this.divisions);
 
 
@@ -87,44 +87,44 @@ function View() {
 	this.DOMUpdateEvent = makeEvent();
 
 	// Listenners
-	this.path.addEventListener('mousedown', function(event) {
+	this.path.addEventListener("mousedown", function(event) {
 		this.mouseDownEvent.trigger(event);
-	}.bind(this))
-};
+	}.bind(this));
+}
 
 View.prototype = {
 	generateBaseDOM() {
 		// Base
-		this.base.classList.add('wrunner');
+		this.base.classList.add("wrunner");
 
 		// Outer
-		this.outer.classList.add('wrunner__outer');
+		this.outer.classList.add("wrunner__outer");
 
 		// Path
-		this.path.classList.add('wrunner__path');
+		this.path.classList.add("wrunner__path");
 
 		// Passed path
-		this.pathPassed.classList.add('wrunner__pathPassed');
+		this.pathPassed.classList.add("wrunner__pathPassed");
 
 		// Path handles
-		this.handle.classList.add('wrunner__handle');
-		this.handleMin.classList.add('wrunner__handle');
-		this.handleMax.classList.add('wrunner__handle');
+		this.handle.classList.add("wrunner__handle");
+		this.handleMin.classList.add("wrunner__handle");
+		this.handleMax.classList.add("wrunner__handle");
 
 		// Path values
-		this.valueNote.classList.add('wrunner__valueNote');
-		this.valueMinNote.classList.add('wrunner__valueNote');
-		this.valueMaxNote.classList.add('wrunner__valueNote');
+		this.valueNote.classList.add("wrunner__valueNote");
+		this.valueMinNote.classList.add("wrunner__valueNote");
+		this.valueMaxNote.classList.add("wrunner__valueNote");
 
-		// Division's container
-		this.divisions.classList.add('wrunner__divisions');
+		// Division"s container
+		this.divisions.classList.add("wrunner__divisions");
 
 		this.baseDOMGeneratedEvent.trigger();
 	},
 
 	updateDOM(type) {
-		this.path.innerHTML = '';
-		this.outer.innerHTML = '';
+		this.path.innerHTML = "";
+		this.outer.innerHTML = "";
 
 		this.base.appendChild(this.outer);
 		this.outer.appendChild(this.path);
@@ -150,15 +150,15 @@ View.prototype = {
 			moveBind = move.bind(this);
 
 		// The handler that indicates that the handle has been dragged.
-		document.body.addEventListener('mousemove', () => dragged = true, {once: true});
-		document.body.addEventListener('mousemove', moveBind);
+		document.body.addEventListener("mousemove", () => dragged = true, {once: true});
+		document.body.addEventListener("mousemove", moveBind);
 
-		// The handler that called after click's end.
-		document.body.addEventListener('mouseup', function(upEvent) {
+		// The handler that called after click"s end.
+		document.body.addEventListener("mouseup", function(upEvent) {
 			var targ = upEvent.target;
 
 			// Removing bind.
-			document.body.removeEventListener('mousemove', moveBind);
+			document.body.removeEventListener("mousemove", moveBind);
 
 			// If handle was dragged, stop the function.
 			if (dragged) return;
@@ -174,7 +174,7 @@ View.prototype = {
 		function move(eventMove) {
 			hanlder.call(this, eventMove);
 			this.draggEvent.trigger(event);
-		};
+		}
 
 		function hanlder(event) {
 			var scale, min, max, pos;
@@ -193,16 +193,16 @@ View.prototype = {
 
 			max = min + scale;
 
-			// If the dragg is out of slider's range, the function stops.
+			// If the dragg is out of slider"s range, the function stops.
 			if (pos < min - 10 || pos > max + 10) return;
 
 			if(dir == this.stylesConstants.direction.horizontalValue) {
-				this.UIValueActionEvent.trigger((pos - min) / scale * 100)
+				this.UIValueActionEvent.trigger((pos - min) / scale * 100);
 			}
 			if(dir == this.stylesConstants.direction.verticalValue){
-				this.UIValueActionEvent.trigger(100 - (pos - min) / scale * 100)
+				this.UIValueActionEvent.trigger(100 - (pos - min) / scale * 100);
 			}
-		};
+		}
 	},
 
 	append() {
@@ -224,29 +224,29 @@ View.prototype = {
 	},
 
 	generateDivisions() {
-		this.divisions.innerHTML = '';
+		this.divisions.innerHTML = "";
 		this.divisionsList.length = 0;
 
 		for(var i = this.divisionsCount; i > 0; i--) {
-			var instance = document.createElement('div');
-			instance.classList.add('wrunner__division');
+			var instance = document.createElement("div");
+			instance.classList.add("wrunner__division");
 			this.divisionsList.push(instance);
 			this.divisions.appendChild(instance);
 		}
 
 		this.els = this.divisionsList.concat(this.stableElsList);
-		return this.divisionsList
+		return this.divisionsList;
 	},
 
 	setDivisionsCount(count, auto) {
 		if (!helper.isNumber(count) || count < 0) return;
 
-		var count = Math.round(count);
+		count = Math.round(+count);
 
 		if (count == 1) {
 			count++;
-			if(!auto) console.log('Count was increased by one, cause it may not be equal to one.')
-		};
+			if (!auto) console.log("Count was increased by one, cause it may not be equal to one.");
+		}
 		this.divisionsCount = +count;
 
 		this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
@@ -279,26 +279,26 @@ View.prototype = {
 
 			if(dir == dirConsts.horizontalValue) {
 				// Passed path
-				this.pathPassed.style.width = selected + '%';
+				this.pathPassed.style.width = selected + "%";
 
 				// Handle
-				this.handle.style.left = selected + '%';
+				this.handle.style.left = selected + "%";
 
 				pathScale = this.path.offsetWidth; valueNoteScale = this.valueNote.offsetWidth;
 
-				this.valueNote.style.left = (pathScale * selected / 100 - valueNoteScale / 2) / pathScale * 100 + '%';
+				this.valueNote.style.left = (pathScale * selected / 100 - valueNoteScale / 2) / pathScale * 100 + "%";
 			}
 
 			if(dir == dirConsts.verticalValue) {
 				// Passed path
-				this.pathPassed.style.height = selected + '%';
+				this.pathPassed.style.height = selected + "%";
 
 				// Handle
-				this.handle.style.top = 100 - selected + '%';
+				this.handle.style.top = 100 - selected + "%";
 
 				pathScale = this.path.offsetHeight;	valueNoteScale = this.valueNote.offsetHeight;
 
-				this.valueNote.style.top = 100 - (pathScale * selected / 100 + valueNoteScale / 2) / pathScale * 100 + '%';
+				this.valueNote.style.top = 100 - (pathScale * selected / 100 + valueNoteScale / 2) / pathScale * 100 + "%";
 			}
 		}
 
@@ -310,38 +310,38 @@ View.prototype = {
 
 			if(dir == dirConsts.horizontalValue) {
 	
-					// Passed path
-					this.pathPassed.style.width = selected + '%';
-					this.pathPassed.style.left = start + '%';
-	
-					// Handle
-					this.handleMin.style.left = start + '%';
-					this.handleMax.style.left = start + selected +'%';
-	
-					pathScale = this.path.offsetWidth;
-					valueMinNoteScale = this.valueMinNote.offsetWidth; valueMaxNoteScale = this.valueMaxNote.offsetWidth;
-	
-					this.valueMinNote.style.left = (pathScale * start / 100 - valueMinNoteScale / 2) / pathScale * 100 + '%';
-					this.valueMaxNote.style.left = (pathScale * (start + selected) / 100 - valueMaxNoteScale / 2) / pathScale * 100 + '%';
+				// Passed path
+				this.pathPassed.style.width = selected + "%";
+				this.pathPassed.style.left = start + "%";
+
+				// Handle
+				this.handleMin.style.left = start + "%";
+				this.handleMax.style.left = start + selected +"%";
+
+				pathScale = this.path.offsetWidth;
+				valueMinNoteScale = this.valueMinNote.offsetWidth; valueMaxNoteScale = this.valueMaxNote.offsetWidth;
+
+				this.valueMinNote.style.left = (pathScale * start / 100 - valueMinNoteScale / 2) / pathScale * 100 + "%";
+				this.valueMaxNote.style.left = (pathScale * (start + selected) / 100 - valueMaxNoteScale / 2) / pathScale * 100 + "%";
 			}
 
 			if(dir == dirConsts.verticalValue) {
-				this.pathPassed.style.height = selected + '%';
-				this.pathPassed.style.top = 100 - selected - start + '%';
+				this.pathPassed.style.height = selected + "%";
+				this.pathPassed.style.top = 100 - selected - start + "%";
 
 				// Handle
-				this.handleMax.style.top = 100 - start - selected + '%';
-				this.handleMin.style.top = 100 - start  +'%';
+				this.handleMax.style.top = 100 - start - selected + "%";
+				this.handleMin.style.top = 100 - start  +"%";
 
 				pathScale = this.path.offsetHeight;
 				valueMinNoteScale = this.valueMinNote.offsetHeight; valueMaxNoteScale = this.valueMaxNote.offsetHeight;
 
-				this.valueMinNote.style.top = 100 - (pathScale * start / 100 + valueMinNoteScale / 2) / pathScale * 100 + '%';
-				this.valueMaxNote.style.top = 100 - (pathScale * (start + selected) / 100 + valueMaxNoteScale / 2) / pathScale * 100 + '%';
+				this.valueMinNote.style.top = 100 - (pathScale * start / 100 + valueMinNoteScale / 2) / pathScale * 100 + "%";
+				this.valueMaxNote.style.top = 100 - (pathScale * (start + selected) / 100 + valueMaxNoteScale / 2) / pathScale * 100 + "%";
 			}
 		}
 
-		return value
+		return value;
 	},
 
 	setStyles(newStyles) {
@@ -369,7 +369,7 @@ View.prototype = {
 				}
 			}
 
-			if (typeof newStyles[prop].className == 'string') {
+			if (typeof newStyles[prop].className == "string") {
 				mutable.className = newStyles[prop].className;
 				changed = true;
 			}
@@ -378,7 +378,7 @@ View.prototype = {
 		if(!changed) return;
 
 		this.stylesUpdateEvent.trigger(Object.assign({}, this.styles));
-		return Object.assign({}, this.styles)
+		return Object.assign({}, this.styles);
 	},
 
 	applyStyles() {
@@ -392,20 +392,20 @@ View.prototype = {
 					oldValue = styles[prop].oldValue,
 					value = styles[prop].value;
 
-				if (oldValue) el.classList.remove(mark + '_' + styles[prop].className + '_' + oldValue);
-				if (value) el.classList.add(mark + '_' + styles[prop].className + '_' + value);
+				if (oldValue) el.classList.remove(mark + "_" + styles[prop].className + "_" + oldValue);
+				if (value) el.classList.add(mark + "_" + styles[prop].className + "_" + value);
 			}
 		}
 
-		this.stylesAppliedEvent.trigger(Object.assign({}, this.styles))
-		return Object.assign({}, this.styles)
+		this.stylesAppliedEvent.trigger(Object.assign({}, this.styles));
+		return Object.assign({}, this.styles);
 	},
 
 	getStyles() {
 		return {
 			styles: Object.assign({}, this.styles),
 			stylesConstants: Object.assign({}, this.stylesConstants)
-		}
+		};
 	},
 
 	applyValueNoteDisplay() {
@@ -413,16 +413,16 @@ View.prototype = {
 		var els = [this.valueNote, this.valueMinNote, this.valueMaxNote];
 
 		for (var i = els.length - 1; i >= 0; i--) {
-			els[i].classList.remove(mark + '_display_' + (!this.valueNoteDisplay ? 'visible' : 'hidden'));
-			els[i].classList.add(mark + '_display_' + (this.valueNoteDisplay ? 'visible' : 'hidden'));
+			els[i].classList.remove(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"));
+			els[i].classList.add(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
 		}
 
 		this.valueNoteDisplayAppliedEvent.trigger(this.valueNoteDisplay);
-		return this.valueNoteDisplay
+		return this.valueNoteDisplay;
 	},
 
 	setValueNoteDisplay(value) {
-		if (typeof value !== 'boolean') return;
+		if (typeof value !== "boolean") return;
 		this.valueNoteDisplay = value;
 
 		this.valueNoteDisplayUpdateEvent.trigger(this.valueNoteDisplay);
@@ -431,7 +431,7 @@ View.prototype = {
 
 	getValueNoteDisplay() {
 		return this.valueNoteDisplay;
-	},
+	}
 };
 
-export default View
+export default View;

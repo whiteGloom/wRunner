@@ -1,9 +1,9 @@
-import modelModule from './model/model.js';
-import viewModule from './view/view.js';
-import presenterModule from './presenter/presenter.js';
+import modelModule from "./model/model.js";
+import viewModule from "./view/view.js";
+import presenterModule from "./presenter/presenter.js";
 
 window.wRunner = function(instanceOptions) {
-	var instanceOptions = instanceOptions ? instanceOptions : {};
+	instanceOptions = instanceOptions ? instanceOptions : {};
 
 	const structure = new function() {
 		// Model
@@ -14,7 +14,7 @@ window.wRunner = function(instanceOptions) {
 
 		// Presenter
 		this.Presenter = presenterModule;
-	}
+	};
 
 	return newInstance();
 
@@ -57,5 +57,5 @@ window.wRunner = function(instanceOptions) {
 			onValueNoteDisplayUpdate: presenter.onValueNoteDisplayUpdate.bind(presenter),
 			onStylesUpdate: presenter.onStylesUpdate.bind(presenter)
 		};
-	};
+	}
 };

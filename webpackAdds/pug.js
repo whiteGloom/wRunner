@@ -1,39 +1,35 @@
-/*
-    Файл с инструкциями для обработки Pug файлов.
-*/
-
 const HTMLWebpackPlugin = require("html-webpack-plugin");
-const HtmlBeautifyPlugin = require('html-beautify-webpack-plugin');
+const HtmlBeautifyPlugin = require("html-beautify-webpack-plugin");
 
 module.exports = function(options) {
-    var options = options ? options : {};
-    var base = options.base;
-    return {
-        module: {
-            rules: [
+	options = options ? options : {};
+	var base = options.base;
+	return {
+		module: {
+			rules: [
 				{
-				    test: /\.(pug|html)/,
-				    loader: 'pug-loader',
+					test: /\.(pug|html)/,
+					loader: "pug-loader",
 					exclude: /[\\/]node_modules[\\/]/
 				}
-            ]
-        },
-        plugins: [
+			]
+		},
+		plugins: [
 			new HTMLWebpackPlugin({
 				template: base + "/src/showcase/views/index.pug",
-				filename: 'index.html',
+				filename: "index.html",
 				inject: false,
 				minify: false
 			}),
-	        new HtmlBeautifyPlugin({
-		        config: {
-		            html: {
-		                indent_with_tabs: true,
-		                inline: [],
-		                unformatted: ['p', 'i', 'b', 'span']
-		            }
-		        }
-		    })
+			new HtmlBeautifyPlugin({
+				config: {
+					html: {
+						indent_with_tabs: true,
+						inline: [],
+						unformatted: ["p", "i", "b", "span"]
+					}
+				}
+			})
 		]
-    }
+	};
 };
