@@ -11,10 +11,11 @@
 
 **В проекте используются:**
 
-* **Webpack**
-* **Pug**
-* **Stylus**
-* **Jasmine**
+* **[Webpack](https://webpack.js.org/ "Webpack")**
+* **[Pug](https://pugjs.org/ "Pug")**
+* **[Stylus](http://stylus-lang.com/ "Stylus")**
+* **[Jasmine](https://jasmine.github.io/ "Jasmine")**
+* **[ES Lint](https://eslint.org/ "ES Lint")**
 
 ## Внимание
 jQuery версия слайдера требует [jQuery](https://jquery.com/ "jQuery"), версией не ниже 3.4.1
@@ -79,6 +80,25 @@ npm install
 * `npm run build-watch` - запуск автоматической пересборки;
 * `npm run build-live` - запуск сервера;
 * `npm test` - запуск тестов;
+
+**Aliases (сокращения):**
+Алиасы прописываются в файле package.json (находится в корневом каталоге), в параметре "**_moduleAliases**", и должны начинаться с символа "**@**".
+Webpack и Jasmine автоматически подгрузят сокращения.
+
+*Пример:*
+```
+// Создание сокращения.
+// Файл "package.json":
+{
+	...
+	"scripts": { ... },
+	"_moduleAliases": {
+		"@ИмяСокращения": "./путьДоСокращения",
+		"@test": "./test.js"
+	},
+	...
+}
+```
 
 ## Методы:
 
