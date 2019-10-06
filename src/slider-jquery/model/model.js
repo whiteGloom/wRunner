@@ -41,9 +41,13 @@ Model.prototype = {
 			max = helper.isNumber(limits.maxLimit) ? +limits.maxLimit : this.maxLimit;
 
 		// If minLimit > maxLimit, it will reverse them.
-		if (min <= max) {
+		// If minLimit == maxLimit, it will increase maxLimit by 1.
+		if (min < max) {
 			this.minLimit = min;
 			this.maxLimit = max;
+		} else if (min === max) {
+			this.minLimit = min;
+			this.maxLimit = max + 1;
 		} else {
 			this.minLimit = max;
 			this.maxLimit = min;
@@ -93,10 +97,8 @@ Model.prototype = {
 	},
 
 	setRangeValue(values, auto) {
-		if (typeof values !== "object") return;
-
 		var min, max;
-		if (values == null) {
+		if (typeof values !== "object" || values == null) {
 			min = this.rangeMinValue;
 			max = this.rangeMaxValue;
 		} else {
@@ -110,8 +112,8 @@ Model.prototype = {
 			min = clone;
 		}
 		
-		this.setAValueTo(min, "rangeMinValue");
-		this.setAValueTo(max, "rangeMaxValue");
+		this.setAValueTo(min, "rangeMinValue", auto);
+		this.setAValueTo(max, "rangeMaxValue", auto);
 
 
 		// Update selected

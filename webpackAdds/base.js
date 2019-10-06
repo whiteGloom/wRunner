@@ -1,6 +1,7 @@
 module.exports = function(options) {
 	options = options ? options : {};
 	var base = options.base;
+	
 	return {
 		mode: "development",
 		entry: {

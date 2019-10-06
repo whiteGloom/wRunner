@@ -4,7 +4,8 @@ module.exports = {
     "env": {
         "browser": true,
         "node": true,
-        "jquery": true
+        "jquery": true,
+        "jasmine": true
     },
     "rules": {
         // enable additional rules
