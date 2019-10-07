@@ -3,9 +3,9 @@ import viewModule from "./view/view.js";
 import presenterModule from "./presenter/presenter.js";
 
 ;(function($){
-	$.fn.wRunner = function(instanceOptions) {
-		instanceOptions = instanceOptions ? instanceOptions : {};
-		instanceOptions.roots = this[0];
+	$.fn.wRunner = function(userOptions) {
+		userOptions = userOptions ? userOptions : {};
+		userOptions.roots = this[0];
 
 		const structure = new function() {
 			// Model
@@ -25,7 +25,7 @@ import presenterModule from "./presenter/presenter.js";
 
 			var model = new structure.Model(),
 				view = new structure.View(),
-				presenter = new structure.Presenter({model: model, view: view, instanceOptions: instanceOptions});
+				presenter = new structure.Presenter({model: model, view: view, userOptions: userOptions});
 
 			return {
 				setType: model.setType.bind(model),

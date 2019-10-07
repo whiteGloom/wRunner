@@ -1,6 +1,6 @@
 {
   "name": "wRunner",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "A slider plugin",
   "main": "index.js",
   "scripts": {

@@ -2,8 +2,8 @@ import modelModule from "./model/model.js";
 import viewModule from "./view/view.js";
 import presenterModule from "./presenter/presenter.js";
 
-window.wRunner = function(instanceOptions) {
-	instanceOptions = instanceOptions ? instanceOptions : {};
+window.wRunner = function(userOptions) {
+	userOptions = userOptions ? userOptions : {};
 
 	const structure = new function() {
 		// Model
@@ -22,7 +22,7 @@ window.wRunner = function(instanceOptions) {
 	function newInstance() {
 		var model = new structure.Model(),
 			view = new structure.View(),
-			presenter = new structure.Presenter({model: model, view: view, instanceOptions: instanceOptions});
+			presenter = new structure.Presenter({model: model, view: view, userOptions: userOptions});
 
 		return {
 			setType: model.setType.bind(model),

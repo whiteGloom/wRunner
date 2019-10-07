@@ -7,7 +7,7 @@ function Presenter(options) {
 	// Plugin load
 	this.addEvents();
 	this.initInstance();
-	this.applyOptions(options.instanceOptions);
+	this.applyUserOptions(options.userOptions);
 	this.triggerEvents();
 }
 
@@ -21,7 +21,7 @@ Presenter.prototype = {
 		this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 	},
 
-	applyOptions(options) {
+	applyUserOptions(options) {
 		options = options ? options : {};
 		this.view.setRoots(options.roots);
 
@@ -29,7 +29,8 @@ Presenter.prototype = {
 		if (options.step !== undefined) this.model.setStep(options.step);
 		if (options.type !== undefined) this.model.setType(options.type);
 		if (options.limits !== undefined) this.model.setLimits(options.limits);
-		if (options.value !== undefined) this.model.setValue(options.value);
+		if (options.singleValue !== undefined) this.model.setSingleValue(options.singleValue);
+		if (options.rangeValue !== undefined) this.model.setRangeValue(options.rangeValue);
 
 		// View
 		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);

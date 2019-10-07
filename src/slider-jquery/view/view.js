@@ -70,26 +70,34 @@ function View() {
 
 
 	// EVENTS
-	this.mouseDownEvent = makeEvent();
-	this.draggEvent = makeEvent();
-	this.clickEvent = makeEvent();
-	this.UIValueActionEvent = makeEvent();
-	this.stylesUpdateEvent = makeEvent();
-	this.stylesAppliedEvent = makeEvent();
-	this.valueNoteDisplayUpdateEvent = makeEvent();
-	this.rootsUpdateEvent = makeEvent();
-	this.divisionsCountUpdateEvent = makeEvent();
-	this.valueNoteDisplayAppliedEvent = makeEvent();
-	this.baseDOMGeneratedEvent = makeEvent();
-	this.DOMUpdateEvent = makeEvent();
+	this.addEvents();
 
 	// Listenners
-	$(this.path).on("mousedown", function(event) {
-		this.mouseDownEvent.trigger(event);
-	}.bind(this));
+	this.addListenners();
 }
 
 View.prototype = {
+	addEvents() {
+		this.mouseDownEvent = makeEvent();
+		this.draggEvent = makeEvent();
+		this.clickEvent = makeEvent();
+		this.UIValueActionEvent = makeEvent();
+		this.stylesUpdateEvent = makeEvent();
+		this.stylesAppliedEvent = makeEvent();
+		this.valueNoteDisplayUpdateEvent = makeEvent();
+		this.rootsUpdateEvent = makeEvent();
+		this.divisionsCountUpdateEvent = makeEvent();
+		this.valueNoteDisplayAppliedEvent = makeEvent();
+		this.baseDOMGeneratedEvent = makeEvent();
+		this.DOMUpdateEvent = makeEvent();
+	},
+
+	addListenners() {
+		$(this.path).on("mousedown", function(event) {
+			this.mouseDownEvent.trigger(event);
+		}.bind(this));
+	},
+
 	updateDOM(type) {
 		if(type.type == type.typeConstants.singleValue) {
 			$(this.handleMin).detach();

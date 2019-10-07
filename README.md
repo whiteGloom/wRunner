@@ -47,8 +47,10 @@ $(DOM element).wRunner([options]);
 		+ Default: "single"
 	- **limits** - (watch setLimits method)
 		+ Default: {minLimit: 0, maxLimit: 100}
-	- **value** - (watch setValue method)
+	- **singleValue** - (watch setSingleValue method)
 		+ Default: 50
+	- **rangeValue** - (watch setRangeValue method)
+		+ Default: { minValue: 20, maxValue: 80 }
 	- **roots** - (watch setRoots method) **Доступен только в JS Native версии.**
 		+ Default: document.body
 	- **divisionsCount** - (watch setDivisionsCount method)
