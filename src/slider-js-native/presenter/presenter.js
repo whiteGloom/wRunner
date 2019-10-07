@@ -6,14 +6,14 @@ function Presenter(options) {
 
 	// Plugin load
 	this.addEvents();
-	this.initInstance();
+	this.applyUserEvents(options.userOptions);
 	this.applyUserOptions(options.userOptions);
+	this.initInstance();
 	this.triggerEvents();
 }
 
 Presenter.prototype = {
 	initInstance() {
-		this.view.generateBaseDOM();
 		this.view.updateDOM(this.model.getType());
 		this.view.generateDivisions();
 		this.view.append();
@@ -25,20 +25,21 @@ Presenter.prototype = {
 	applyUserOptions(options) {
 		options = options ? options : {};
 
-		// Model
 		if (options.step !== undefined) this.model.setStep(options.step);
 		if (options.type !== undefined) this.model.setType(options.type);
 		if (options.limits !== undefined) this.model.setLimits(options.limits);
 		if (options.singleValue !== undefined) this.model.setSingleValue(options.singleValue);
 		if (options.rangeValue !== undefined) this.model.setRangeValue(options.rangeValue);
 
-		// View
 		if (options.roots !== undefined) this.view.setRoots(options.roots);
 		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
 		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
 		if (options.styles !== undefined) this.view.setStyles(options.styles);
+	},
 
-		// Events
+	applyUserEvents(options) {
+		options = options ? options : {};
+
 		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
 		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
 		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
@@ -67,15 +68,12 @@ Presenter.prototype = {
 
 		this.model.typeUpdateEvent.addHandler(function(data) {
 			this.view.updateDOM(this.model.getType());
+			this.model.recalculateValue();
 		}.bind(this));
 
 
 		// View events
-
-		this.view.DOMUpdateEvent.addHandler(function(data) {
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-		}.bind(this));
-
+		
 		this.view.mouseDownEvent.addHandler(function(data) {
 			this.view.action(data);
 		}.bind(this));
@@ -107,14 +105,14 @@ Presenter.prototype = {
 	triggerEvents() {
 		if (this.model.type == this.model.typeConstants.singleValue) {
 			this.model.valueUpdateEvent.trigger({
-				value: this.model.value,
+				value: this.model.singleValue,
 				selected: this.model.singleSelected
 			});
 		}
 		if (this.model.type == this.model.typeConstants.rangeValue) {
 			this.model.valueUpdateEvent.trigger({
-				minValue: this.model.minValue,
-				maxValue: this.model.maxValue,
+				minValue: this.model.rangeMinValue,
+				maxValue: this.model.rangeMaxValue,
 				selected: this.model.rangeSelected
 			});
 		}

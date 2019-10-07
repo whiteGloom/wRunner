@@ -24,15 +24,18 @@ function Model() {
 		rangeValue: "range"
 	};
 
-
-	this.valueUpdateEvent = makeEvent();
-	this.limitsUpdateEvent = makeEvent();
-	this.stepUpdateEvent = makeEvent();
-	this.percentageUpdateEvent = makeEvent();
-	this.typeUpdateEvent = makeEvent();
+	this.addEvents();
 }
 
 Model.prototype = {
+	addEvents() {
+		this.valueUpdateEvent = makeEvent();
+		this.limitsUpdateEvent = makeEvent();
+		this.stepUpdateEvent = makeEvent();
+		this.percentageUpdateEvent = makeEvent();
+		this.typeUpdateEvent = makeEvent();
+	},
+
 	setLimits(limits, auto) {
 		limits = limits ? limits : {};
 
@@ -40,18 +43,19 @@ Model.prototype = {
 		var min = helper.isNumber(limits.minLimit) ? +limits.minLimit : this.minLimit,
 			max = helper.isNumber(limits.maxLimit) ? +limits.maxLimit : this.maxLimit;
 
-		// If minLimit > maxLimit, it will reverse them.
-		// If minLimit == maxLimit, it will increase maxLimit by 1.
 		if (min < max) {
 			this.minLimit = min;
 			this.maxLimit = max;
-		} else if (min === max) {
+		}
+		if (min === max) {
 			this.minLimit = min;
 			this.maxLimit = max + 1;
-		} else {
+			if (!auto) console.log("Maximum limit was increased by 1, because the minimum limit is equal to the maximum limit.");
+		}
+		if (min > max) {
 			this.minLimit = max;
 			this.maxLimit = min;
-			if (!auto) console.log("Values have been reversed, because the minimum value is less than the maximum value.");
+			if (!auto) console.log("Limits was reversed, because the maximum limit is less than the minimum limit.");
 		}
 
 		// Update count of values.
@@ -106,10 +110,15 @@ Model.prototype = {
 			max = helper.isNumber(values.maxValue) ? +values.maxValue : this.rangeMaxValue;
 		}
 
+		if (min === max) {
+			max += this.step;
+			if (!auto) console.log("The maximum value was increased by 1, because minimum value is equal to maximum value.");
+		}
 		if (min > max) {
 			let clone = max;
 			max = min;
 			min = clone;
+			if (!auto) console.log("The values was reversed, because maximum value is less than minimum value.");
 		}
 		
 		this.setAValueTo(min, "rangeMinValue", auto);
@@ -224,19 +233,6 @@ Model.prototype = {
 		this.type = type;
 
 		this.typeUpdateEvent.trigger(this.type);
-		if (this.type == this.typeConstants.singleValue) {
-			this.valueUpdateEvent.trigger({
-				value: this.value,
-				selected: this.singleSelected
-			});
-		}
-		if (this.type == this.typeConstants.rangeValue) {
-			this.valueUpdateEvent.trigger({
-				minValue: this.minValue,
-				maxValue: this.maxValue,
-				selected: this.rangeSelected
-			});
-		}
 		return this.type;
 	},
 

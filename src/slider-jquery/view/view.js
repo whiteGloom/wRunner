@@ -88,8 +88,6 @@ View.prototype = {
 		this.rootsUpdateEvent = makeEvent();
 		this.divisionsCountUpdateEvent = makeEvent();
 		this.valueNoteDisplayAppliedEvent = makeEvent();
-		this.baseDOMGeneratedEvent = makeEvent();
-		this.DOMUpdateEvent = makeEvent();
 	},
 
 	addListenners() {
@@ -117,8 +115,6 @@ View.prototype = {
 			$(this.valueMinNote).appendTo($(this.outer));
 			$(this.valueMaxNote).appendTo($(this.outer));
 		}
-
-		this.DOMUpdateEvent.trigger();
 	},
 
 	action(event) {

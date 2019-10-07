@@ -72,6 +72,8 @@ function View() {
 	this.stableElsList.push(this.divisions);
 
 
+	this.generateBaseDOM();
+
 	// EVENTS
 	this.addEvents();
 
@@ -91,7 +93,6 @@ View.prototype = {
 		this.rootsUpdateEvent = makeEvent();
 		this.divisionsCountUpdateEvent = makeEvent();
 		this.valueNoteDisplayAppliedEvent = makeEvent();
-		this.DOMUpdateEvent = makeEvent();
 	},
 
 	addListenners() {
@@ -146,8 +147,6 @@ View.prototype = {
 			this.outer.appendChild(this.valueMinNote);
 			this.outer.appendChild(this.valueMaxNote);
 		}
-
-		this.DOMUpdateEvent.trigger();
 	},
 
 	action(event) {
