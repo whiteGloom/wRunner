@@ -1,32 +1,27 @@
 const helper = new function() {
-	this.isNumber = function(value, exceps) {
-		exceps = exceps ? exceps : [];
-		for (var i = 0; i < exceps.length; i++) {
-			if (typeof value === exceps[i]) return true;
-		}
-
-		if (!Number.isNaN(+value) && (typeof value === "number" && !Number.isNaN(+value) || typeof value === "string" && typeof +value === "number")) return true;
+	this.isNumber = function(value) {
+		if ((typeof value === "number" || typeof value === "string") & isFinite(value)) return true;
 
 		return false;
 	},
 
 	this.toNumber = function(value) {
-		if (typeof value === "number" && !Number.isNaN(+value) || typeof value === "string" && typeof +value === "number" && !Number.isNaN(+value)) return +value;
+		if (this.isNumber(value)) return +value;
 		return false;
 	},
 
-	this.isDomEl = function(el) {
-		if (typeof el !== "object" || Number.isNaN(el) || el === null) return false;
-		return "ownerDocument" in el ? true : false;
+	this.isDOMEl = function(el) {
+		if (this.isObject(el) && el.constructor !== Object && this.isNumber(el.nodeType) && +el.nodeType === 1) return true;
+		return false;
 	},
 
 	this.isObject = function(el) {
-		if (typeof el === "object" && el !== null && !Number.isNaN(el)) return true;
+		if (typeof el === "object" && el !== null) return true;
 		return false;
 	},
 
 	this.isArray = function(el) {
-		if (typeof el === "object" && el !== null && !Number.isNaN(el) && el.length) return true;
+		if (this.isObject(el) && el.constructor === Array) return true;
 		return false;
 	};
 };

@@ -211,7 +211,7 @@ View.prototype = {
 	},
 
 	setRoots(roots) {
-		if (!helper.isDomEl(roots)) return;
+		if (!helper.isDOMEl(roots)) return;
 		this.roots = roots;
 
 		//console.log(this.roots)
