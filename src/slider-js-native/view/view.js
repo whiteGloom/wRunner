@@ -62,10 +62,10 @@ function View() {
 	// Path values
 	this.valueNote = document.createElement("div");
 	this.stableElsList.push(this.valueNote);
-	this.valueMinNote = document.createElement("div");
-	this.stableElsList.push(this.valueMinNote);
-	this.valueMaxNote = document.createElement("div");
-	this.stableElsList.push(this.valueMaxNote);
+	this.valueNoteMin = document.createElement("div");
+	this.stableElsList.push(this.valueNoteMin);
+	this.valueNoteMax = document.createElement("div");
+	this.stableElsList.push(this.valueNoteMax);
 
 	// Division"s container
 	this.divisions = document.createElement("div");
@@ -121,8 +121,8 @@ View.prototype = {
 
 		// Path values
 		this.valueNote.classList.add("wrunner__valueNote");
-		this.valueMinNote.classList.add("wrunner__valueNote");
-		this.valueMaxNote.classList.add("wrunner__valueNote");
+		this.valueNoteMin.classList.add("wrunner__valueNote");
+		this.valueNoteMax.classList.add("wrunner__valueNote");
 
 		// Division"s container
 		this.divisions.classList.add("wrunner__divisions");
@@ -144,8 +144,8 @@ View.prototype = {
 		if(type.type == type.typeConstants.rangeValue) {
 			this.path.appendChild(this.handleMin);
 			this.path.appendChild(this.handleMax);
-			this.outer.appendChild(this.valueMinNote);
-			this.outer.appendChild(this.valueMaxNote);
+			this.outer.appendChild(this.valueNoteMin);
+			this.outer.appendChild(this.valueNoteMax);
 		}
 	},
 
@@ -262,7 +262,7 @@ View.prototype = {
 	},
 
 	drawValue(value, limits, currentType) {
-		var pathScale, valueNoteScale, valueMinNoteScale, valueMaxNoteScale;
+		var pathScale, valueNoteScale, valuecaleMinNoteS, valuecaleMaxNoteS;
 		var selected = value.selected;
 		
 		var dir = this.styles.direction.value,
@@ -275,8 +275,8 @@ View.prototype = {
 		this.handleMin.style.cssText = "";
 		this.handleMax.style.cssText = "";
 		this.valueNote.style.cssText = "";
-		this.valueMinNote.style.cssText = "";
-		this.valueMaxNote.style.cssText = "";
+		this.valueNoteMin.style.cssText = "";
+		this.valueNoteMax.style.cssText = "";
 
 		if(type == typeConstants.singleValue) {
 			this.valueNote.innerHTML = value.value;
@@ -309,8 +309,8 @@ View.prototype = {
 		if (type == typeConstants.rangeValue) {
 			var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
 
-			this.valueMinNote.innerHTML = value.minValue;
-			this.valueMaxNote.innerHTML = value.maxValue;
+			this.valueNoteMin.innerHTML = value.minValue;
+			this.valueNoteMax.innerHTML = value.maxValue;
 
 			if(dir == dirConsts.horizontalValue) {
 	
@@ -323,10 +323,10 @@ View.prototype = {
 				this.handleMax.style.left = start + selected +"%";
 
 				pathScale = this.path.offsetWidth;
-				valueMinNoteScale = this.valueMinNote.offsetWidth; valueMaxNoteScale = this.valueMaxNote.offsetWidth;
+				valuecaleMinNoteS = this.valueNoteMin.offsetWidth; valuecaleMaxNoteS = this.valueNoteMax.offsetWidth;
 
-				this.valueMinNote.style.left = (pathScale * start / 100 - valueMinNoteScale / 2) / pathScale * 100 + "%";
-				this.valueMaxNote.style.left = (pathScale * (start + selected) / 100 - valueMaxNoteScale / 2) / pathScale * 100 + "%";
+				this.valueNoteMin.style.left = (pathScale * start / 100 - valuecaleMinNoteS / 2) / pathScale * 100 + "%";
+				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valuecaleMaxNoteS / 2) / pathScale * 100 + "%";
 			}
 
 			if(dir == dirConsts.verticalValue) {
@@ -338,10 +338,10 @@ View.prototype = {
 				this.handleMin.style.top = 100 - start  +"%";
 
 				pathScale = this.path.offsetHeight;
-				valueMinNoteScale = this.valueMinNote.offsetHeight; valueMaxNoteScale = this.valueMaxNote.offsetHeight;
+				valuecaleMinNoteS = this.valueNoteMin.offsetHeight; valuecaleMaxNoteS = this.valueNoteMax.offsetHeight;
 
-				this.valueMinNote.style.top = 100 - (pathScale * start / 100 + valueMinNoteScale / 2) / pathScale * 100 + "%";
-				this.valueMaxNote.style.top = 100 - (pathScale * (start + selected) / 100 + valueMaxNoteScale / 2) / pathScale * 100 + "%";
+				this.valueNoteMin.style.top = 100 - (pathScale * start / 100 + valuecaleMinNoteS / 2) / pathScale * 100 + "%";
+				this.valueNoteMax.style.top = 100 - (pathScale * (start + selected) / 100 + valuecaleMaxNoteS / 2) / pathScale * 100 + "%";
 			}
 		}
 
@@ -414,7 +414,7 @@ View.prototype = {
 
 	applyValueNoteDisplay() {
 		var mark = this.valueNote.classList[0];
-		var els = [this.valueNote, this.valueMinNote, this.valueMaxNote];
+		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
 
 		for (var i = els.length - 1; i >= 0; i--) {
 			els[i].classList.remove(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"));

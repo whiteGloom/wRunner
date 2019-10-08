@@ -43,9 +43,10 @@ describe("getValue method.", () => {
 	describe("When slider's type is 'single'.", () => {
 		beforeAll(() => {
 			model.setType("single");
+			model.setLimits({minLimit: 0, maxLimit: 100});
 		});
 
-		it("Returns { value: *slider's value*, selected: *count of selected values* }", () => {
+		it("Returns { value: *slider's value*, selected: *percent of selected values* }", () => {
 			var result = model.getValue();
 
 			// the result is an object.
@@ -57,7 +58,7 @@ describe("getValue method.", () => {
 			expect(result.value).toEqual(model.singleValue);
 
 			// The "selected" property is equal to property "value".
-			expect(result.selected).toEqual(result.value);
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
 			// The "selected" property is equal to model.selected.
 			expect(result.selected).toEqual(model.singleSelected);
 		});
@@ -66,9 +67,10 @@ describe("getValue method.", () => {
 	describe("When slider's type is 'range'.", () => {
 		beforeAll(() => {
 			model.setType("range");
+			model.setLimits({minLimit: 0, maxLimit: 100});
 		});
 
-		it("Returns { minValue: *slider's minimum value*, maxValue: *slider's maximum value*, selected: *count of selected values* }", () => {
+		it("Returns { minValue: *slider's minimum value*, maxValue: *slider's maximum value*, selected: *percent of selected values* }", () => {
 			var result = model.getValue();
 
 			// the result is an object.
@@ -77,15 +79,15 @@ describe("getValue method.", () => {
 			// The "minValue" property is an number.
 			expect(helper.isNumber(result.minValue)).toBeTruthy();
 			// The "minValue" property is equal to model.minValue.
-			expect(result.minValue).toEqual(model.rangeMinValue);
+			expect(result.minValue).toEqual(model.rangeValueMin);
 
 			// The "maxValue" property is an number.
 			expect(helper.isNumber(result.maxValue)).toBeTruthy();
 			// The "maxValue" property is equal to model.maxValue.
-			expect(result.maxValue).toEqual(model.rangeMaxValue);
+			expect(result.maxValue).toEqual(model.rangeValueMax);
 
 			// The "selected" property is equal to: maxValue - minValue.
-			expect(result.selected).toEqual(result.maxValue - result.minValue);
+			expect(result.selected).toEqual((model.rangeValueMax - model.rangeValueMin) / model.valuesCount * 100);
 			// The "selected" property is equal to model.selected.
 			expect(result.selected).toEqual(model.rangeSelected);
 		});
@@ -213,23 +215,23 @@ describe("setSingleValue method.", () => {
 			model.setLimits({minLimit: 0, maxLimit: 100});
 		});
 
-		it("Taking 50, changing single value to 50. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking 50, changing single value to 50. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setSingleValue(50, true);
 
 			expect(result.value).toEqual(50);
 			expect(result.value).toEqual(model.singleValue);
 
-			expect(result.selected).toEqual(50);
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.singleSelected);
 		});
 
-		it("Taking 50, changing single value to 75. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking 50, changing single value to 75. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setSingleValue(75, true);
 
 			expect(result.value).toEqual(75);
 			expect(result.value).toEqual(model.singleValue);
 
-			expect(result.selected).toEqual(75);
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.singleSelected);
 		});
 	});
@@ -241,25 +243,25 @@ describe("setSingleValue method.", () => {
 			model.setLimits({minLimit: 0, maxLimit: 100});
 		});
 
-		it("Taking 110, changing value to 100. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking 110, changing value to 100. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setSingleValue(110, true);
 
 			// Value was equated to a highest limit.
 			expect(result.value).toEqual(100);
 			expect(result.value).toEqual(model.singleValue);
 
-			expect(result.selected).toEqual(100);
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.singleSelected);
 		});
 
-		it("Taking -10, changing value to 0. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking -10, changing value to 0. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setSingleValue(-10, true);
 
 			// Value was equated to a highest limit.
 			expect(result.value).toEqual(0);
 			expect(result.value).toEqual(model.singleValue);
 
-			expect(result.selected).toEqual(0);
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.singleSelected);
 		});
 	});
@@ -272,7 +274,7 @@ describe("setSingleValue method.", () => {
 			model.setLimits({minLimit: 0, maxLimit: 100});
 		});
 
-		it("Taking null, value will stay the same. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking null, value will stay the same. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setSingleValue(null, true);
 
 			// Value stays the same.
@@ -280,11 +282,11 @@ describe("setSingleValue method.", () => {
 			expect(result.value).toEqual(model.singleValue);
 
 			// Selected values stays the same.
-			expect(result.selected).toEqual(50);
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.singleSelected);
 		});
 
-		it("Taking 'dadaya', value will stay the same. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking 'dadaya', value will stay the same. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setSingleValue("dadaya", true);
 
 			// Value stays the same.
@@ -292,7 +294,35 @@ describe("setSingleValue method.", () => {
 			expect(result.value).toEqual(model.singleValue);
 
 			// Selected values stays the same.
-			expect(result.selected).toEqual(50);
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
+			expect(result.selected).toEqual(model.singleSelected);
+		});
+	});
+
+	describe("The value is set according to slider's step.", () => {
+		beforeEach(() => {
+			model.setStep(3);
+			model.setLimits({minLimit: -100, maxLimit: 100}, true);
+			model.setSingleValue(50, true);
+		});
+
+		it("Taking 10, when step is equeal to 3, changes value to 9.", () => {
+			var result = model.setSingleValue(10);
+
+			expect(result.value).toEqual(9);
+			expect(result.value).toEqual(model.singleValue);
+
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
+			expect(result.selected).toEqual(model.singleSelected);
+		});
+
+		it("Taking -10, when step is equeal to 3, changes value to -9.", () => {
+			var result = model.setSingleValue(-10);
+
+			expect(result.value).toEqual(-9);
+			expect(result.value).toEqual(model.singleValue);
+
+			expect(result.selected).toEqual((model.singleValue - model.minLimit) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.singleSelected);
 		});
 	});
@@ -306,16 +336,16 @@ describe("setRangeValue method.", () => {
 			model.setLimits({minLimit: 0, maxLimit: 100});
 		});
 
-		it("Taking {minValue: 10, maxValue: 90}, changing minimum value to 10, maximum value to 90. Returns { minValue: *minimum value*, maxValue: *maximum value*, *selected count of integer value* }", () => {
+		it("Taking { minValue: 10, maxValue: 90 }, changing minimum value to 10, maximum value to 90. Returns { minValue: *minimum value*, maxValue: *maximum value*, selected: *percent of selected values* }", () => {
 			var result = model.setRangeValue({minValue: 10, maxValue: 90}, true);
 
 			expect(result.minValue).toEqual(10);
-			expect(result.minValue).toEqual(model.rangeMinValue);
+			expect(result.minValue).toEqual(model.rangeValueMin);
 
 			expect(result.maxValue).toEqual(90);
-			expect(result.maxValue).toEqual(model.rangeMaxValue);
+			expect(result.maxValue).toEqual(model.rangeValueMax);
 
-			expect(result.selected).toEqual(result.maxValue - result.minValue);
+			expect(result.selected).toEqual((model.rangeValueMax - model.rangeValueMin) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.rangeSelected);
 		});
 	});
@@ -327,16 +357,16 @@ describe("setRangeValue method.", () => {
 			model.setLimits({minLimit: 0, maxLimit: 100});
 		});
 
-		it("Taking {minValue: -10, maxValue: 110}, changes minimum value to 0, maximum value to 100. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking { minValue: -10, maxValue: 110 }, changes minimum value to 0, maximum value to 100. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setRangeValue({minValue: -10, maxValue: 110}, true);
 
 			expect(result.minValue).toEqual(0);
-			expect(result.minValue).toEqual(model.rangeMinValue);
+			expect(result.minValue).toEqual(model.rangeValueMin);
 
 			expect(result.maxValue).toEqual(100);
-			expect(result.maxValue).toEqual(model.rangeMaxValue);
+			expect(result.maxValue).toEqual(model.rangeValueMax);
 
-			expect(result.selected).toEqual(100);
+			expect(result.selected).toEqual((model.rangeValueMax - model.rangeValueMin) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.rangeSelected);
 		});
 	});
@@ -351,46 +381,67 @@ describe("setRangeValue method.", () => {
 			model.setRangeValue({minValue: 20, maxValue: 80}, true);
 		});
 
-		it("Taking {maxValue: 60}, changes maximum value to 60, minimum value will stay the same. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking { maxValue: 60 }, changes maximum value to 60, minimum value will stay the same. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setRangeValue({maxValue: 60}, true);
 
 			// Minimum value stays the same.
 			expect(result.minValue).toEqual(20);
-			expect(result.minValue).toEqual(model.rangeMinValue);
+			expect(result.minValue).toEqual(model.rangeValueMin);
 
 			// Maximum value was changed.
 			expect(result.maxValue).toEqual(60);
-			expect(result.maxValue).toEqual(model.rangeMaxValue);
+			expect(result.maxValue).toEqual(model.rangeValueMax);
 
-			expect(result.selected).toEqual(result.maxValue - result.minValue);
+			expect(result.selected).toEqual((model.rangeValueMax - model.rangeValueMin) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.rangeSelected);
 		});
 
-		it("Taking {minValue: null, maxValue: null}, values will stay the same. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking { minValue: null, maxValue: null }, values will stay the same. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setRangeValue({minValue: null, maxValue: null}, true);
 
 			// Values stays the same.
 			expect(result.minValue).toEqual(20);
-			expect(result.minValue).toEqual(model.rangeMinValue);
+			expect(result.minValue).toEqual(model.rangeValueMin);
 
 			expect(result.maxValue).toEqual(80);
-			expect(result.maxValue).toEqual(model.rangeMaxValue);
+			expect(result.maxValue).toEqual(model.rangeValueMax);
 
-			expect(result.selected).toEqual(result.maxValue - result.minValue);
+			expect(result.selected).toEqual((model.rangeValueMax - model.rangeValueMin) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.rangeSelected);
 		});
 
-		it("Taking null, values will stay the same. Returns { value: *value*, *selected count of integer value* }", () => {
+		it("Taking null, values will stay the same. Returns { value: *value*, selected: *percent of selected values* }", () => {
 			var result = model.setRangeValue(null, true);
 
 			// Values stays the same.
 			expect(result.minValue).toEqual(20);
-			expect(result.minValue).toEqual(model.rangeMinValue);
+			expect(result.minValue).toEqual(model.rangeValueMin);
 
 			expect(result.maxValue).toEqual(80);
-			expect(result.maxValue).toEqual(model.rangeMaxValue);
+			expect(result.maxValue).toEqual(model.rangeValueMax);
 
-			expect(result.selected).toEqual(result.maxValue - result.minValue);
+			expect(result.selected).toEqual((model.rangeValueMax - model.rangeValueMin) / model.valuesCount * 100);
+			expect(result.selected).toEqual(model.rangeSelected);
+		});
+	});
+
+	describe("The value is set according to slider's step.", () => {
+		beforeEach(() => {
+			model.setStep(3);
+			model.setLimits({minLimit: -100, maxLimit: 100}, true);
+			model.setRangeValue({minValue: -50, maxValue: 50}, true);
+		});
+
+		it("Taking { minValue: -10, maxValue: 10 }, when step is equeal to 3, changes minimum value to -9, maximum value to 9.", () => {
+			var result = model.setRangeValue({minValue: -10, maxValue: 10});
+
+			expect(result.minValue).toEqual(-9);
+			expect(result.minValue).toEqual(model.rangeValueMin);
+
+			expect(result.maxValue).toEqual(9);
+			expect(result.maxValue).toEqual(model.rangeValueMax);
+
+			expect(result.selected).toEqual((model.rangeValueMax - model.rangeValueMin) / model.valuesCount * 100);
 			expect(result.selected).toEqual(model.rangeSelected);
 		});
 	});
@@ -415,7 +466,6 @@ describe("setNearestValueViaPercents", () => {
 
 			expect(model.setSingleValue).toHaveBeenCalled();
 			expect(model.singleValue).toEqual(model.valuesCount * 0.75);
-			expect(model.singleSelected).toEqual(model.valuesCount * 0.75);
 		});
 	});
 
@@ -436,7 +486,7 @@ describe("setNearestValueViaPercents", () => {
 			model.setNearestValueViaPercents(30);
 
 			expect(model.setRangeValue).toHaveBeenCalled();
-			expect(model.rangeMinValue).toEqual(model.valuesCount * 0.3);
+			expect(model.rangeValueMin).toEqual(model.valuesCount * 0.3);
 		});
 
 		it("Taking 90, changing minimum value to 90%.", () => {
@@ -445,7 +495,7 @@ describe("setNearestValueViaPercents", () => {
 			model.setNearestValueViaPercents(90);
 
 			expect(model.setRangeValue).toHaveBeenCalled();
-			expect(model.rangeMaxValue).toEqual(model.valuesCount * 0.9);
+			expect(model.rangeValueMax).toEqual(model.valuesCount * 0.9);
 		});
 	});
 });

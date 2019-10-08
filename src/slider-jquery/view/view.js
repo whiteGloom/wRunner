@@ -59,10 +59,10 @@ function View() {
 	// Path values
 	this.valueNote = $("<div class='wrunner__valueNote'>")[0];
 	this.stableElsList.push(this.valueNote);
-	this.valueMinNote = $("<div class='wrunner__valueNote'>")[0];
-	this.stableElsList.push(this.valueMinNote);
-	this.valueMaxNote = $("<div class='wrunner__valueNote'>")[0];
-	this.stableElsList.push(this.valueMaxNote);
+	this.valueNoteMin = $("<div class='wrunner__valueNote'>")[0];
+	this.stableElsList.push(this.valueNoteMin);
+	this.valueNoteMax = $("<div class='wrunner__valueNote'>")[0];
+	this.stableElsList.push(this.valueNoteMax);
 
 	// Division"s container
 	this.divisions = $("<div class='wrunner__divisions'>").appendTo($(this.outer))[0];
@@ -100,8 +100,8 @@ View.prototype = {
 		if(type.type == type.typeConstants.singleValue) {
 			$(this.handleMin).detach();
 			$(this.handleMax).detach();
-			$(this.valueMinNote).detach();
-			$(this.valueMaxNote).detach();
+			$(this.valueNoteMin).detach();
+			$(this.valueNoteMax).detach();
 
 			$(this.handle).appendTo($(this.path));
 			$(this.valueNote).appendTo($(this.outer));
@@ -112,8 +112,8 @@ View.prototype = {
 
 			$(this.handleMin).appendTo($(this.path));
 			$(this.handleMax).appendTo($(this.path));
-			$(this.valueMinNote).appendTo($(this.outer));
-			$(this.valueMaxNote).appendTo($(this.outer));
+			$(this.valueNoteMin).appendTo($(this.outer));
+			$(this.valueNoteMax).appendTo($(this.outer));
 		}
 	},
 
@@ -229,7 +229,7 @@ View.prototype = {
 	},
 
 	drawValue(value, limits, currentType) {
-		var pathScale, valueNoteScale, valueMinNoteScale, valueMaxNoteScale;
+		var pathScale, valueNoteScale, valueNoteMinScale, valueNoteMaxScale;
 		var selected = value.selected;
 		
 		var dir = this.styles.direction.value,
@@ -242,8 +242,8 @@ View.prototype = {
 		$(this.handleMin).attr("style", "");
 		$(this.handleMax).attr("style", "");
 		$(this.valueNote).attr("style", "");
-		$(this.valueMinNote).attr("style", "");
-		$(this.valueMaxNote).attr("style", "");
+		$(this.valueNoteMin).attr("style", "");
+		$(this.valueNoteMax).attr("style", "");
 
 		if(type == typeConstants.singleValue) {
 			$(this.valueNote).text(value.value);
@@ -276,8 +276,8 @@ View.prototype = {
 		if (type == typeConstants.rangeValue) {
 			var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
 
-			$(this.valueMinNote).text(value.minValue);
-			$(this.valueMaxNote).text(value.maxValue);
+			$(this.valueNoteMin).text(value.minValue);
+			$(this.valueNoteMax).text(value.maxValue);
 
 			if(dir == dirConsts.horizontalValue) {
 				// Passed path
@@ -289,10 +289,10 @@ View.prototype = {
 				$(this.handleMax).css("left", start + selected +"%");
 
 				pathScale = $(this.path).outerWidth();
-				valueMinNoteScale = $(this.valueMinNote).outerWidth(); valueMaxNoteScale = $(this.valueMaxNote).outerWidth();
+				valueNoteMinScale = $(this.valueNoteMin).outerWidth(); valueNoteMaxScale = $(this.valueNoteMax).outerWidth();
 
-				$(this.valueMinNote).css("left", (pathScale * start / 100 - valueMinNoteScale / 2) / pathScale * 100 + "%");
-				$(this.valueMaxNote).css("left", (pathScale * (start + selected) / 100 - valueMaxNoteScale / 2) / pathScale * 100 + "%");
+				$(this.valueNoteMin).css("left", (pathScale * start / 100 - valueNoteMinScale / 2) / pathScale * 100 + "%");
+				$(this.valueNoteMax).css("left", (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2) / pathScale * 100 + "%");
 			}
 
 			if(dir == dirConsts.verticalValue) {
@@ -304,10 +304,10 @@ View.prototype = {
 				$(this.handleMin).css("top", 100 - start  +"%");
 
 				pathScale = $(this.path).outerHeight();
-				valueMinNoteScale = $(this.valueMinNote).outerHeight(); valueMaxNoteScale = $(this.valueMaxNote).outerHeight();
+				valueNoteMinScale = $(this.valueNoteMin).outerHeight(); valueNoteMaxScale = $(this.valueNoteMax).outerHeight();
 
-				$(this.valueMinNote).css("top", 100 - (pathScale * start / 100 + valueMinNoteScale / 2) / pathScale * 100 + "%");
-				$(this.valueMaxNote).css("top", 100 - (pathScale * (start + selected) / 100 + valueMaxNoteScale / 2) / pathScale * 100 + "%");
+				$(this.valueNoteMin).css("top", 100 - (pathScale * start / 100 + valueNoteMinScale / 2) / pathScale * 100 + "%");
+				$(this.valueNoteMax).css("top", 100 - (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2) / pathScale * 100 + "%");
 			}
 		}
 
@@ -380,7 +380,7 @@ View.prototype = {
 
 	applyValueNoteDisplay() {
 		var mark = this.valueNote.classList[0];
-		var els = [this.valueNote, this.valueMinNote, this.valueMaxNote];
+		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
 
 		for (var i = els.length - 1; i >= 0; i--) {
 			$(els[i])

@@ -13,44 +13,6 @@ function Presenter(options) {
 }
 
 Presenter.prototype = {
-	initInstance() {
-		this.view.updateDOM(this.model.getType());
-		this.view.generateDivisions();
-		this.view.append();
-		this.view.applyValueNoteDisplay();
-		this.view.applyStyles();
-		this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-	},
-
-	applyUserOptions(options) {
-		options = options ? options : {};
-
-		if (options.step !== undefined) this.model.setStep(options.step);
-		if (options.type !== undefined) this.model.setType(options.type);
-		if (options.limits !== undefined) this.model.setLimits(options.limits);
-		if (options.singleValue !== undefined) this.model.setSingleValue(options.singleValue);
-		if (options.rangeValue !== undefined) this.model.setRangeValue(options.rangeValue);
-
-		if (options.roots !== undefined) this.view.setRoots(options.roots);
-		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
-		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
-		if (options.styles !== undefined) this.view.setStyles(options.styles);
-	},
-
-	applyUserEvents(options) {
-		options = options ? options : {};
-
-		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
-		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
-		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
-		if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
-
-		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
-		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
-		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
-		if (options.onStylesUpdate !== undefined) this.onStylesUpdate(options.onStylesUpdate);
-	},
-
 	addEvents() {
 		// Model events
 
@@ -100,6 +62,44 @@ Presenter.prototype = {
 			this.view.generateDivisions();
 			this.view.applyStyles();
 		}.bind(this));
+	},
+
+	initInstance() {
+		this.view.updateDOM(this.model.getType());
+		this.view.generateDivisions();
+		this.view.append();
+		this.view.applyValueNoteDisplay();
+		this.view.applyStyles();
+		this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+	},
+
+	applyUserOptions(options) {
+		options = options ? options : {};
+
+		if (options.step !== undefined) this.model.setStep(options.step);
+		if (options.type !== undefined) this.model.setType(options.type);
+		if (options.limits !== undefined) this.model.setLimits(options.limits);
+		if (options.singleValue !== undefined) this.model.setSingleValue(options.singleValue);
+		if (options.rangeValue !== undefined) this.model.setRangeValue(options.rangeValue);
+
+		if (options.roots !== undefined) this.view.setRoots(options.roots);
+		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
+		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
+		if (options.styles !== undefined) this.view.setStyles(options.styles);
+	},
+
+	applyUserEvents(options) {
+		options = options ? options : {};
+
+		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
+		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
+		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
+		if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
+
+		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
+		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
+		if (options.onStylesUpdate !== undefined) this.onStylesUpdate(options.onStylesUpdate);
 	},
 
 	triggerEvents() {
