@@ -195,20 +195,6 @@ View.prototype = {
 		return this.roots;
 	},
 
-	generateDivisions() {
-		$(this.divisions).empty();
-		this.divisionsList.length = 0;
-
-		for(var i = this.divisionsCount; i > 0; i--) {
-			var instance = $("<div class='wrunner__division'>");
-			this.divisionsList.push(instance[0]);
-			instance.appendTo($(this.divisions));
-		}
-
-		this.els = this.divisionsList.concat(this.stableElsList);
-		return this.divisionsList;
-	},
-
 	setDivisionsCount(count, auto) {
 		if (!helper.isNumber(count) || count < 0) return;
 
@@ -222,6 +208,20 @@ View.prototype = {
 
 		this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
 		return this.divisionsCount;
+	},
+
+	generateDivisions() {
+		$(this.divisions).empty();
+		this.divisionsList.length = 0;
+
+		for(var i = this.divisionsCount; i > 0; i--) {
+			var instance = $("<div class='wrunner__division'>");
+			this.divisionsList.push(instance[0]);
+			instance.appendTo($(this.divisions));
+		}
+
+		this.els = this.divisionsList.concat(this.stableElsList);
+		return this.divisionsList;
 	},
 
 	getDivisionsCount() {

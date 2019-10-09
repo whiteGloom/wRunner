@@ -126,13 +126,14 @@ View.prototype = {
 
 		// Division"s container
 		this.divisions.classList.add("wrunner__divisions");
+		
+		this.base.appendChild(this.outer);
 	},
 
 	updateDOM(type) {
 		this.path.innerHTML = "";
 		this.outer.innerHTML = "";
 
-		this.base.appendChild(this.outer);
 		this.outer.appendChild(this.path);
 		this.path.appendChild(this.pathPassed);
 		this.outer.appendChild(this.divisions);
@@ -227,21 +228,6 @@ View.prototype = {
 		return this.roots;
 	},
 
-	generateDivisions() {
-		this.divisions.innerHTML = "";
-		this.divisionsList.length = 0;
-
-		for(var i = this.divisionsCount; i > 0; i--) {
-			var instance = document.createElement("div");
-			instance.classList.add("wrunner__division");
-			this.divisionsList.push(instance);
-			this.divisions.appendChild(instance);
-		}
-
-		this.els = this.divisionsList.concat(this.stableElsList);
-		return this.divisionsList;
-	},
-
 	setDivisionsCount(count, auto) {
 		if (!helper.isNumber(count) || count < 0) return;
 
@@ -255,6 +241,21 @@ View.prototype = {
 
 		this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
 		return this.divisionsCount;
+	},
+
+	generateDivisions() {
+		this.divisions.innerHTML = "";
+		this.divisionsList.length = 0;
+
+		for(var i = this.divisionsCount; i > 0; i--) {
+			var instance = document.createElement("div");
+			instance.classList.add("wrunner__division");
+			this.divisionsList.push(instance);
+			this.divisions.appendChild(instance);
+		}
+
+		this.els = this.divisionsList.concat(this.stableElsList);
+		return this.divisionsList;
 	},
 
 	getDivisionsCount() {
