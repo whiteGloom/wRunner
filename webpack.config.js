@@ -10,7 +10,7 @@ const base		= require(folder + "/webpackAdds/base.js");
 const babel		= require(folder + "/webpackAdds/babel.js");
 const pug		= require(folder + "/webpackAdds/pug.js");
 const stylus	= require(folder + "/webpackAdds/stylus.js");
-const static	= require(folder + "/webpackAdds/static.js");
+const statics	= require(folder + "/webpackAdds/statics.js");
 const aliases	= require(folder + "/webpackAdds/aliases.js");
 
 // Configuration
@@ -20,7 +20,7 @@ module.exports = function() {
 		babel(),
 		pug({base: folder}),
 		stylus(),
-		static(),
+		statics(),
 		aliases({base: folder})
 	])
 }

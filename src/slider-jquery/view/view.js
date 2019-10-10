@@ -171,7 +171,7 @@ View.prototype = {
 			if(dir == this.stylesConstants.direction.horizontalValue) {
 				this.UIValueActionEvent.trigger((pos - min) / scale * 100);
 			}
-			if(dir == this.stylesConstants.direction.verticalValue){
+			if(dir == this.stylesConstants.direction.verticalValue) {
 				this.UIValueActionEvent.trigger(100 - (pos - min) / scale * 100);
 			}
 		}
@@ -325,7 +325,7 @@ View.prototype = {
 			if (newStyles[prop].value !== undefined) {
 				if (this.stylesConstants[prop]) {
 					for (var defs in this.stylesConstants[prop]) {
-						if (newStyles[prop].value == this.stylesConstants[prop][defs]){
+						if (newStyles[prop].value == this.stylesConstants[prop][defs]) {
 							mutable.oldValue = mutable.value;
 							mutable.value = newStyles[prop].value;
 							changed = true;

@@ -82,7 +82,7 @@ Model.prototype = {
 		};
 	},
 
-	setSingleValue(value, auto){
+	setSingleValue(value, auto) {
 		value = helper.isNumber(value) ? +value : this.singleValue;
 		this.setAValueTo(value, "singleValue", true);
 

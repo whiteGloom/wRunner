@@ -1,2 +1,2 @@
-$ = require('jquery');
-require('./scripts/scripts.js');
+$ = require("jquery");
+require("./scripts/scripts.js");

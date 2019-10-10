@@ -13,7 +13,7 @@ function Presenter(options) {
 }
 
 Presenter.prototype = {
-	addEvents(){
+	addEvents() {
 		// Model events
 
 		this.model.stepUpdateEvent.addHandler(function(data) {

@@ -2,7 +2,7 @@ import modelModule from "./model/model.js";
 import viewModule from "./view/view.js";
 import presenterModule from "./presenter/presenter.js";
 
-;(function($){
+;(function($) {
 	$.fn.wRunner = function(userOptions) {
 		userOptions = userOptions ? userOptions : {};
 		userOptions.roots = this[0];

@@ -74,27 +74,27 @@ function test() {
 			sliders[index] = $("#exm" + index).wRunner(data);
 		}
 
-		controllers[index]["slider" + index + "Step"].addEventListener("input", function(e){
+		controllers[index]["slider" + index + "Step"].addEventListener("input", function(e) {
 			sliders[index].setStep(controllers[index]["slider" + index + "Step"].value);
 		});
 
-		controllers[index]["slider" + index + "MinLimit"].addEventListener("input", function(e){
+		controllers[index]["slider" + index + "MinLimit"].addEventListener("input", function(e) {
 			sliders[index].setLimits({minLimit: controllers[index]["slider" + index + "MinLimit"].value});
 		});
 
-		controllers[index]["slider" + index + "MaxLimit"].addEventListener("input", function(e){
+		controllers[index]["slider" + index + "MaxLimit"].addEventListener("input", function(e) {
 			sliders[index].setLimits({maxLimit: controllers[index]["slider" + index + "MaxLimit"].value});
 		});
 
-		controllers[index]["slider" + index + "Value"].addEventListener("input", function(e){
+		controllers[index]["slider" + index + "Value"].addEventListener("input", function(e) {
 			sliders[index].setSingleValue(controllers[index]["slider" + index + "Value"].value);
 		});
 
-		controllers[index]["slider" + index + "MinValue"].addEventListener("input", function(e){
+		controllers[index]["slider" + index + "MinValue"].addEventListener("input", function(e) {
 			sliders[index].setRangeValue({minValue: controllers[index]["slider" + index + "MinValue"].value});
 		});
 
-		controllers[index]["slider" + index + "MaxValue"].addEventListener("input", function(e){
+		controllers[index]["slider" + index + "MaxValue"].addEventListener("input", function(e) {
 			sliders[index].setRangeValue({maxValue: controllers[index]["slider" + index + "MaxValue"].value});
 		});
 
