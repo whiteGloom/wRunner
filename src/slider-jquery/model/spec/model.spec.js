@@ -552,7 +552,7 @@ describe("setStep method.", () => {
 });
 
 describe("setType method.", () => {
-	describe("Normal values - if value is listed in typeConstants.", () => {
+	describe("Normal values - if value is listed in typeConstants. Changes slider's type, returns new type.", () => {
 		for (var constant in model.getType().typeConstants) {
 			it("Taking " + model.getType().typeConstants[constant] + ", changes type to " + model.getType().typeConstants[constant] + ". Returns type.", () => {
 				var result = model.setType(model.getType().typeConstants[constant]);

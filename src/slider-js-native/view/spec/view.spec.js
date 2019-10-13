@@ -58,6 +58,8 @@ describe("updateDOM method.", () => {
 	});
 });
 
+// action
+
 describe("append method.", () => {
 	it("Applying slider's roots.", () => {
 		view.append();
@@ -290,6 +292,144 @@ describe("getDivisionsCount method.", () => {
 	});
 });
 
+// drawValue
+
+describe("setStyles method.", () => {
+	describe("Normal values - listed in stylesConstants. Changes slider's styles, returns new styles.", () => {
+		beforeEach(() => {
+			view.setStyles({direction: {value: "horizontal", className: "direction"}, theme: {value: "default", className: "theme"}});
+		});
+
+		for (var style in view.stylesConstants) {
+			for (var constant in view.stylesConstants[style]) {
+				it("Taking {" + style + ": {value: " + view.stylesConstants[style][constant] + ", className: 'dadaya'}}, changes direction to 'vertical', class name to 'dadaya'.", () => {
+					var props = {};
+					props[style] = {value: view.stylesConstants[style][constant], className: "dadaya"};
+					var result = view.setStyles(props);
+
+					expect(result[style].value).toEqual(view.stylesConstants[style][constant]);
+					expect(result[style].value).toEqual(view.styles[style].value);
+
+					expect(result[style].className).toEqual("dadaya");
+					expect(result[style].className).toEqual(view.styles[style].className);
+				});
+			}
+		}
+
+		for (var style in view.stylesConstants) {
+			for (var constant in view.stylesConstants[style]) {
+				it("Taking {" + style + ": {value: " + view.stylesConstants[style][constant] + "}}, changes direction to 'vertical'.", () => {
+					var props = {};
+					props[style] = {value: view.stylesConstants[style][constant]};
+					var result = view.setStyles(props);
+
+					expect(result[style].value).toEqual(view.stylesConstants[style][constant]);
+					expect(result[style].value).toEqual(view.styles[style].value);
+				});
+			}
+		}
+
+		for (var style in view.stylesConstants) {
+			it("Taking {" + style + ": {className: 'dadaya'}}, chages class name to 'dadaya'.", () => {
+				var props = {};
+				props[style] = {className: "dadaya"};
+				var result = view.setStyles(props);
+
+				expect(result[style].className).toEqual("dadaya");
+				expect(result[style].className).toEqual(view.styles[style].className);
+			});
+		}
+	});
+
+	describe("Normal values - not listed in stylesConstants. Changes slider's styles, returns new styles.", () => {
+		beforeEach(() => {
+			view.setStyles({direction: {value: "horizontal", className: "direction"}, theme: {value: "default", className: "theme"}});
+		});
+
+		it("Taking {theme: {value: 'ayadad', className: 'dadaya'}}, changes theme to 'ayadad', class name to 'dadaya'.", () => {
+			var result = view.setStyles({theme: {value: "ayadad", className: "dadaya"}});
+
+			expect(result.theme.value).toEqual("ayadad");
+			expect(result.theme.value).toEqual(view.styles.theme.value);
+
+			expect(result.theme.className).toEqual("dadaya");
+			expect(result.theme.className).toEqual(view.styles.theme.className);
+		});
+
+		it("Taking {theme: {value: 'blue'}}, changes theme to 'blue'.", () => {
+			var result = view.setStyles({theme: {value: "blue"}});
+
+			expect(result.theme.value).toEqual("blue");
+			expect(result.theme.value).toEqual(view.styles.theme.value);
+		});
+
+		it("Taking {theme: {className: 'themes'}}, changes class name to 'themes'.", () => {
+			var result = view.setStyles({theme: {className: "themes"}});
+
+			expect(result.theme.className).toEqual("themes");
+			expect(result.theme.className).toEqual(view.styles.theme.className);
+		});
+	});
+
+	describe("If you try to set style, that is listed in constants, as not reserved value, it will not changes it.", () => {
+		beforeEach(() => {
+			view.setStyles({direction: {value: "horizontal"}});
+		});
+
+		it("Taking {direction: {value: 'something'}}, value stays the same.", () => {
+			var result = view.setStyles({direction: {value: "something", className: "???"}});
+			
+			expect(result.direction.value).toEqual("horizontal");
+			expect(result.direction.value).toEqual(view.styles.direction.value);
+		});
+	});
+
+	describe("If you try to set property as not a string, it will not changes it.", () => {
+		beforeEach(() => {
+			view.setStyles({theme: {value: "default", className: "theme"}, direction: {value: "horizontal", className: "direction"}})
+		});
+
+		it("Taking {theme: {value: 'newTheme', className: null}}, className stays the same.", () => {
+			var result = view.setStyles({theme: {value: "newTheme", className: null}});
+
+			expect(result.theme.className).toEqual("theme");
+			expect(result.theme.className).toEqual(view.styles.theme.className);
+		});
+
+		it("Taking {theme: {value: null, className: 'some'}}, className stays the same.", () => {
+			var result = view.setStyles({theme: {value: null, className: "some"}});
+
+			expect(result.theme.value).toEqual("default");
+			expect(result.theme.value).toEqual(view.styles.theme.value);
+		});
+	});
+
+	describe("If no one property was changes, returns undefined.", () => {
+		beforeEach(() => {
+			view.setStyles({direction: {value: "horizontal", className: "direction"}, theme: {value: "default", className: "theme"}})
+		});
+		it("Taking {direction: {value: 'someAnother'}}, returns undefined.", () => {
+			var result = view.setStyles({direction: {value: "someAnother"}});
+
+			expect(result).toBeUndefined();
+			expect(view.styles.direction.value).toEqual("horizontal");
+		});	
+	});
+});
+
+// applyStyles
+
+describe("getStyles method.", () => {
+	it("Returns {styles: *styles*, stylesConstants: *list of reserved styles*}.", () => {
+		var result = view.getStyles();
+
+		expect(helper.isObject(result)).toBeTruthy();
+		expect(result.styles).toBeDefined();
+		expect(helper.isObject(result.styles)).toBeTruthy();
+		expect(helper.isObject(result.stylesConstants)).toBeTruthy();
+	});
+});
+
 describe("setValueNoteDisplay method.", () => {
 	describe("Changing display of value note, returns value of display.", () => {
 		it("Taking true, returns true.", () => {
@@ -311,7 +451,7 @@ describe("setValueNoteDisplay method.", () => {
 		});
 
 		it("Taking '123', returns undefined.", () => {
-			var result = view.setValueNoteDisplay('123');
+			var result = view.setValueNoteDisplay("123");
 
 			expect(result).toBeUndefined();
 			expect(view.valueNoteDisplay).toEqual(true);
@@ -357,6 +497,38 @@ describe("setValueNoteDisplay method.", () => {
 
 			expect(result).toBeUndefined();
 			expect(view.valueNoteDisplay).toEqual(true);
+		});
+	});
+});
+
+describe("applyValueNoteDisplay method.", () => {
+	describe("When display is true.", () => {
+		beforeAll(() => {
+			view.setValueNoteDisplay(true);
+		});
+
+		it("Applying display of value note, returns display.", () => {
+			var result = view.applyValueNoteDisplay();
+
+			expect(result).toBeTruthy();
+			expect(view.valueNote).toHaveClass(view.valueNote.classList[0] + "_display_visible");
+			expect(view.valueNoteMin).toHaveClass(view.valueNoteMin.classList[0] + "_display_visible");
+			expect(view.valueNoteMax).toHaveClass(view.valueNoteMax.classList[0] + "_display_visible");
+		});
+	});
+
+	describe("When display is false.", () => {
+		beforeAll(() => {
+			view.setValueNoteDisplay(false);
+		});
+
+		it("Applying display of value note, returns display.", () => {
+			var result = view.applyValueNoteDisplay();
+
+			expect(result).toBeFalsy();
+			expect(view.valueNote).toHaveClass(view.valueNote.classList[0] + "_display_hidden");
+			expect(view.valueNoteMin).toHaveClass(view.valueNoteMin.classList[0] + "_display_hidden");
+			expect(view.valueNoteMax).toHaveClass(view.valueNoteMax.classList[0] + "_display_hidden");
 		});
 	});
 });

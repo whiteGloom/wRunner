@@ -333,9 +333,11 @@ View.prototype = {
 						}
 					}
 				} else {
-					mutable.oldValue = mutable.value;
-					mutable.value = newStyles[prop].value;
-					changed = true;
+					if (typeof newStyles[prop].value == "string") {
+						mutable.oldValue = mutable.value;
+						mutable.value = newStyles[prop].value;
+						changed = true;
+					}
 				}
 			}
 
@@ -378,6 +380,14 @@ View.prototype = {
 		};
 	},
 
+	setValueNoteDisplay(value) {
+		if (typeof value !== "boolean") return;
+		this.valueNoteDisplay = value;
+
+		this.valueNoteDisplayUpdateEvent.trigger(this.valueNoteDisplay);
+		return this.valueNoteDisplay;
+	},
+
 	applyValueNoteDisplay() {
 		var mark = this.valueNote.classList[0];
 		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
@@ -389,14 +399,6 @@ View.prototype = {
 		}
 
 		this.valueNoteDisplayAppliedEvent.trigger(this.valueNoteDisplay);
-		return this.valueNoteDisplay;
-	},
-
-	setValueNoteDisplay(value) {
-		if (typeof value !== "boolean") return;
-		this.valueNoteDisplay = value;
-
-		this.valueNoteDisplayUpdateEvent.trigger(this.valueNoteDisplay);
 		return this.valueNoteDisplay;
 	},
 
