@@ -63,8 +63,8 @@ function test() {
 				controllers[index]["slider" + index + "Roots"].value = str;
 			},
 
-			onStylesUpdate: function(styles) {
-				controllers[index]["slider" + index + "Direction"].value = styles.direction.value;
+			onDirectionUpdate: function(direction) {
+				controllers[index]["slider" + index + "Direction"].value = direction.value;
 			}
 		});
 
@@ -111,7 +111,7 @@ function test() {
 		});
 
 		controllers[index]["slider" + index + "Direction"].addEventListener("input", function(e) {
-			sliders[index].setStyles({direction: {value: controllers[index]["slider" + index + "Direction"].value}});
+			sliders[index].setDirection(controllers[index]["slider" + index + "Direction"].value);
 		});
 	}
 

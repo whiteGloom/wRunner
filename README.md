@@ -57,8 +57,10 @@ $(DOM element).wRunner([options]);
 		+ Default: 5
 	- **valueNoteDisplay** - (watch setValueNoteDisplay method)
 		+ Default: true
-	- **styles** - (watch setStyles method)
-		+ Default: {theme: {value: "default", sign: "theme"}, direction: {value: "horizontal", sign: "direction"}}
+	- **theme** - (watch setTheme method)
+		+ Default: "default"
+	- **direction** - (watch setDirection method)
+		+ Default: "horizontal"
 	- **onStepUpdate** - (watch onStepUpdate method)
 	- **onTypeUpdate** - (watch onTypeUpdate method)
 	- **onLimitsUpdate** - (watch onLimitsUpdate method)
@@ -66,7 +68,8 @@ $(DOM element).wRunner([options]);
 	- **onRootsUpdate** - (watch onRootsUpdate method)
 	- **onDivisionsCountUpdate** - (watch onDivisionsCountUpdate method)
 	- **onValueNoteDisplayUpdate** - (watch onValueNoteDisplayUpdate method)
-	- **onStylesUpdate** - (watch onStylesUpdate method)
+	- **onThemeUpdate** - (watch onThemeUpdate method)
+	- **onDirectionUpdate** - (watch onDirectionUpdate method)
 
 ## Для работы с исходным кодом
 **Развёртывание проекта**
@@ -330,45 +333,43 @@ Webpack и Jasmine автоматически подгрузят сокраще�
 
 
 
-### setStyles method
-Меняет стили слайдера.
+### setTheme method
+Меняет тему слайдера.
 
 ```
-.setStyles(options)
+.setTheme(theme)
 ```
 
 *Arguments:*
-* **options** - type: object. Properties:
-	- **direction / theme** - type: object. Properties:
-		+ **value** - type: string.  Если стиль имеет зарезервированные значения, но нужно использовать одно из них.
-		+ **sign** - type: string. Меняет подпись стиля в классе элемента.
+* **theme** - type: string
+
+*Returns:*
+**String** - тема
+
+*Triggering:*
+**onThemeUpdate**, передаёт тоже, что и возвращает.
+
+------------
+
+
+
+### setDirection method
+Меняет положение слайдера.
+
+```
+.setDirection(direction)
+```
+
+*Arguments:*
+* **direction** - type: string. Avaible values: перечислены в directionConstants (см. getDirection method)
 
 *Returns:*
 **Object**. Properties:
-* **styles** - type: object. Properies:
-	- **direction / theme / ...** - type: object. Properties:
-		+ **value** - type: string. Значение стиля
-		+ **sign** - type: string. Подпись стиля в классе элемента
-		+ **oldValue** - type: string. Предыдущее значение стиля
+* **value** - type: string. Значение положения.
+* **directionConstants** - type: object. Список зарезервированных значений в формате {horizontalValue: "horizontal"}.
 
 *Triggering:*
-**onStylesUpdate**, передаёт тоже, что и возвращает.
-
-*Examples:*
-```
-.setStyles({theme: {value: "dark", sign: "testTheme"}}) // Изменит значение (название) темы и её подпись в названии класса
-
-.setStyles({theme: {value: "dark"}}) // Изменит значение (название) темы
-
-.setStyles({theme: {sign: "testTheme"}}) // Изменит подпись темы в названии класса
-```
-
-```
-.setStyles({direction: {value: "horizontal", sign: "testDirection"}}) // Изменит значение положения слайдера и его подпись в названии класса
-
-.setStyles({direction: {value: "San Diego", sign: "testDirection"}}) // Изменения значения не произойдёт, так как параметр "direction" имеет зарезервированные значения. Изменится только подпись положения в названии класса
-
-```
+**onDirectionUpdate**, передаёт тоже, что и возвращает.
 
 ------------
 
@@ -386,7 +387,7 @@ Webpack и Jasmine автоматически подгрузят сокраще�
 **Object**. Properties:
 * **type** - type: string. Текущий тип слайдера.
 * **typeConstants** - object. Properties:
-	- **singleValue / rangeValue** - type: string. Зарезервированые типы слайдера.
+	- **singleValue / rangeValue** - type: string. Список зарезервированных значений в формате {horizontalValue: "horizontal"}.
 
 ------------
 
@@ -487,23 +488,31 @@ getValueNoteDisplay()
 
 
 
-### getStyles method
-Возвращает стили слайдера.
+### getTheme method
+Возвращает тему слайдера.
 
 ```
-.getStyles()
+.getTheme()
 ```
 
 *Returns:*
-**Object**. Properties:
-* **styles** - type: object. Properies:
-	- **direction / theme / ...** - type: object. Properties:
-		+ **value** - type: string. Значение стиля
-		+ **sign** - type: string. Подпись стиля в классе элемента
-		+ **oldValue** - type: string. Предыдущее значение стиля
-* **styleConstants** - type: object. Properties:
-	- **direction / theme / ...** - type: object. Properties:
-		+ **horizontalValue / ...** - зарезервированные значения стиля (если они есть)
+**String**
+
+------------
+
+
+
+### getDirection method
+Возвращает положение слайдера.
+
+```
+.getDirection()
+```
+
+*Returns:*
+**Object** - Properties:
+* **value** - type: string. Значение положения.
+* **directionConstants** - type: object. Список зарезервированных значений в формате {horizontalValue: "horizontal"}.
 
 ------------
 
@@ -621,17 +630,33 @@ getValueNoteDisplay()
 
 
 
-### onStylesUpdate method
-Устанавливает функцию-обработчик, вызываемую при обновлении стилей слайдера
+### onThemeUpdate method
+Устанавливает функцию-обработчик, вызываемую при обновлении темы слайдера
 
 ```
-.onStylesUpdate(function(styles){
+.onThemeUpdate(function(styles){
 	...
 })
 ```
 
 **Передаваемые значения:**
-Смотреть *setStyles method*
+Смотреть *setTheme method*
+
+------------
+
+
+
+### onDirectionUpdate method
+Устанавливает функцию-обработчик, вызываемую при обновлении положения слайдера
+
+```
+.onDirectionUpdate(function(styles){
+	...
+})
+```
+
+**Передаваемые значения:**
+Смотреть *setDirection method*
 
 ------------
 

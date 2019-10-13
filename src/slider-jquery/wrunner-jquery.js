@@ -41,12 +41,14 @@ import presenterModule from "./presenter/presenter.js";
 				getStep: model.getStep.bind(model),
 
 				setRoots: view.setRoots.bind(view),
-				setStyles: view.setStyles.bind(view),
+				setTheme: view.setTheme.bind(view),
+				setDirection: view.setDirection.bind(view),
 				setValueNoteDisplay: view.setValueNoteDisplay.bind(view),
 				setDivisionsCount: view.setDivisionsCount.bind(view),
 
 				getRoots: view.getRoots.bind(view),
-				getStyles: view.getStyles.bind(view),
+				getTheme: view.getTheme.bind(view),
+				getDirection: view.getDirection.bind(view),
 				getValueNoteDisplay: view.getValueNoteDisplay.bind(view),
 				getDivisionsCount: view.getDivisionsCount.bind(view),
 
@@ -58,7 +60,8 @@ import presenterModule from "./presenter/presenter.js";
 				onRootsUpdate: presenter.onRootsUpdate.bind(presenter),
 				onDivisionsCountUpdate: presenter.onDivisionsCountUpdate.bind(presenter),
 				onValueNoteDisplayUpdate: presenter.onValueNoteDisplayUpdate.bind(presenter),
-				onStylesUpdate: presenter.onStylesUpdate.bind(presenter)
+				onThemeUpdate: presenter.onThemeUpdate.bind(presenter),
+				onDirectionUpdate: presenter.onDirectionUpdate.bind(presenter)
 			};
 		}
 	};

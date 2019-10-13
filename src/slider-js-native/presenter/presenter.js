@@ -5,7 +5,7 @@ function Presenter(options) {
 	this.view = options.view;
 
 	// Plugin load
-	this.addEvents();
+	this.addDefaultEvents();
 	this.applyUserEvents(options.userOptions);
 	this.applyUserOptions(options.userOptions);
 	this.initInstance();
@@ -13,7 +13,7 @@ function Presenter(options) {
 }
 
 Presenter.prototype = {
-	addEvents() {
+	addDefaultEvents() {
 		// Model events
 
 		this.model.stepUpdateEvent.addHandler(function(data) {
@@ -44,7 +44,12 @@ Presenter.prototype = {
 			this.model.setNearestValueViaPercents(data, true);
 		}.bind(this));
 
-		this.view.stylesUpdateEvent.addHandler(function(data) {
+		this.view.directionUpdateEvent.addHandler(function(data) {
+			this.view.applyStyles();
+			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+		}.bind(this));
+
+		this.view.themeUpdateEvent.addHandler(function(data) {
 			this.view.applyStyles();
 			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 		}.bind(this));
@@ -85,7 +90,8 @@ Presenter.prototype = {
 		if (options.roots !== undefined) this.view.setRoots(options.roots);
 		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
 		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
-		if (options.styles !== undefined) this.view.setStyles(options.styles);
+		if (options.theme !== undefined) this.view.setTheme(options.theme);
+		if (options.direction !== undefined) this.view.setDirection(options.direction);
 	},
 
 	applyUserEvents(options) {
@@ -99,7 +105,8 @@ Presenter.prototype = {
 		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
 		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
 		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
-		if (options.onStylesUpdate !== undefined) this.onStylesUpdate(options.onStylesUpdate);
+		if (options.onThemeUpdate !== undefined) this.onThemeUpdate(options.onThemeUpdate);
+		if (options.onDirectionUpdate !== undefined) this.onDirectionUpdate(options.onDirectionUpdate);
 	},
 
 	triggerEvents() {
@@ -125,7 +132,8 @@ Presenter.prototype = {
 			valuesCount: this.model.valuesCount
 		});
 
-		this.view.stylesUpdateEvent.trigger(Object.assign({}, this.view.styles));
+		this.view.themeUpdateEvent.trigger(Object.assign({}, this.view.theme));
+		this.view.directionUpdateEvent.trigger(Object.assign({}, this.view.direction));
 		this.view.valueNoteDisplayUpdateEvent.trigger(this.view.valueNoteDisplay);
 		this.view.rootsUpdateEvent.trigger(this.view.roots);
 		this.view.divisionsCountUpdateEvent.trigger(this.view.divisionsCount);
@@ -147,8 +155,12 @@ Presenter.prototype = {
 		this.model.typeUpdateEvent.addHandler(handler);
 	},
 
-	onStylesUpdate(handler) {
-		this.view.stylesUpdateEvent.addHandler(handler);
+	onThemeUpdate(handler) {
+		this.view.themeUpdateEvent.addHandler(handler);
+	},
+
+	onDirectionUpdate(handler) {
+		this.view.directionUpdateEvent.addHandler(handler);
 	},
 
 	onValueNoteDisplayUpdate(handler) {

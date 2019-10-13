@@ -9,24 +9,20 @@ function View() {
 	this.roots = document.body;
 	this.divisionsCount = 5;
 	this.valueNoteDisplay = true;
-	this.styles = {
-		theme: {
-			value: "default",
-			className: "theme",
-			oldValue: null
-		},
-		
-		direction: {
-			value: "horizontal",
-			className: "direction",
-			oldValue: null
-		}
+	this.theme = {
+		value: "default",
+		className: "theme",
+		oldValue: null
 	};
-	this.stylesConstants = {
-		direction: {
-			horizontalValue: "horizontal", 
-			verticalValue: "vertical"
-		}
+	this.direction = {
+		value: "horizontal",
+		className: "direction",
+		oldValue: null
+	};
+
+	this.directionConstants = {
+		horizontalValue: "horizontal",
+		verticalValue: "vertical"
 	};
 
 	// Lists of els
@@ -87,7 +83,8 @@ View.prototype = {
 		this.draggEvent = makeEvent();
 		this.clickEvent = makeEvent();
 		this.UIValueActionEvent = makeEvent();
-		this.stylesUpdateEvent = makeEvent();
+		this.directionUpdateEvent = makeEvent();
+		this.themeUpdateEvent = makeEvent();
 		this.stylesAppliedEvent = makeEvent();
 		this.valueNoteDisplayUpdateEvent = makeEvent();
 		this.rootsUpdateEvent = makeEvent();
@@ -183,14 +180,15 @@ View.prototype = {
 
 		function hanlder(event) {
 			var scale, min, max, pos;
-			var dir = this.styles.direction.value;
+			var direction = this.direction.value,
+				directionConstants = this.directionConstants;
 
-			if(dir == this.stylesConstants.direction.horizontalValue) {
+			if(direction === directionConstants.horizontalValue) {
 				scale = this.path.offsetWidth;
 				min = this.path.getBoundingClientRect().left;
 				pos = event.clientX;
 			}
-			if(dir ==  this.stylesConstants.direction.verticalValue) {
+			if(direction === directionConstants.verticalValue) {
 				scale = this.path.offsetHeight;
 				min = this.path.getBoundingClientRect().top;
 				pos = event.clientY;
@@ -201,10 +199,10 @@ View.prototype = {
 			// If the dragg is out of slider"s range, the function stops.
 			if (pos < min - 10 || pos > max + 10) return;
 
-			if(dir == this.stylesConstants.direction.horizontalValue) {
+			if(direction === directionConstants.horizontalValue) {
 				this.UIValueActionEvent.trigger((pos - min) / scale * 100);
 			}
-			if(dir == this.stylesConstants.direction.verticalValue) {
+			if(direction === directionConstants.verticalValue) {
 				this.UIValueActionEvent.trigger(100 - (pos - min) / scale * 100);
 			}
 		}
@@ -219,7 +217,6 @@ View.prototype = {
 		if (!helper.isDOMEl(roots)) return;
 		this.roots = roots;
 
-		//console.log(this.roots)
 		this.rootsUpdateEvent.trigger(this.roots);
 		return this.roots;
 	},
@@ -266,23 +263,20 @@ View.prototype = {
 		var pathScale, valueNoteScale, valuecaleMinNoteS, valuecaleMaxNoteS;
 		var selected = value.selected;
 		
-		var dir = this.styles.direction.value,
-			dirConsts = this.stylesConstants.direction;
+		var direction = this.direction.value,
+			directionConstants = this.directionConstants;
 		var type = currentType.type,
 			typeConstants = currentType.typeConstants;
 
-		this.pathPassed.style.cssText = "";
-		this.handle.style.cssText = "";
-		this.handleMin.style.cssText = "";
-		this.handleMax.style.cssText = "";
-		this.valueNote.style.cssText = "";
-		this.valueNoteMin.style.cssText = "";
-		this.valueNoteMax.style.cssText = "";
+		var clearList = [this.pathPassed, this.handle, this.handleMin, this.handleMax, this.valueNote, this.valueNoteMin, this.valueNoteMax];
+		for (var i = 0; i < clearList.length; i++) {
+			clearList[i].style.cssText = "";
+		}
 
 		if(type == typeConstants.singleValue) {
 			this.valueNote.innerHTML = value.value;
 
-			if(dir == dirConsts.horizontalValue) {
+			if(direction == directionConstants.horizontalValue) {
 				// Passed path
 				this.pathPassed.style.width = selected + "%";
 
@@ -294,7 +288,7 @@ View.prototype = {
 				this.valueNote.style.left = (pathScale * selected / 100 - valueNoteScale / 2) / pathScale * 100 + "%";
 			}
 
-			if(dir == dirConsts.verticalValue) {
+			if(direction == directionConstants.verticalValue) {
 				// Passed path
 				this.pathPassed.style.height = selected + "%";
 
@@ -313,7 +307,7 @@ View.prototype = {
 			this.valueNoteMin.innerHTML = value.minValue;
 			this.valueNoteMax.innerHTML = value.maxValue;
 
-			if(dir == dirConsts.horizontalValue) {
+			if(direction == directionConstants.horizontalValue) {
 	
 				// Passed path
 				this.pathPassed.style.width = selected + "%";
@@ -330,7 +324,7 @@ View.prototype = {
 				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valuecaleMaxNoteS / 2) / pathScale * 100 + "%";
 			}
 
-			if(dir == dirConsts.verticalValue) {
+			if(direction == directionConstants.verticalValue) {
 				this.pathPassed.style.height = selected + "%";
 				this.pathPassed.style.top = 100 - selected - start + "%";
 
@@ -349,70 +343,65 @@ View.prototype = {
 		return value;
 	},
 
-	setStyles(newStyles) {
-		if (!helper.isObject(newStyles)) return;
+	setTheme(newTheme) {
+		if (typeof newTheme !== "string") return;
 
-		var changed = false;
-		for(var prop in newStyles) {
-			if(!(prop in this.styles)) continue;
-			var mutable = this.styles[prop];
+		this.theme.oldValue = this.theme.value;
+		this.theme.value = newTheme;
 
-			if (newStyles[prop].value !== undefined) {
-				if (this.stylesConstants[prop]) {
-					for (var defs in this.stylesConstants[prop]) {
-						if (newStyles[prop].value == this.stylesConstants[prop][defs]) {
-							mutable.oldValue = mutable.value;
-							mutable.value = newStyles[prop].value;
-							changed = true;
-							break;
-						}
-					}
-				} else {
-					if (typeof newStyles[prop].value == "string") {
-						mutable.oldValue = mutable.value;
-						mutable.value = newStyles[prop].value;
-						changed = true;
-					}
-				}
-			}
+		this.themeUpdateEvent.trigger(this.theme.value);
+		return this.theme.value;
+	},
 
-			if (typeof newStyles[prop].className == "string") {
-				mutable.className = newStyles[prop].className;
-				changed = true;
+	getTheme() {
+		return this.theme.value;
+	},
+
+	setDirection(newDirection) {
+		if (typeof newDirection !== "string") return;
+
+		for (var constant in this.directionConstants) {
+			if (newDirection === this.directionConstants[constant]) {
+				this.direction.oldValue = this.direction.value;
+				this.direction.value = newDirection;
+
+				this.directionUpdateEvent.trigger({
+					value: this.direction.value,
+					constants: this.directionConstants
+				});
+				return {
+					value: this.direction.value,
+					constants: this.directionConstants
+				};
 			}
 		}
+	},
 
-		if(!changed) return;
-
-		this.stylesUpdateEvent.trigger(Object.assign({}, this.styles));
-		return Object.assign({}, this.styles);
+	getDirection() {
+		return {
+			value: this.direction.value,
+			constants: this.directionConstants
+		};
 	},
 
 	applyStyles() {
-		var styles = this.styles;
+		var styles = [this.theme, this.direction];
 
-		for (var i = this.els.length - 1; i >= 0; i--) {
+		for (var i = 0; i < this.els.length; i++) {
 			var el = this.els[i];
 
-			for(var prop in styles) {
+			for(var style in styles) {
 				var mark = this.els[i].classList[0],
-					oldValue = styles[prop].oldValue,
-					value = styles[prop].value;
+					oldValue = styles[style].oldValue,
+					value = styles[style].value;
 
-				if (oldValue) el.classList.remove(mark + "_" + styles[prop].className + "_" + oldValue);
-				if (value) el.classList.add(mark + "_" + styles[prop].className + "_" + value);
+				if (oldValue) el.classList.remove(mark + "_" + styles[style].className + "_" + oldValue);
+				if (value) el.classList.add(mark + "_" + styles[style].className + "_" + value);
 			}
 		}
 
 		this.stylesAppliedEvent.trigger(Object.assign({}, this.styles));
 		return Object.assign({}, this.styles);
-	},
-
-	getStyles() {
-		return {
-			styles: Object.assign({}, this.styles),
-			stylesConstants: Object.assign({}, this.stylesConstants)
-		};
 	},
 
 	setValueNoteDisplay(value) {

@@ -408,6 +408,7 @@ describe("setStyles method.", () => {
 		beforeEach(() => {
 			view.setStyles({direction: {value: "horizontal", className: "direction"}, theme: {value: "default", className: "theme"}})
 		});
+		
 		it("Taking {direction: {value: 'someAnother'}}, returns undefined.", () => {
 			var result = view.setStyles({direction: {value: "someAnother"}});
 
