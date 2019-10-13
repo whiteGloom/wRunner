@@ -20,6 +20,44 @@
 ## Внимание
 jQuery версия слайдера требует [jQuery](https://jquery.com/ "jQuery"), версией не ниже 3.4.1
 
+# Навигация
+* **[Шо ита? [RU]](#Шо ита? [RU])**
+* **[Инструкция](#Инструкция)**
+	+ **[Для работы с исходным кодом](#Для работы с исходным кодом)**
+	+ **[Создание экземпляра](#Создание экземпляра)**
+	+ **[Методы](#Методы)**
+		- **[setType method](#setType method)**
+		- **[setLimits method](#setLimits method)**
+		- **[setStep method](#setStep method)**
+		- **[setSingleValue method](#setSingleValue method)**
+		- **[setRangeValue method](#setRangeValue method)**
+		- **[setValueNoteDisplay method](#setValueNoteDisplay method)**
+		- **[setNearestValueViaPercents method](#setNearestValueViaPercents method)**
+		- **[setDivisionsCount method](#setDivisionsCount method)**
+		- **[setRoots method](#setRoots method)**
+		- **[setTheme method](#setTheme method)**
+		- **[setDirection method](#setDirection method)**
+		- **[getType method](#getType method)**
+		- **[getStep method](#getStep method)**
+		- **[getLimits method](#getLimits method)**
+		- **[getValue method](#getValue method)**
+		- **[getRoots method](#getRoots method)**
+		- **[getValueNoteDisplay method](#getValueNoteDisplay method)**
+		- **[getDivisionsCount method](#getDivisionsCount method)**
+		- **[getTheme method](#getTheme method)**
+		- **[getDirection method](#getDirection method)**
+	+ **[События](#События)**
+		- **[onStepUpdate method](#onStepUpdate method)**
+		- **[onTypeUpdate method](#onTypeUpdate method)**
+		- **[onLimitsUpdate method](#onLimitsUpdate method)**
+		- **[onValueUpdate method](#onValueUpdate method)**
+		- **[onRootsUpdate method](#onRootsUpdate method)**
+		- **[onDivisionsCountUpdate  method](#onDivisionsCountUpdate  method)**
+		- **[onValueNoteDisplayUpdate method](#onValueNoteDisplayUpdate method)**
+		- **[onThemeUpdate method](#onThemeUpdate method)**
+		- **[onDirectionUpdate method](#onDirectionUpdate method)**
+* **[Всё.](#Всё.)**
+
 # Инструкция
 
 ## Для работы с исходным кодом
@@ -76,37 +114,37 @@ $(DOM element).wRunner([options]);
 
 *Arguments:*
 * **options** - type: object. Properties:
-	- **step** - (watch setStep method)
+	- **step** - (watch [setStep method](#setStep method "setStep method"))
 		+ Default: 1
-	- **type** - (watch setType method)
+	- **type** - (watch [setType method](#setType method "setType method"))
 		+ Default: "single"
-	- **limits** - (watch setLimits method)
+	- **limits** - (watch [setLimits method](#setLimits method "setLimits method"))
 		+ Default: {minLimit: 0, maxLimit: 100}
-	- **singleValue** - (watch setSingleValue method)
+	- **singleValue** - (watch [setSingleValue method](#setSingleValue method "setSingleValue method"))
 		+ Default: 50
-	- **rangeValue** - (watch setRangeValue method)
+	- **rangeValue** - (watch [setRangeValue method](#setRangeValue method "setRangeValue method"))
 		+ Default: { minValue: 20, maxValue: 80 }
-	- **roots** - (watch setRoots method) **Доступен только в JS Native версии.**
+	- **roots** - (watch [setRoots method](#setRoots method "setRoots method")) **(Доступен только в JS Native версии)**
 		+ Default: document.body
-	- **divisionsCount** - (watch setDivisionsCount method)
+	- **divisionsCount** - (watch [setDivisionsCount method](#setDivisionsCount method "setDivisionsCount method"))
 		+ Default: 5
-	- **valueNoteDisplay** - (watch setValueNoteDisplay method)
+	- **valueNoteDisplay** - (watch [setValueNoteDisplay method](#setValueNoteDisplay method "setValueNoteDisplay method"))
 		+ Default: true
-	- **theme** - (watch setTheme method)
+	- **theme** - (watch [setTheme method](#setTheme method "setTheme method"))
 		+ Default: "default"
-	- **direction** - (watch setDirection method)
+	- **direction** - (watch [setDirection method](#setDirection method "setDirection method"))
 		+ Default: "horizontal"
-	- **onStepUpdate** - (watch onStepUpdate method)
-	- **onTypeUpdate** - (watch onTypeUpdate method)
-	- **onLimitsUpdate** - (watch onLimitsUpdate method)
-	- **onValueUpdate** - (watch onValueUpdate method)
-	- **onRootsUpdate** - (watch onRootsUpdate method)
-	- **onDivisionsCountUpdate** - (watch onDivisionsCountUpdate method)
-	- **onValueNoteDisplayUpdate** - (watch onValueNoteDisplayUpdate method)
-	- **onThemeUpdate** - (watch onThemeUpdate method)
-	- **onDirectionUpdate** - (watch onDirectionUpdate method)
+	- **onStepUpdate** - (watch [onStepUpdate method](#onStepUpdate method "onStepUpdate method"))
+	- **onTypeUpdate** - (watch [onTypeUpdate method](#onTypeUpdate method "onTypeUpdate method"))
+	- **onLimitsUpdate** - (watch [onLimitsUpdate method](#onLimitsUpdate method "onLimitsUpdate method"))
+	- **onValueUpdate** - (watch [onValueUpdate method](#onValueUpdate method "onValueUpdate method"))
+	- **onRootsUpdate** - (watch [onRootsUpdate method](#onRootsUpdate method "onRootsUpdate method"))
+	- **onDivisionsCountUpdate** - (watch [onDivisionsCountUpdate method](#onDivisionsCountUpdate method "onDivisionsCountUpdate method"))
+	- **onValueNoteDisplayUpdate** - (watch [onValueNoteDisplayUpdate method](#onValueNoteDisplayUpdate method "onValueNoteDisplayUpdate method"))
+	- **onThemeUpdate** - (watch [onThemeUpdate method](#onThemeUpdate method "onThemeUpdate method"))
+	- **onDirectionUpdate** - (watch [onDirectionUpdate method](#onDirectionUpdate method "onDirectionUpdate method"))
 
-## Методы:
+## Методы
 
 ### setType method
 Меняет тип слайдера.
@@ -517,7 +555,7 @@ getValueNoteDisplay()
 
 ------------
 
-
+## События
 
 ### onStepUpdate method
 Устанавливает функцию-обработчик, вызываемую при обновлении шага слайдера
@@ -529,7 +567,7 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setStep method*
+Смотреть *[setStep method](#setStep method "setStep method")*
 
 ------------
 
@@ -545,7 +583,7 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setType method*
+Смотреть *[setType method](#setType method "setType method")*
 
 ------------
 
@@ -561,7 +599,7 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setLimits method*
+Смотреть *[setLimits method](#setLimits method "setLimits method")*
 
 ------------
 
@@ -577,7 +615,7 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setValue method*
+Смотреть *[setValue method](#setValue method "setValue method")*
 
 ------------
 
@@ -593,7 +631,7 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setRoots method*
+Смотреть *[setRoots method](#setRoots method "setRoots method")*
 
 ------------
 
@@ -609,7 +647,7 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setDivisionsCount method*
+Смотреть *[setDivisionsCount method](#setDivisionsCount method "setDivisionsCount method")*
 
 ------------
 
@@ -625,7 +663,7 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setValueNoteDisplay method*
+Смотреть *[setValueNoteDisplay method](#setValueNoteDisplay method "setValueNoteDisplay method")*
 
 ------------
 
@@ -641,7 +679,7 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setTheme method*
+Смотреть *[setTheme method](#setTheme method "setTheme method")*
 
 ------------
 
@@ -657,10 +695,10 @@ getValueNoteDisplay()
 ```
 
 **Передаваемые значения:**
-Смотреть *setDirection method*
+Смотреть *[setDirection method](#setDirection method "setDirection method")*
 
 ------------
 
 
-## Всё.
+# Всё.
 **-whiteGloom**
