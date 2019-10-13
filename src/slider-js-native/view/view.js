@@ -25,47 +25,24 @@ function View() {
 		verticalValue: "vertical"
 	};
 
-	// Lists of els
-	this.stableElsList = [];
-	this.divisionsList = [];
-	this.els = [];
-
 	// Stable elements
-	// Base
 	this.base = document.createElement("div");
-	this.stableElsList.push(this.base);
-
-	// Outer
 	this.outer = document.createElement("div");
-	this.stableElsList.push(this.outer);
-
-	// Path
 	this.path = document.createElement("div");
-	this.stableElsList.push(this.path);
-
-	// Passed path
 	this.pathPassed = document.createElement("div");
-	this.stableElsList.push(this.pathPassed);
 
 	// Path handles
 	this.handle = document.createElement("div");
-	this.stableElsList.push(this.handle);
 	this.handleMin = document.createElement("div");
-	this.stableElsList.push(this.handleMin);
 	this.handleMax = document.createElement("div");
-	this.stableElsList.push(this.handleMax);
 
 	// Path values
 	this.valueNote = document.createElement("div");
-	this.stableElsList.push(this.valueNote);
 	this.valueNoteMin = document.createElement("div");
-	this.stableElsList.push(this.valueNoteMin);
 	this.valueNoteMax = document.createElement("div");
-	this.stableElsList.push(this.valueNoteMax);
 
-	// Division"s container
 	this.divisions = document.createElement("div");
-	this.stableElsList.push(this.divisions);
+	this.divisionsList = [];
 
 
 	this.generateBaseDOM();
@@ -251,7 +228,6 @@ View.prototype = {
 			this.divisions.appendChild(instance);
 		}
 
-		this.els = this.divisionsList.concat(this.stableElsList);
 		return this.divisionsList;
 	},
 
@@ -386,12 +362,20 @@ View.prototype = {
 
 	applyStyles() {
 		var styles = [this.theme, this.direction];
+		var els = [
+			this.base, this.outer,
+			this.path, this.pathPassed,
+			this.divisions,	this.handle,
+			this.handleMin, this.handleMax,
+			this.valueNote, this.valueNoteMin,
+			this.valueNoteMax
+		].concat(this.divisionsList);
 
-		for (var i = 0; i < this.els.length; i++) {
-			var el = this.els[i];
+		for (var i = 0; i < els.length; i++) {
+			var el = els[i];
 
 			for(var style in styles) {
-				var mark = this.els[i].classList[0],
+				var mark = els[i].classList[0],
 					oldValue = styles[style].oldValue,
 					value = styles[style].value;
 

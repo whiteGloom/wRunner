@@ -121,22 +121,14 @@ function test() {
 
 	makeSlider(1, {
 		roots: document.getElementById("exm1"),
-		styles: {
-			direction: {
-				value: "vertical"
-			}
-		},
+		direction: "vertical",
 		step: 5,
 		type: "range"
 	}, "native");
 
 	makeSlider(2, {
 		divisionsCount: 16,
-		styles: {
-			direction: {
-				value: "vertical"
-			}
-		},
+		direction: "vertical",
 		step: 5,
 		type: "range"
 	});
