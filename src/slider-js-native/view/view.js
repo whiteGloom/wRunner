@@ -195,7 +195,7 @@ class View {
 	}
 
 	drawValue(value, limits, currentType) {
-		var pathScale, valueNoteScale, valueMinNoteScale, valueMaxNoteScale;
+		var pathScale, valueNoteScale, valueNoteMinScale, valueNoteMaxScale;
 		var selected = value.selected;
 		
 		var direction = this.direction.value,
@@ -249,7 +249,7 @@ class View {
 			this.valueNoteMax.innerHTML = value.maxValue;
 
 			if(direction == directionConstants.horizontalValue) {
-	
+
 				// Passed path
 				this.pathPassed.style.width = selected + "%";
 				this.pathPassed.style.left = start + "%";
@@ -259,10 +259,10 @@ class View {
 				this.handleMax.style.left = start + selected +"%";
 
 				pathScale = this.path.offsetWidth;
-				valueMinNoteScale = this.valueNoteMin.offsetWidth; valueMaxNoteScale = this.valueNoteMax.offsetWidth;
+				valueNoteMinScale = this.valueNoteMin.offsetWidth; valueNoteMaxScale = this.valueNoteMax.offsetWidth;
 
-				this.valueNoteMin.style.left = (pathScale * start / 100 - valueMinNoteScale / 2) / pathScale * 100 + "%";
-				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valueMaxNoteScale / 2) / pathScale * 100 + "%";
+				this.valueNoteMin.style.left = (pathScale * start / 100 - valueNoteMinScale / 2) / pathScale * 100 + "%";
+				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2) / pathScale * 100 + "%";
 			}
 
 			if(direction == directionConstants.verticalValue) {
@@ -274,10 +274,10 @@ class View {
 				this.handleMin.style.top = 100 - start  +"%";
 
 				pathScale = this.path.offsetHeight;
-				valueMinNoteScale = this.valueNoteMin.offsetHeight; valueMaxNoteScale = this.valueNoteMax.offsetHeight;
+				valueNoteMinScale = this.valueNoteMin.offsetHeight; valueNoteMaxScale = this.valueNoteMax.offsetHeight;
 
-				this.valueNoteMin.style.top = 100 - (pathScale * start / 100 + valueMinNoteScale / 2) / pathScale * 100 + "%";
-				this.valueNoteMax.style.top = 100 - (pathScale * (start + selected) / 100 + valueMaxNoteScale / 2) / pathScale * 100 + "%";
+				this.valueNoteMin.style.top = 100 - (pathScale * start / 100 + valueNoteMinScale / 2) / pathScale * 100 + "%";
+				this.valueNoteMax.style.top = 100 - (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2) / pathScale * 100 + "%";
 			}
 		}
 
@@ -330,7 +330,7 @@ class View {
 		var els = [
 			this.base, this.outer,
 			this.path, this.pathPassed,
-			this.divisions,	this.handle,
+			this.divisions, this.handle,
 			this.handleMin, this.handleMax,
 			this.valueNote, this.valueNoteMin,
 			this.valueNoteMax
@@ -362,10 +362,11 @@ class View {
 	}
 
 	applyValueNoteDisplay() {
-		var mark = this.valueNote.classList[0];
 		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
 
 		for (var i = 0; i < els.length; i++) {
+			var mark = els[i].classList[0];
+
 			els[i].classList.remove(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"));
 			els[i].classList.add(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
 		}

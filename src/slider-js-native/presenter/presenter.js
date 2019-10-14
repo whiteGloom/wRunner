@@ -126,8 +126,11 @@ class Presenter {
 			valuesCount: this.model.valuesCount
 		});
 
-		this.view.themeUpdateEvent.trigger(Object.assign({}, this.view.theme));
-		this.view.directionUpdateEvent.trigger(Object.assign({}, this.view.direction));
+		this.view.themeUpdateEvent.trigger(this.view.theme.value);
+		this.view.directionUpdateEvent.trigger({
+			value: this.view.direction.value,
+			constants: Object.assign({}, this.view.directionConstants)
+		});
 		this.view.valueNoteDisplayUpdateEvent.trigger(this.view.valueNoteDisplay);
 		this.view.rootsUpdateEvent.trigger(this.view.roots);
 		this.view.divisionsCountUpdateEvent.trigger(this.view.divisionsCount);

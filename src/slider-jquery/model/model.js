@@ -84,7 +84,8 @@ class Model {
 
 	setSingleValue(value, auto) {
 		value = helper.isNumber(value) ? +value : this.singleValue;
-		this.setAValueTo(value, "singleValue", true);
+
+		this.setAValueTo(value, "singleValue", auto);
 
 		// Update selected
 		this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
@@ -112,7 +113,7 @@ class Model {
 
 		if (min === max) {
 			max += this.step;
-			if (!auto) console.log("The maximum value was increased by 1, because minimum value is equal to maximum value.");
+			if (!auto) console.log("The maximum value was increased by step size, because minimum value is equal to maximum value.");
 		}
 		if (min > max) {
 			let clone = max;
@@ -203,7 +204,7 @@ class Model {
 	}
 
 	setStep(step) {
-		if (!helper.isNumber(step) || step <= 0) return;
+		if (!helper.isNumber(step) || +step <= 0) return;
 		this.step = +step;
 
 		this.stepUpdateEvent.trigger(this.step);

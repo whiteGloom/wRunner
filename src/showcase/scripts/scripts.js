@@ -56,6 +56,7 @@ function test() {
 			},
 
 			onRootsUpdate: function(roots) {
+				roots = $(roots)[0];
 				var str = "#" + roots.id;
 				for (var i = 0; i < roots.classList.length; i++) {
 					str+= "." + roots.classList[i];

@@ -254,14 +254,13 @@ describe("generateDivisions method.", () => {
 	});
 
 	it("Generate divisions for slider's.", () => {
-		var result = view.generateDivisions();
+		view.generateDivisions();
 
-		expect(helper.isArray(result)).toBeTruthy();
-		expect(result.length).toEqual(3);
+		expect(view.divisionsList.length).toEqual(3);
 
-		for(var i = 0; i < result.length - 1; i++) {
-			expect(helper.isDOMEl(result[i])).toBeTruthy();
-			expect(result[i].parentNode).toEqual(view.divisions);
+		for(var i = 0; i < view.divisionsList.length; i++) {
+			expect(helper.isDOMEl(view.divisionsList[i])).toBeTruthy();
+			expect(view.divisionsList[i].parentNode).toEqual(view.divisions);
 		}
 	});
 });

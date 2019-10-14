@@ -7,7 +7,7 @@ const helper = helperModule;
 class View {
 	constructor() {
 		// Defaults
-		this.roots = document.body;
+		this.$roots = $(document.body);
 		this.divisionsCount = 5;
 		this.valueNoteDisplay = true;
 		this.theme = {
@@ -27,22 +27,22 @@ class View {
 		};
 
 		// Stable elements
-		this.base = $("<div class='wrunner'>")[0];
-		this.outer = $("<div class='wrunner__outer'>").appendTo($(this.base))[0];
-		this.path = $("<div class='wrunner__path'>").appendTo($(this.outer))[0];
-		this.pathPassed = $("<div class='wrunner__pathPassed'>").appendTo($(this.path))[0];
+		this.$base = $("<div class='wrunner'>");
+		this.$outer = $("<div class='wrunner__outer'>").appendTo(this.$base);
+		this.$path = $("<div class='wrunner__path'>").appendTo(this.$outer);
+		this.$pathPassed = $("<div class='wrunner__pathPassed'>").appendTo(this.$path);
 
 		// Path handles
-		this.handle = $("<div class='wrunner__handle'>")[0];
-		this.handleMin = $("<div class='wrunner__handle'>")[0];
-		this.handleMax = $("<div class='wrunner__handle'>")[0];
+		this.$handle = $("<div class='wrunner__handle'>");
+		this.$handleMin = $("<div class='wrunner__handle'>");
+		this.$handleMax = $("<div class='wrunner__handle'>");
 
 		// Path values
-		this.valueNote = $("<div class='wrunner__valueNote'>")[0];
-		this.valueNoteMin = $("<div class='wrunner__valueNote'>")[0];
-		this.valueNoteMax = $("<div class='wrunner__valueNote'>")[0];
+		this.$valueNote = $("<div class='wrunner__valueNote'>");
+		this.$valueNoteMin = $("<div class='wrunner__valueNote'>");
+		this.$valueNoteMax = $("<div class='wrunner__valueNote'>");
 
-		this.divisions = $("<div class='wrunner__divisions'>").appendTo($(this.outer))[0];
+		this.$divisions = $("<div class='wrunner__divisions'>").appendTo(this.$outer);
 		this.divisionsList = [];
 
 		this.addEvents();
@@ -61,27 +61,27 @@ class View {
 	}
 
 	addListenners() {
-		$(this.path).on("mousedown", this.mouseAction.bind(this));
+		$(this.$path).on("mousedown", this.mouseAction.bind(this));
 	}
 
 	updateDOM(type) {
 		if(type.type == type.typeConstants.singleValue) {
-			$(this.handleMin).detach();
-			$(this.handleMax).detach();
-			$(this.valueNoteMin).detach();
-			$(this.valueNoteMax).detach();
+			this.$handleMin.detach();
+			this.$handleMax.detach();
+			this.$valueNoteMin.detach();
+			this.$valueNoteMax.detach();
 
-			$(this.handle).appendTo($(this.path));
-			$(this.valueNote).appendTo($(this.outer));
+			this.$handle.appendTo(this.$path);
+			this.$valueNote.appendTo(this.$outer);
 		}
 		if(type.type == type.typeConstants.rangeValue) {
-			$(this.handle).detach();
-			$(this.valueNote).detach();
+			this.$handle.detach();
+			this.$valueNote.detach();
 
-			$(this.handleMin).appendTo($(this.path));
-			$(this.handleMax).appendTo($(this.path));
-			$(this.valueNoteMin).appendTo($(this.outer));
-			$(this.valueNoteMax).appendTo($(this.outer));
+			this.$handleMin.appendTo(this.$path);
+			this.$handleMax.appendTo(this.$path);
+			this.$valueNoteMin.appendTo(this.$outer);
+			this.$valueNoteMax.appendTo(this.$outer);
 		}
 	}
 
@@ -102,14 +102,14 @@ class View {
 
 		// Handlers
 		function mouseUp(eventUp) {
-			var target = eventUp.target;
+			var $target = $(eventUp.target);
 
 			// Removing move bind.
 			$(document.body).off("mousemove", handlerBind);
 
 			// If handle was dragged, stop the function.
 			if (dragged) return;
-			if (target == this.handle || target == this.handleMin || target == this.handleMax) return;
+			if ($target.is(this.$handle) || $target.is(this.$handleMin) || $target.is(this.$handleMax)) return;
 
 			// Else trigger a click.
 			handlerBind(eventUp);
@@ -121,13 +121,13 @@ class View {
 				directionConstants = this.directionConstants;
 
 			if(direction === directionConstants.horizontalValue) {
-				scale = $(this.path).outerWidth();
-				min = this.path.getBoundingClientRect().left;
+				scale = this.$path.outerWidth();
+				min = this.$path[0].getBoundingClientRect().left;
 				pos = event.clientX;
 			}
 			if(direction === directionConstants.verticalValue) {
-				scale = $(this.path).outerHeight();
-				min = this.path.getBoundingClientRect().top;
+				scale = this.$path.outerHeight();
+				min = this.$path[0].getBoundingClientRect().top;
 				pos = event.clientY;
 			}
 
@@ -146,20 +146,21 @@ class View {
 	}
 
 	append() {
-		$(this.base).appendTo($(this.roots));
-		return this.roots;
+		this.$base.appendTo(this.$roots);
+
+		return this.$roots;
 	}
 
 	setRoots(roots) {
-		if (!helper.isDOMEl(roots)) return;
-		this.roots = roots;
+		if (!helper.isDOMEl($(roots)[0])) return;
+		this.$roots = $(roots);
 
-		this.rootsUpdateEvent.trigger(this.roots);
-		return this.roots;
+		this.rootsUpdateEvent.trigger(this.$roots);
+		return this.$roots;
 	}
 
 	getRoots() {
-		return this.roots;
+		return this.$roots;
 	}
 
 	setDivisionsCount(count, auto) {
@@ -178,14 +179,14 @@ class View {
 	}
 
 	generateDivisions() {
-		$(this.divisions).empty();
+		this.$divisions.empty();
 		this.divisionsList.length = 0;
 
 		for(var i = this.divisionsCount; i > 0; i--) {
 			var instance = $("<div class='wrunner__division'>");
 			
-			this.divisionsList.push(instance[0]);
-			instance.appendTo($(this.divisions));
+			this.divisionsList.push(instance);
+			instance.appendTo(this.$divisions);
 		}
 	}
 
@@ -203,79 +204,79 @@ class View {
 			typeConstants = currentType.typeConstants;
 
 		var clearList = [
-			this.pathPassed, this.handle,
-			this.handleMin, this.handleMax,
-			this.valueNote, this.valueNoteMin,
-			this.valueNoteMax
+			this.$pathPassed, this.$handle,
+			this.$handleMin, this.$handleMax,
+			this.$valueNote, this.$valueNoteMin,
+			this.$valueNoteMax
 		];
 
 		for (var i = 0; i < clearList.length; i++) {
-			$(clearList[i]).attr("style", "");
+			clearList[i].attr("style", "");
 		}
 
 		if(type == typeConstants.singleValue) {
-			$(this.valueNote).text(value.value);
+			this.$valueNote.text(value.value);
 
 			if(direction == directionConstants.horizontalValue) {
 				// Passed path
-				$(this.pathPassed).css("width", selected + "%");
+				this.$pathPassed.css("width", selected + "%");
 
 				// Handle
-				$(this.handle).css("left",selected + "%");
+				this.$handle.css("left",selected + "%");
 
-				pathScale = $(this.path).outerWidth(); valueNoteScale = $(this.valueNote).outerWidth();
+				pathScale = this.$path.outerWidth(); valueNoteScale = this.$valueNote.outerWidth();
 
-				$(this.valueNote).css("left", (pathScale * selected / 100 - valueNoteScale / 2) / pathScale * 100 + "%");
+				this.$valueNote.css("left", (pathScale * selected / 100 - valueNoteScale / 2) / pathScale * 100 + "%");
 			}
 
 			if(direction == directionConstants.verticalValue) {
 				// Passed path
-				$(this.pathPassed).css("height", selected + "%");
+				this.$pathPassed.css("height", selected + "%");
 
 				// Handle
-				$(this.handle).css("top", 100 - selected + "%");
+				this.$handle.css("top", 100 - selected + "%");
 
-				pathScale = $(this.path).outerHeight();	valueNoteScale = $(this.valueNote).outerHeight();
+				pathScale = this.$path.outerHeight(); valueNoteScale = this.$valueNote.outerHeight();
 
-				$(this.valueNote).css("top", 100 - (pathScale * selected / 100 + valueNoteScale / 2) / pathScale * 100 + "%");
+				this.$valueNote.css("top", 100 - (pathScale * selected / 100 + valueNoteScale / 2) / pathScale * 100 + "%");
 			}
 		}
 
 		if (type == typeConstants.rangeValue) {
 			var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
 
-			$(this.valueNoteMin).text(value.minValue);
-			$(this.valueNoteMax).text(value.maxValue);
+			this.$valueNoteMin.text(value.minValue);
+			this.$valueNoteMax.text(value.maxValue);
 
 			if(direction == directionConstants.horizontalValue) {
 				// Passed path
-				$(this.pathPassed).css("width", selected + "%");
-				$(this.pathPassed).css("left", start + "%");
+				this.$pathPassed.css("width", selected + "%");
+				this.$pathPassed.css("left", start + "%");
 
 				// Handle
-				$(this.handleMin).css("left", start + "%");
-				$(this.handleMax).css("left", start + selected +"%");
+				this.$handleMin.css("left", start + "%");
+				this.$handleMax.css("left", start + selected +"%");
 
-				pathScale = $(this.path).outerWidth();
-				valueNoteMinScale = $(this.valueNoteMin).outerWidth(); valueNoteMaxScale = $(this.valueNoteMax).outerWidth();
+				pathScale = this.$path.outerWidth();
+				valueNoteMinScale = this.$valueNoteMin.outerWidth(); valueNoteMaxScale = this.$valueNoteMax.outerWidth();
 
-				$(this.valueNoteMin).css("left", (pathScale * start / 100 - valueNoteMinScale / 2) / pathScale * 100 + "%");
-				$(this.valueNoteMax).css("left", (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2) / pathScale * 100 + "%");
+				this.$valueNoteMin.css("left", (pathScale * start / 100 - valueNoteMinScale / 2) / pathScale * 100 + "%");
+				this.$valueNoteMax.css("left", (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2) / pathScale * 100 + "%");
 			}
 
 			if(direction == directionConstants.verticalValue) {
-				$(this.pathPassed).css("height", selected + "%");
-				$(this.pathPassed).css("top", 100 - selected - start + "%");
+				this.$pathPassed.css("height", selected + "%");
+				this.$pathPassed.css("top", 100 - selected - start + "%");
 
 				// Handle
-				$(this.handleMax).css("top", 100 - start - selected + "%");
-				$(this.handleMin).css("top", 100 - start  +"%");
+				this.$handleMax.css("top", 100 - start - selected + "%");
+				this.$handleMin.css("top", 100 - start  +"%");
 
-				pathScale = $(this.path).outerHeight();
-				valueNoteMinScale = $(this.valueNoteMin).outerHeight(); valueNoteMaxScale = $(this.valueNoteMax).outerHeight();
+				pathScale = this.$path.outerHeight();
+				valueNoteMinScale = this.$valueNoteMin.outerHeight(); valueNoteMaxScale = this.$valueNoteMax.outerHeight();
 
-				$(this.valueNoteMin).css("top", 100 - (pathScale * start / 100 + valueNoteMinScale / 2) / pathScale * 100 + "%");
-				$(this.valueNoteMax).css("top", 100 - (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2) / pathScale * 100 + "%");
+				this.$valueNoteMin.css("top", 100 - (pathScale * start / 100 + valueNoteMinScale / 2) / pathScale * 100 + "%");
+				this.$valueNoteMax.css("top", 100 - (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2) / pathScale * 100 + "%");
 			}
 		}
 
@@ -326,19 +327,19 @@ class View {
 	applyStyles() {
 		var styles = [this.theme, this.direction];
 		var els = [
-			this.base, this.outer,
-			this.path, this.pathPassed,
-			this.divisions,	this.handle,
-			this.handleMin, this.handleMax,
-			this.valueNote, this.valueNoteMin,
-			this.valueNoteMax
+			this.$base, this.$outer,
+			this.$path, this.$pathPassed,
+			this.$divisions, this.$handle,
+			this.$handleMin, this.$handleMax,
+			this.$valueNote, this.$valueNoteMin,
+			this.$valueNoteMax
 		].concat(this.divisionsList);
 
 		for (var i = 0; i < els.length; i++) {
-			var $el = $(els[i]);
+			var $el = els[i];
 
 			for(var style in styles) {
-				var mark = els[i].classList[0],
+				var mark = $el[0].classList[0],
 					oldValue = styles[style].oldValue,
 					value = styles[style].value;
 
@@ -360,11 +361,12 @@ class View {
 	}
 
 	applyValueNoteDisplay() {
-		var mark = this.valueNote.classList[0];
-		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
+		var els = [this.$valueNote, this.$valueNoteMin, this.$valueNoteMax];
 
 		for (var i = 0; i < els.length; i++) {
-			$(els[i])
+			var mark = els[i][0].classList[0];
+
+			els[i]
 				.removeClass(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"))
 				.addClass(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
 		}

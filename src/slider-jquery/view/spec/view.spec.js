@@ -18,12 +18,12 @@ describe("updateDOM method.", () => {
 		it("Rebuild plugin structure.", () => {
 			view.updateDOM({type: "single", typeConstants: {singleValue: "single", rangeValue: "range"}});
 
-			expect(view.path.parentNode == view.outer).toBeTruthy();
-			expect(view.pathPassed.parentNode == view.path).toBeTruthy();
-			expect(view.divisions.parentNode == view.outer).toBeTruthy();
+			expect(view.$path.parent().is(view.$outer)).toBeTruthy();
+			expect(view.$pathPassed.parent().is(view.$path)).toBeTruthy();
+			expect(view.$divisions.parent().is(view.$outer)).toBeTruthy();
 
-			expect(view.handle.parentNode == view.path);
-			expect(view.valueNote.parentNode == view.outer);
+			expect(view.$handle.parent().is(view.$path)).toBeTruthy();
+			expect(view.$valueNote.parent().is(view.$outer)).toBeTruthy();
 		});
 	});
 
@@ -31,14 +31,14 @@ describe("updateDOM method.", () => {
 		it("Rebuild plugin structure.", () => {
 			view.updateDOM({type: "range", typeConstants: {singleValue: "single", rangeValue: "range"}});
 
-			expect(view.path.parentNode == view.outer).toBeTruthy();
-			expect(view.pathPassed.parentNode == view.path).toBeTruthy();
-			expect(view.divisions.parentNode == view.outer).toBeTruthy();
+			expect(view.$path.parent().is(view.$outer)).toBeTruthy();
+			expect(view.$pathPassed.parent().is(view.$path)).toBeTruthy();
+			expect(view.$divisions.parent().is(view.$outer)).toBeTruthy();
 
-			expect(view.handleMin.parentNode == view.path);
-			expect(view.handleMax.parentNode == view.path);
-			expect(view.valueNoteMin.parentNode == view.outer);
-			expect(view.valueNoteMax.parentNode == view.outer);
+			expect(view.$handleMin.parent().is(view.$path)).toBeTruthy();
+			expect(view.$handleMax.parent().is(view.$path)).toBeTruthy();
+			expect(view.$valueNoteMin.parent().is(view.$outer)).toBeTruthy();
+			expect(view.$valueNoteMax.parent().is(view.$outer)).toBeTruthy();
 		});
 	});
 });
@@ -47,17 +47,17 @@ describe("append method.", () => {
 	it("Applying slider's roots.", () => {
 		view.append();
 
-		expect(view.base.parentNode == view.roots).toBeTruthy();
+		expect(view.$base.parent().is(view.$roots)).toBeTruthy();
 	});
 });
 
 describe("setRoots method.", () => {
 	describe("Normal value - DOM el.", () => {
 		it("Chaning roots, returns roots.", () => {
-			var result = view.setRoots(document.getElementById("root"));
+			var result = view.setRoots($("#root"));
 
-			expect(result).toEqual(document.getElementById("root"));
-			expect(result).toEqual(view.roots);
+			expect(result.is($("#root"))).toBeTruthy();
+			expect(result.is(view.$roots)).toBeTruthy();
 		});
 	});
 
@@ -70,63 +70,63 @@ describe("setRoots method.", () => {
 			var result = view.setRoots(NaN);
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 
 		it("Taking {}, returns undefined.", () => {
 			var result = view.setRoots({});
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 
 		it("Taking 123, returns undefined.", () => {
 			var result = view.setRoots(123);
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 
 		it("Taking null, returns undefined.", () => {
 			var result = view.setRoots(null);
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 
 		it("Taking undefined, returns undefined.", () => {
 			var result = view.setRoots(undefined);
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 
 		it("Taking false, returns undefined.", () => {
 			var result = view.setRoots(false);
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 
 		it("Taking true, returns undefined.", () => {
 			var result = view.setRoots(true);
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 
 		it("Taking [], returns undefined.", () => {
 			var result = view.setRoots([]);
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 
 		it("Taking 'dadaya', returns undefined.", () => {
 			var result = view.setRoots("dadaya");
 
 			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
+			expect(view.$roots.is($(document.body))).toBeTruthy();
 		});
 	});
 });
@@ -135,7 +135,7 @@ describe("getRoots method.", () => {
 	it("Returns slider's roots.", () => {
 		var result = view.getRoots();
 
-		expect(helper.isDOMEl(result)).toBeTruthy();
+		expect(helper.isDOMEl(result[0])).toBeTruthy();
 	});
 });
 
@@ -255,14 +255,13 @@ describe("generateDivisions method.", () => {
 	});
 
 	it("Generate divisions for slider's.", () => {
-		var result = view.generateDivisions();
+		view.generateDivisions();
 
-		expect(helper.isArray(result)).toBeTruthy();
-		expect(result.length).toEqual(3);
+		expect(view.divisionsList.length).toEqual(3);
 
-		for(var i = 0; i < result.length - 1; i++) {
-			expect(helper.isDOMEl(result[i])).toBeTruthy();
-			expect(result[i].parentNode).toEqual(view.divisions);
+		for(var i = 0; i < view.divisionsList.length; i++) {
+			expect(helper.isDOMEl(view.divisionsList[i][0])).toBeTruthy();
+			expect(view.divisionsList[i].parent().is(view.$divisions)).toBeTruthy();
 		}
 	});
 });
@@ -475,19 +474,19 @@ describe("applyStyles method.", () => {
 		view.applyStyles();
 
 		var els = [
-			view.base, view.outer,
-			view.path, view.pathPassed,
-			view.divisions,	view.handle,
-			view.handleMin, view.handleMax,
-			view.valueNote, view.valueNoteMin,
-			view.valueNoteMax
+			view.$base, view.$outer,
+			view.$path, view.$pathPassed,
+			view.$divisions,	view.$handle,
+			view.$handleMin, view.$handleMax,
+			view.$valueNote, view.$valueNoteMin,
+			view.$valueNoteMax
 		].concat(view.divisionsList);
 
 		for (var i = 0; i < els.length; i++) {
 			var el = els[i];
 
-			expect(el).toHaveClass(el.classList[0] + "_theme_default");
-			expect(el).toHaveClass(el.classList[0] + "_direction_horizontal");
+			expect(el[0]).toHaveClass(el[0].classList[0] + "_theme_default");
+			expect(el[0]).toHaveClass(el[0].classList[0] + "_direction_horizontal");
 		}
 	});
 
@@ -500,18 +499,18 @@ describe("applyStyles method.", () => {
 		view.applyStyles();
 
 		var els = [
-			view.base, view.outer,
-			view.path, view.pathPassed,
-			view.divisions,	view.handle,
-			view.handleMin, view.handleMax,
-			view.valueNote, view.valueNoteMin,
-			view.valueNoteMax
+			view.$base, view.$outer,
+			view.$path, view.$pathPassed,
+			view.$divisions,	view.$handle,
+			view.$handleMin, view.$handleMax,
+			view.$valueNote, view.$valueNoteMin,
+			view.$valueNoteMax
 		].concat(view.divisionsList);
 
 		for (var i = 0; i < els.length; i++) {
 			var el = els[i];
-			expect(el).not.toHaveClass(el.classList[0] + "_theme_default");
-			expect(el).not.toHaveClass(el.classList[0] + "_direction_horizontal");
+			expect(el[0]).not.toHaveClass(el[0].classList[0] + "_theme_default");
+			expect(el[0]).not.toHaveClass(el[0].classList[0] + "_direction_horizontal");
 		}
 	});
 });
@@ -597,9 +596,9 @@ describe("applyValueNoteDisplay method.", () => {
 			var result = view.applyValueNoteDisplay();
 
 			expect(result).toBeTruthy();
-			expect(view.valueNote).toHaveClass(view.valueNote.classList[0] + "_display_visible");
-			expect(view.valueNoteMin).toHaveClass(view.valueNoteMin.classList[0] + "_display_visible");
-			expect(view.valueNoteMax).toHaveClass(view.valueNoteMax.classList[0] + "_display_visible");
+			expect(view.$valueNote[0]).toHaveClass(view.$valueNote[0].classList[0] + "_display_visible");
+			expect(view.$valueNoteMin[0]).toHaveClass(view.$valueNoteMin[0].classList[0] + "_display_visible");
+			expect(view.$valueNoteMax[0]).toHaveClass(view.$valueNoteMax[0].classList[0] + "_display_visible");
 		});
 	});
 
@@ -612,9 +611,9 @@ describe("applyValueNoteDisplay method.", () => {
 			var result = view.applyValueNoteDisplay();
 
 			expect(result).toBeFalsy();
-			expect(view.valueNote).toHaveClass(view.valueNote.classList[0] + "_display_hidden");
-			expect(view.valueNoteMin).toHaveClass(view.valueNoteMin.classList[0] + "_display_hidden");
-			expect(view.valueNoteMax).toHaveClass(view.valueNoteMax.classList[0] + "_display_hidden");
+			expect(view.$valueNote[0]).toHaveClass(view.$valueNote[0].classList[0] + "_display_hidden");
+			expect(view.$valueNoteMin[0]).toHaveClass(view.$valueNoteMin[0].classList[0] + "_display_hidden");
+			expect(view.$valueNoteMax[0]).toHaveClass(view.$valueNoteMax[0].classList[0] + "_display_hidden");
 		});
 	});
 });
