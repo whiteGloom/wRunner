@@ -4,59 +4,52 @@ import helperModule from "@helper";
 const makeEvent = makeEventModule;
 const helper = helperModule; 
 
-function View() {
-	// Defaults
-	this.roots = document.body;
-	this.divisionsCount = 5;
-	this.valueNoteDisplay = true;
-	this.theme = {
-		value: "default",
-		className: "theme",
-		oldValue: null
-	};
-	this.direction = {
-		value: "horizontal",
-		className: "direction",
-		oldValue: null
-	};
+class View {
+	constructor() {
+		// Defaults
+		this.roots = document.body;
+		this.divisionsCount = 5;
+		this.valueNoteDisplay = true;
+		this.theme = {
+			value: "default",
+			className: "theme",
+			oldValue: null
+		};
+		this.direction = {
+			value: "horizontal",
+			className: "direction",
+			oldValue: null
+		};
 
-	this.directionConstants = {
-		horizontalValue: "horizontal",
-		verticalValue: "vertical"
-	};
+		this.directionConstants = {
+			horizontalValue: "horizontal",
+			verticalValue: "vertical"
+		};
 
-	// Stable elements
-	this.base = $("<div class='wrunner'>")[0];
-	this.outer = $("<div class='wrunner__outer'>").appendTo($(this.base))[0];
-	this.path = $("<div class='wrunner__path'>").appendTo($(this.outer))[0];
-	this.pathPassed = $("<div class='wrunner__pathPassed'>").appendTo($(this.path))[0];
+		// Stable elements
+		this.base = $("<div class='wrunner'>")[0];
+		this.outer = $("<div class='wrunner__outer'>").appendTo($(this.base))[0];
+		this.path = $("<div class='wrunner__path'>").appendTo($(this.outer))[0];
+		this.pathPassed = $("<div class='wrunner__pathPassed'>").appendTo($(this.path))[0];
 
-	// Path handles
-	this.handle = $("<div class='wrunner__handle'>")[0];
-	this.handleMin = $("<div class='wrunner__handle'>")[0];
-	this.handleMax = $("<div class='wrunner__handle'>")[0];
+		// Path handles
+		this.handle = $("<div class='wrunner__handle'>")[0];
+		this.handleMin = $("<div class='wrunner__handle'>")[0];
+		this.handleMax = $("<div class='wrunner__handle'>")[0];
 
-	// Path values
-	this.valueNote = $("<div class='wrunner__valueNote'>")[0];
-	this.valueNoteMin = $("<div class='wrunner__valueNote'>")[0];
-	this.valueNoteMax = $("<div class='wrunner__valueNote'>")[0];
+		// Path values
+		this.valueNote = $("<div class='wrunner__valueNote'>")[0];
+		this.valueNoteMin = $("<div class='wrunner__valueNote'>")[0];
+		this.valueNoteMax = $("<div class='wrunner__valueNote'>")[0];
 
-	this.divisions = $("<div class='wrunner__divisions'>").appendTo($(this.outer))[0];
-	this.divisionsList = [];
+		this.divisions = $("<div class='wrunner__divisions'>").appendTo($(this.outer))[0];
+		this.divisionsList = [];
 
+		this.addEvents();
+		this.addListenners();
+	}
 
-	// EVENTS
-	this.addEvents();
-
-	// Listenners
-	this.addListenners();
-}
-
-View.prototype = {
 	addEvents() {
-		this.mouseDownEvent = makeEvent();
-		this.draggEvent = makeEvent();
-		this.clickEvent = makeEvent();
 		this.UIValueActionEvent = makeEvent();
 		this.themeUpdateEvent = makeEvent();
 		this.directionUpdateEvent = makeEvent();
@@ -65,13 +58,11 @@ View.prototype = {
 		this.rootsUpdateEvent = makeEvent();
 		this.divisionsCountUpdateEvent = makeEvent();
 		this.valueNoteDisplayAppliedEvent = makeEvent();
-	},
+	}
 
 	addListenners() {
-		$(this.path).on("mousedown", function(event) {
-			this.mouseDownEvent.trigger(event);
-		}.bind(this));
-	},
+		$(this.path).on("mousedown", this.mouseAction.bind(this));
+	}
 
 	updateDOM(type) {
 		if(type.type == type.typeConstants.singleValue) {
@@ -92,40 +83,39 @@ View.prototype = {
 			$(this.valueNoteMin).appendTo($(this.outer));
 			$(this.valueNoteMax).appendTo($(this.outer));
 		}
-	},
+	}
 
-	action(event) {
-		var	dragged = false,
-			moveBind = move.bind(this);
+	mouseAction(eventDown) {
+		var	dragged = false;
+		var handlerBind = handler.bind(this),
+			upBind = mouseUp.bind(this);
 
 		// The handler that indicates that the handle has been dragged.
 		$(document.body).one("mousemove", () => dragged = true);
-		$(document.body).on("mousemove", moveBind);
 
-		// The handler that called after click"s end.
-		$(document.body).one("mouseup", function(upEvent) {
-			var targ = upEvent.target;
+		// The handler that called when mouse moved, while button pressed.
+		$(document.body).on("mousemove", handlerBind);
 
-			// Removing bind.
-			$(document.body).off("mousemove", moveBind);
+		// The handler that called when mouse button released.
+		$(document.body).one("mouseup", upBind);
+
+
+		// Handlers
+		function mouseUp(eventUp) {
+			var target = eventUp.target;
+
+			// Removing move bind.
+			$(document.body).off("mousemove", handlerBind);
 
 			// If handle was dragged, stop the function.
 			if (dragged) return;
-			if (targ == this.handle || targ == this.handleMin || targ == this.handleMax) return;
+			if (target == this.handle || target == this.handleMin || target == this.handleMax) return;
 
-			// Else trigger a click
-			hanlder.call(this, upEvent);
-			this.clickEvent.trigger();
-		}.bind(this));
-
-
-		// Helpers
-		function move(eventMove) {
-			hanlder.call(this, eventMove);
-			this.draggEvent.trigger(event);
+			// Else trigger a click.
+			handlerBind(eventUp);
 		}
 
-		function hanlder(event) {
+		function handler(event) {
 			var scale, min, max, pos;
 			var direction = this.direction.value,
 				directionConstants = this.directionConstants;
@@ -143,7 +133,7 @@ View.prototype = {
 
 			max = min + scale;
 
-			// If the dragg is out of slider"s range, the function stops.
+			// If the dragg is out of slider's range, the function stops.
 			if (pos < min - 10 || pos > max + 10) return;
 
 			if(direction === directionConstants.horizontalValue) {
@@ -153,12 +143,12 @@ View.prototype = {
 				this.UIValueActionEvent.trigger(100 - (pos - min) / scale * 100);
 			}
 		}
-	},
+	}
 
 	append() {
 		$(this.base).appendTo($(this.roots));
 		return this.roots;
-	},
+	}
 
 	setRoots(roots) {
 		if (!helper.isDOMEl(roots)) return;
@@ -166,11 +156,11 @@ View.prototype = {
 
 		this.rootsUpdateEvent.trigger(this.roots);
 		return this.roots;
-	},
+	}
 
 	getRoots() {
 		return this.roots;
-	},
+	}
 
 	setDivisionsCount(count, auto) {
 		if (!helper.isNumber(count) || count < 0) return;
@@ -185,7 +175,7 @@ View.prototype = {
 
 		this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
 		return this.divisionsCount;
-	},
+	}
 
 	generateDivisions() {
 		$(this.divisions).empty();
@@ -199,11 +189,11 @@ View.prototype = {
 
 		this.els = this.divisionsList.concat(this.baseElsList);
 		return this.divisionsList;
-	},
+	}
 
 	getDivisionsCount() {
 		return this.divisionsCount;
-	},
+	}
 
 	drawValue(value, limits, currentType) {
 		var pathScale, valueNoteScale, valueNoteMinScale, valueNoteMaxScale;
@@ -286,7 +276,7 @@ View.prototype = {
 		}
 
 		return value;
-	},
+	}
 
 	setTheme(newTheme) {
 		if (typeof newTheme !== "string") return;
@@ -296,11 +286,11 @@ View.prototype = {
 
 		this.themeUpdateEvent.trigger(this.theme.value);
 		return this.theme.value;
-	},
+	}
 
 	getTheme() {
 		return this.theme.value;
-	},
+	}
 
 	setDirection(newDirection) {
 		if (typeof newDirection !== "string") return;
@@ -320,14 +310,14 @@ View.prototype = {
 				};
 			}
 		}
-	},
+	}
 
 	getDirection() {
 		return {
 			value: this.direction.value,
 			constants: this.directionConstants
 		};
-	},
+	}
 
 	applyStyles() {
 		var styles = [this.theme, this.direction];
@@ -355,7 +345,7 @@ View.prototype = {
 
 		this.stylesAppliedEvent.trigger(Object.assign({}, this.styles));
 		return Object.assign({}, this.styles);
-	},
+	}
 
 	setValueNoteDisplay(value) {
 		if (typeof value !== "boolean") return;
@@ -363,7 +353,7 @@ View.prototype = {
 
 		this.valueNoteDisplayUpdateEvent.trigger(this.valueNoteDisplay);
 		return this.valueNoteDisplay;
-	},
+	}
 
 	applyValueNoteDisplay() {
 		var mark = this.valueNote.classList[0];
@@ -377,11 +367,11 @@ View.prototype = {
 
 		this.valueNoteDisplayAppliedEvent.trigger(this.valueNoteDisplay);
 		return this.valueNoteDisplay;
-	},
+	}
 
 	getValueNoteDisplay() {
 		return this.valueNoteDisplay;
 	}
-};
+}
 
 export default View;

@@ -4,61 +4,53 @@ import helperModule from "@helper";
 const makeEvent = makeEventModule;
 const helper = helperModule; 
 
-function View() {
-	// Defaults
-	this.roots = document.body;
-	this.divisionsCount = 5;
-	this.valueNoteDisplay = true;
-	this.theme = {
-		value: "default",
-		className: "theme",
-		oldValue: null
-	};
-	this.direction = {
-		value: "horizontal",
-		className: "direction",
-		oldValue: null
-	};
+class View {
+	constructor() {
+		// Defaults
+		this.roots = document.body;
+		this.divisionsCount = 5;
+		this.valueNoteDisplay = true;
+		this.theme = {
+			value: "default",
+			className: "theme",
+			oldValue: null
+		};
+		this.direction = {
+			value: "horizontal",
+			className: "direction",
+			oldValue: null
+		};
 
-	this.directionConstants = {
-		horizontalValue: "horizontal",
-		verticalValue: "vertical"
-	};
+		this.directionConstants = {
+			horizontalValue: "horizontal",
+			verticalValue: "vertical"
+		};
 
-	// Stable elements
-	this.base = document.createElement("div");
-	this.outer = document.createElement("div");
-	this.path = document.createElement("div");
-	this.pathPassed = document.createElement("div");
+		// Stable elements
+		(this.base = document.createElement("div")).classList.add("wrunner");
+		(this.outer = document.createElement("div")).classList.add("wrunner__outer");
+		(this.path = document.createElement("div")).classList.add("wrunner__path");
+		(this.pathPassed = document.createElement("div")).classList.add("wrunner__pathPassed");
 
-	// Path handles
-	this.handle = document.createElement("div");
-	this.handleMin = document.createElement("div");
-	this.handleMax = document.createElement("div");
+		// Path handles
+		(this.handle = document.createElement("div")).classList.add("wrunner__handle");
+		(this.handleMin = document.createElement("div")).classList.add("wrunner__handle");
+		(this.handleMax = document.createElement("div")).classList.add("wrunner__handle");
 
-	// Path values
-	this.valueNote = document.createElement("div");
-	this.valueNoteMin = document.createElement("div");
-	this.valueNoteMax = document.createElement("div");
+		// Path values
+		(this.valueNote = document.createElement("div")).classList.add("wrunner__valueNote");
+		(this.valueNoteMin = document.createElement("div")).classList.add("wrunner__valueNote");
+		(this.valueNoteMax = document.createElement("div")).classList.add("wrunner__valueNote");
 
-	this.divisions = document.createElement("div");
-	this.divisionsList = [];
+		(this.divisions = document.createElement("div")).classList.add("wrunner__divisions");
+		this.divisionsList = [];
 
+		this.base.appendChild(this.outer);
+		this.addEvents();
+		this.addListenners();
+	}
 
-	this.generateBaseDOM();
-
-	// EVENTS
-	this.addEvents();
-
-	// Listenners
-	this.addListenners();
-}
-
-View.prototype = {
 	addEvents() {
-		this.mouseDownEvent = makeEvent();
-		this.draggEvent = makeEvent();
-		this.clickEvent = makeEvent();
 		this.UIValueActionEvent = makeEvent();
 		this.directionUpdateEvent = makeEvent();
 		this.themeUpdateEvent = makeEvent();
@@ -67,42 +59,11 @@ View.prototype = {
 		this.rootsUpdateEvent = makeEvent();
 		this.divisionsCountUpdateEvent = makeEvent();
 		this.valueNoteDisplayAppliedEvent = makeEvent();
-	},
+	}
 
 	addListenners() {
-		this.path.addEventListener("mousedown", function(event) {
-			this.mouseDownEvent.trigger(event);
-		}.bind(this));
-	},
-
-	generateBaseDOM() {
-		// Base
-		this.base.classList.add("wrunner");
-
-		// Outer
-		this.outer.classList.add("wrunner__outer");
-
-		// Path
-		this.path.classList.add("wrunner__path");
-
-		// Passed path
-		this.pathPassed.classList.add("wrunner__pathPassed");
-
-		// Path handles
-		this.handle.classList.add("wrunner__handle");
-		this.handleMin.classList.add("wrunner__handle");
-		this.handleMax.classList.add("wrunner__handle");
-
-		// Path values
-		this.valueNote.classList.add("wrunner__valueNote");
-		this.valueNoteMin.classList.add("wrunner__valueNote");
-		this.valueNoteMax.classList.add("wrunner__valueNote");
-
-		// Division"s container
-		this.divisions.classList.add("wrunner__divisions");
-		
-		this.base.appendChild(this.outer);
-	},
+		this.path.addEventListener("mousedown", this.mouseAction.bind(this));
+	}
 
 	updateDOM(type) {
 		this.path.innerHTML = "";
@@ -122,40 +83,39 @@ View.prototype = {
 			this.outer.appendChild(this.valueNoteMin);
 			this.outer.appendChild(this.valueNoteMax);
 		}
-	},
+	}
 
-	action(event) {
-		var	dragged = false,
-			moveBind = move.bind(this);
+	mouseAction(eventDown) {
+		var	dragged = false;
+		var handlerBind = handler.bind(this),
+			upBind = mouseUp.bind(this);
 
 		// The handler that indicates that the handle has been dragged.
 		document.body.addEventListener("mousemove", () => dragged = true, {once: true});
-		document.body.addEventListener("mousemove", moveBind);
 
-		// The handler that called after click"s end.
-		document.body.addEventListener("mouseup", function(upEvent) {
-			var targ = upEvent.target;
+		// The handler that called when mouse button released.
+		document.body.addEventListener("mousemove", handlerBind);
 
-			// Removing bind.
-			document.body.removeEventListener("mousemove", moveBind);
+		// The handler that called when mouse moved, while button pressed.
+		document.body.addEventListener("mouseup", upBind, {once: true});
+
+
+		// Handlers
+		function mouseUp(eventUp) {
+			var target = eventUp.target;
+
+			// Removing move bind.
+			document.body.removeEventListener("mousemove", handlerBind);
 
 			// If handle was dragged, stop the function.
 			if (dragged) return;
-			if (targ == this.handle || targ == this.handleMin || targ == this.handleMax) return;
+			if (target == this.handle || target == this.handleMin || target == this.handleMax) return;
 
-			// Else trigger a click
-			hanlder.call(this, upEvent);
-			this.clickEvent.trigger();
-		}.bind(this), {once: true});
-
-
-		// Helpers
-		function move(eventMove) {
-			hanlder.call(this, eventMove);
-			this.draggEvent.trigger(event);
+			// Else trigger a click.
+			handlerBind(eventUp);
 		}
 
-		function hanlder(event) {
+		function handler(event) {
 			var scale, min, max, pos;
 			var direction = this.direction.value,
 				directionConstants = this.directionConstants;
@@ -173,7 +133,7 @@ View.prototype = {
 
 			max = min + scale;
 
-			// If the dragg is out of slider"s range, the function stops.
+			// If the dragg is out of slider's range, the function stops.
 			if (pos < min - 10 || pos > max + 10) return;
 
 			if(direction === directionConstants.horizontalValue) {
@@ -183,12 +143,12 @@ View.prototype = {
 				this.UIValueActionEvent.trigger(100 - (pos - min) / scale * 100);
 			}
 		}
-	},
+	}
 
 	append() {
 		this.roots.appendChild(this.base);
 		return this.roots;
-	},
+	}
 
 	setRoots(roots) {
 		if (!helper.isDOMEl(roots)) return;
@@ -196,11 +156,11 @@ View.prototype = {
 
 		this.rootsUpdateEvent.trigger(this.roots);
 		return this.roots;
-	},
+	}
 
 	getRoots() {
 		return this.roots;
-	},
+	}
 
 	setDivisionsCount(count, auto) {
 		if (!helper.isNumber(count) || count < 0) return;
@@ -215,7 +175,7 @@ View.prototype = {
 
 		this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
 		return this.divisionsCount;
-	},
+	}
 
 	generateDivisions() {
 		this.divisions.innerHTML = "";
@@ -229,11 +189,11 @@ View.prototype = {
 		}
 
 		return this.divisionsList;
-	},
+	}
 
 	getDivisionsCount() {
 		return this.divisionsCount;
-	},
+	}
 
 	drawValue(value, limits, currentType) {
 		var pathScale, valueNoteScale, valuecaleMinNoteS, valuecaleMaxNoteS;
@@ -317,7 +277,7 @@ View.prototype = {
 		}
 
 		return value;
-	},
+	}
 
 	setTheme(newTheme) {
 		if (typeof newTheme !== "string") return;
@@ -327,11 +287,11 @@ View.prototype = {
 
 		this.themeUpdateEvent.trigger(this.theme.value);
 		return this.theme.value;
-	},
+	}
 
 	getTheme() {
 		return this.theme.value;
-	},
+	}
 
 	setDirection(newDirection) {
 		if (typeof newDirection !== "string") return;
@@ -351,14 +311,14 @@ View.prototype = {
 				};
 			}
 		}
-	},
+	}
 
 	getDirection() {
 		return {
 			value: this.direction.value,
 			constants: this.directionConstants
 		};
-	},
+	}
 
 	applyStyles() {
 		var styles = [this.theme, this.direction];
@@ -386,7 +346,7 @@ View.prototype = {
 
 		this.stylesAppliedEvent.trigger(Object.assign({}, this.styles));
 		return Object.assign({}, this.styles);
-	},
+	}
 
 	setValueNoteDisplay(value) {
 		if (typeof value !== "boolean") return;
@@ -394,7 +354,7 @@ View.prototype = {
 
 		this.valueNoteDisplayUpdateEvent.trigger(this.valueNoteDisplay);
 		return this.valueNoteDisplay;
-	},
+	}
 
 	applyValueNoteDisplay() {
 		var mark = this.valueNote.classList[0];
@@ -407,11 +367,11 @@ View.prototype = {
 
 		this.valueNoteDisplayAppliedEvent.trigger(this.valueNoteDisplay);
 		return this.valueNoteDisplay;
-	},
+	}
 
 	getValueNoteDisplay() {
 		return this.valueNoteDisplay;
 	}
-};
+}
 
 export default View;

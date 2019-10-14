@@ -1,21 +1,20 @@
-function Presenter(options) {
-	options = options ? options : {};
+class Presenter {
+	constructor(options) {
+		options = options ? options : {};
 
-	this.model = options.model;
-	this.view = options.view;
+		this.model = options.model;
+		this.view = options.view;
 
-	// Plugin load
-	this.addEvents();
-	this.applyUserEvents(options.userOptions);
-	this.applyUserOptions(options.userOptions);
-	this.initInstance();
-	this.triggerEvents();
-}
+		// Plugin load
+		this.addDefaultEvents();
+		this.applyUserEvents(options.userOptions);
+		this.applyUserOptions(options.userOptions);
+		this.initInstance();
+		this.triggerEvents();
+	}
 
-Presenter.prototype = {
-	addEvents() {
+	addDefaultEvents() {
 		// Model events
-
 		this.model.stepUpdateEvent.addHandler(function(data) {
 			this.model.recalculateValue();
 		}.bind(this));
@@ -35,11 +34,6 @@ Presenter.prototype = {
 
 
 		// View events
-
-		this.view.mouseDownEvent.addHandler(function(data) {
-			this.view.action(data);
-		}.bind(this));
-
 		this.view.UIValueActionEvent.addHandler(function(data) {
 			this.model.setNearestValueViaPercents(data, true);
 		}.bind(this));
@@ -67,7 +61,7 @@ Presenter.prototype = {
 			this.view.generateDivisions();
 			this.view.applyStyles();
 		}.bind(this));
-	},
+	}
 
 	initInstance() {
 		this.view.updateDOM(this.model.getType());
@@ -76,7 +70,7 @@ Presenter.prototype = {
 		this.view.applyValueNoteDisplay();
 		this.view.applyStyles();
 		this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-	},
+	}
 
 	applyUserOptions(options) {
 		options = options ? options : {};
@@ -92,7 +86,7 @@ Presenter.prototype = {
 		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
 		if (options.theme !== undefined) this.view.setTheme(options.theme);
 		if (options.direction !== undefined) this.view.setDirection(options.direction);
-	},
+	}
 
 	applyUserEvents(options) {
 		options = options ? options : {};
@@ -107,7 +101,7 @@ Presenter.prototype = {
 		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
 		if (options.onThemeUpdate !== undefined) this.onThemeUpdate(options.onThemeUpdate);
 		if (options.onDirectionUpdate !== undefined) this.onDirectionUpdate(options.onDirectionUpdate);
-	},
+	}
 
 	triggerEvents() {
 		if (this.model.type == this.model.typeConstants.singleValue) {
@@ -137,43 +131,43 @@ Presenter.prototype = {
 		this.view.valueNoteDisplayUpdateEvent.trigger(this.view.valueNoteDisplay);
 		this.view.rootsUpdateEvent.trigger(this.view.roots);
 		this.view.divisionsCountUpdateEvent.trigger(this.view.divisionsCount);
-	},
+	}
 
 	onValueUpdate(handler) {
 		this.model.valueUpdateEvent.addHandler(handler);
-	},
+	}
 
 	onStepUpdate(handler) {
 		this.model.stepUpdateEvent.addHandler(handler);
-	},
+	}
 
 	onLimitsUpdate(handler) {
 		this.model.limitsUpdateEvent.addHandler(handler);
-	},
+	}
 
 	onTypeUpdate(handler) {
 		this.model.typeUpdateEvent.addHandler(handler);
-	},
+	}
 
 	onThemeUpdate(handler) {
 		this.view.themeUpdateEvent.addHandler(handler);
-	},
+	}
 
 	onDirectionUpdate(handler) {
 		this.view.directionUpdateEvent.addHandler(handler);
-	},
+	}
 
 	onValueNoteDisplayUpdate(handler) {
 		this.view.valueNoteDisplayUpdateEvent.addHandler(handler);
-	},
+	}
 
 	onRootsUpdate(handler) {
 		this.view.rootsUpdateEvent.addHandler(handler);
-	},
+	}
 
 	onDivisionsCountUpdate(handler) {
 		this.view.divisionsCountUpdateEvent.addHandler(handler);
 	}
-};
+}
 
 export default Presenter;

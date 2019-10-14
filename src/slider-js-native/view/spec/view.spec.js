@@ -12,23 +12,6 @@ import viewModule from "../view.js";
 
 var view = new viewModule();
 
-describe("generateBaseDOM method.", () => {
-	it("Generate base elements for plugin.", () => {
-		view.generateBaseDOM();
-
-		expect(view.base).toHaveClass("wrunner");
-		expect(view.outer).toHaveClass("wrunner__outer");
-		expect(view.path).toHaveClass("wrunner__path");
-		expect(view.pathPassed).toHaveClass("wrunner__pathPassed");
-		expect(view.handle).toHaveClass("wrunner__handle");
-		expect(view.handleMin).toHaveClass("wrunner__handle");
-		expect(view.handleMax).toHaveClass("wrunner__handle");
-		expect(view.valueNote).toHaveClass("wrunner__valueNote");
-		expect(view.valueNoteMin).toHaveClass("wrunner__valueNote");
-		expect(view.valueNoteMax).toHaveClass("wrunner__valueNote");
-	});
-});
-
 describe("updateDOM method.", () => {
 	describe("When type is 'single'.", () => {
 		it("Rebuild plugin structure.", () => {
@@ -490,8 +473,18 @@ describe("applyStyles method.", () => {
 	it("Applying theme and direction to slider's elements.", () => {
 		view.applyStyles();
 
-		for (var i = 0; i < view.els.length; i++) {
-			var el = view.els[i];
+		var els = [
+			view.base, view.outer,
+			view.path, view.pathPassed,
+			view.divisions,	view.handle,
+			view.handleMin, view.handleMax,
+			view.valueNote, view.valueNoteMin,
+			view.valueNoteMax
+		].concat(view.divisionsList);
+
+		for (var i = 0; i < els.length; i++) {
+			var el = els[i];
+
 			expect(el).toHaveClass(el.classList[0] + "_theme_default");
 			expect(el).toHaveClass(el.classList[0] + "_direction_horizontal");
 		}
@@ -505,8 +498,17 @@ describe("applyStyles method.", () => {
 
 		view.applyStyles();
 
-		for (var i = 0; i < view.els.length; i++) {
-			var el = view.els[i];
+		var els = [
+			view.base, view.outer,
+			view.path, view.pathPassed,
+			view.divisions,	view.handle,
+			view.handleMin, view.handleMax,
+			view.valueNote, view.valueNoteMin,
+			view.valueNoteMax
+		].concat(view.divisionsList);
+
+		for (var i = 0; i < els.length; i++) {
+			var el = els[i];
 			expect(el).not.toHaveClass(el.classList[0] + "_theme_default");
 			expect(el).not.toHaveClass(el.classList[0] + "_direction_horizontal");
 		}

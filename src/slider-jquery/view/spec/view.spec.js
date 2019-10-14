@@ -474,8 +474,18 @@ describe("applyStyles method.", () => {
 	it("Applying theme and direction to slider's elements.", () => {
 		view.applyStyles();
 
-		for (var i = 0; i < view.els.length; i++) {
-			var el = view.els[i];
+		var els = [
+			view.base, view.outer,
+			view.path, view.pathPassed,
+			view.divisions,	view.handle,
+			view.handleMin, view.handleMax,
+			view.valueNote, view.valueNoteMin,
+			view.valueNoteMax
+		].concat(view.divisionsList);
+
+		for (var i = 0; i < els.length; i++) {
+			var el = els[i];
+
 			expect(el).toHaveClass(el.classList[0] + "_theme_default");
 			expect(el).toHaveClass(el.classList[0] + "_direction_horizontal");
 		}
@@ -489,8 +499,17 @@ describe("applyStyles method.", () => {
 
 		view.applyStyles();
 
-		for (var i = 0; i < view.els.length; i++) {
-			var el = view.els[i];
+		var els = [
+			view.base, view.outer,
+			view.path, view.pathPassed,
+			view.divisions,	view.handle,
+			view.handleMin, view.handleMax,
+			view.valueNote, view.valueNoteMin,
+			view.valueNoteMax
+		].concat(view.divisionsList);
+
+		for (var i = 0; i < els.length; i++) {
+			var el = els[i];
 			expect(el).not.toHaveClass(el.classList[0] + "_theme_default");
 			expect(el).not.toHaveClass(el.classList[0] + "_direction_horizontal");
 		}

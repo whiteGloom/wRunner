@@ -4,37 +4,37 @@ import helperModule from "@helper";
 const helper = helperModule;
 const makeEvent = makeEventModule;
 
-function Model() {
-	// Defaults
-	this.minLimit = 0;
-	this.maxLimit = 100;
-	this.valuesCount = this.maxLimit - this.minLimit;
+class Model {
+	constructor() {
+		// Defaults
+		this.minLimit = 0;
+		this.maxLimit = 100;
+		this.valuesCount = this.maxLimit - this.minLimit;
 
-	this.singleValue = 50;
-	this.rangeValueMin = 20;
-	this.rangeValueMax = 80;
-	this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
-	this.rangeSelected = (this.rangeValueMax - this.rangeValueMin) / this.valuesCount * 100;
+		this.singleValue = 50;
+		this.rangeValueMin = 20;
+		this.rangeValueMax = 80;
+		this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
+		this.rangeSelected = (this.rangeValueMax - this.rangeValueMin) / this.valuesCount * 100;
 
-	this.step = 1;
-	
-	this.type = "single";
-	this.typeConstants = {
-		singleValue: "single",
-		rangeValue: "range"
-	};
+		this.step = 1;
+		
+		this.type = "single";
+		this.typeConstants = {
+			singleValue: "single",
+			rangeValue: "range"
+		};
 
-	this.addEvents();
-}
+		this.addEvents();
+	}
 
-Model.prototype = {
 	addEvents() {
 		this.valueUpdateEvent = makeEvent();
 		this.limitsUpdateEvent = makeEvent();
 		this.stepUpdateEvent = makeEvent();
 		this.percentageUpdateEvent = makeEvent();
 		this.typeUpdateEvent = makeEvent();
-	},
+	}
 
 	setLimits(limits, auto) {
 		limits = limits ? limits : {};
@@ -72,7 +72,7 @@ Model.prototype = {
 			maxLimit: this.maxLimit,
 			valuesCount: this.valuesCount
 		};
-	},
+	}
 
 	getLimits() {
 		return {
@@ -80,7 +80,7 @@ Model.prototype = {
 			maxLimit: this.maxLimit,
 			valuesCount: this.valuesCount
 		};
-	},
+	}
 
 	setSingleValue(value, auto) {
 		value = helper.isNumber(value) ? +value : this.singleValue;
@@ -98,7 +98,7 @@ Model.prototype = {
 			value: this.singleValue,
 			selected: this.singleSelected
 		};
-	},
+	}
 
 	setRangeValue(values, auto) {
 		var min, max;
@@ -139,7 +139,7 @@ Model.prototype = {
 			maxValue: this.rangeValueMax,
 			selected: this.rangeSelected
 		};
-	},
+	}
 
 	recalculateValue() {
 		if (this.type === this.typeConstants.singleValue) {
@@ -149,7 +149,7 @@ Model.prototype = {
 		if (this.type === this.typeConstants.rangeValue) {
 			return this.setRangeValue(null, true);
 		}
-	},
+	}
 
 	setNearestValueViaPercents(percents) {
 		if (!helper.isNumber(percents)) return;
@@ -167,7 +167,7 @@ Model.prototype = {
 				return this.setRangeValue({maxValue: +value}, true);
 			}
 		}
-	},
+	}
 
 	setAValueTo(value, mutable, auto) {
 		// Calculating a stepped value.
@@ -183,7 +183,7 @@ Model.prototype = {
 		} else {
 			this[mutable] = stepped;
 		}
-	},
+	}
 
 	getValue() {
 		if(this.type == this.typeConstants.singleValue) {
@@ -200,7 +200,7 @@ Model.prototype = {
 				selected: this.rangeSelected
 			};
 		}
-	},
+	}
 
 	setStep(step) {
 		if (!helper.isNumber(step) || step <= 0) return;
@@ -208,11 +208,11 @@ Model.prototype = {
 
 		this.stepUpdateEvent.trigger(this.step);
 		return this.step;
-	},
+	}
 
 	getStep() {
 		return this.step;
-	},
+	}
 
 	setType(type) {
 		var exist = false;
@@ -228,7 +228,7 @@ Model.prototype = {
 
 		this.typeUpdateEvent.trigger(this.type);
 		return this.type;
-	},
+	}
 
 	getType() {
 		return {
@@ -236,6 +236,6 @@ Model.prototype = {
 			typeConstants: Object.assign({}, this.typeConstants)
 		};
 	}
-};
+}
 
 export default Model;
