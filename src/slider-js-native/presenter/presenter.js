@@ -34,8 +34,7 @@ class Presenter {
 
 
 		// View events
-
-		this.view.UIValueActionEvent.addHandler(function(data) {
+		this.view.UIMouseActionEvent.addHandler(function(data) {
 			this.model.setNearestValueViaPercents(data, true);
 		}.bind(this));
 

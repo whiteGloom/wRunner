@@ -50,7 +50,7 @@ class View {
 	}
 
 	addEvents() {
-		this.UIValueActionEvent = makeEvent();
+		this.UIMouseActionEvent = makeEvent();
 		this.themeUpdateEvent = makeEvent();
 		this.directionUpdateEvent = makeEvent();
 		this.stylesAppliedEvent = makeEvent();
@@ -137,10 +137,10 @@ class View {
 			if (pos < min - 10 || pos > max + 10) return;
 
 			if(direction === directionConstants.horizontalValue) {
-				this.UIValueActionEvent.trigger((pos - min) / scale * 100);
+				this.UIMouseActionEvent.trigger((pos - min) / scale * 100);
 			}
 			if(direction === directionConstants.verticalValue) {
-				this.UIValueActionEvent.trigger(100 - (pos - min) / scale * 100);
+				this.UIMouseActionEvent.trigger(100 - (pos - min) / scale * 100);
 			}
 		}
 	}
@@ -165,11 +165,11 @@ class View {
 	setDivisionsCount(count, auto) {
 		if (!helper.isNumber(count) || count < 0) return;
 
-		count = Math.round(count);
+		count = Math.round(+count);
 
 		if (count == 1) {
 			count++;
-			if(!auto) console.log("Count was increased by one, cause it may not be equal to one.");
+			if (!auto) console.log("Count was increased by one, cause it may not be equal to one.");
 		}
 		this.divisionsCount = +count;
 
@@ -183,12 +183,10 @@ class View {
 
 		for(var i = this.divisionsCount; i > 0; i--) {
 			var instance = $("<div class='wrunner__division'>");
+			
 			this.divisionsList.push(instance[0]);
 			instance.appendTo($(this.divisions));
 		}
-
-		this.els = this.divisionsList.concat(this.baseElsList);
-		return this.divisionsList;
 	}
 
 	getDivisionsCount() {
@@ -204,7 +202,13 @@ class View {
 		var type = currentType.type,
 			typeConstants = currentType.typeConstants;
 
-		var clearList = [this.pathPassed, this.handle, this.handleMin, this.handleMax, this.valueNote, this.valueNoteMin, this.valueNoteMax];
+		var clearList = [
+			this.pathPassed, this.handle,
+			this.handleMin, this.handleMax,
+			this.valueNote, this.valueNoteMin,
+			this.valueNoteMax
+		];
+
 		for (var i = 0; i < clearList.length; i++) {
 			$(clearList[i]).attr("style", "");
 		}
@@ -302,11 +306,11 @@ class View {
 
 				this.directionUpdateEvent.trigger({
 					value: this.direction.value,
-					constants: this.directionConstants
+					constants: Object.assign({}, this.directionConstants)
 				});
 				return {
 					value: this.direction.value,
-					constants: this.directionConstants
+					constants: Object.assign({}, this.directionConstants)
 				};
 			}
 		}
@@ -315,7 +319,7 @@ class View {
 	getDirection() {
 		return {
 			value: this.direction.value,
-			constants: this.directionConstants
+			constants: Object.assign({}, this.directionConstants)
 		};
 	}
 
@@ -339,7 +343,7 @@ class View {
 					value = styles[style].value;
 
 				if (oldValue) $el.removeClass(mark + "_" + styles[style].className + "_" + oldValue);
-				if (value) $el.addClass(mark + "_" + styles[style].className + "_" + value);
+				$el.addClass(mark + "_" + styles[style].className + "_" + value);
 			}
 		}
 
@@ -359,7 +363,7 @@ class View {
 		var mark = this.valueNote.classList[0];
 		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
 
-		for (var i = els.length - 1; i >= 0; i--) {
+		for (var i = 0; i < els.length; i++) {
 			$(els[i])
 				.removeClass(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"))
 				.addClass(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));

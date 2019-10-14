@@ -18,6 +18,7 @@ module.exports = {
             "args": "none"
         }],
         "space-before-blocks": ["error", "always"],
-        "arrow-spacing": ["error", { "before": true, "after": true }]
+        "arrow-spacing": ["error", { "before": true, "after": true }],
+        "spaced-comment": ["error", "always"]
     }
 }

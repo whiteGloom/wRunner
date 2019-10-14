@@ -51,7 +51,7 @@ class View {
 	}
 
 	addEvents() {
-		this.UIValueActionEvent = makeEvent();
+		this.UIMouseActionEvent = makeEvent();
 		this.directionUpdateEvent = makeEvent();
 		this.themeUpdateEvent = makeEvent();
 		this.stylesAppliedEvent = makeEvent();
@@ -137,10 +137,10 @@ class View {
 			if (pos < min - 10 || pos > max + 10) return;
 
 			if(direction === directionConstants.horizontalValue) {
-				this.UIValueActionEvent.trigger((pos - min) / scale * 100);
+				this.UIMouseActionEvent.trigger((pos - min) / scale * 100);
 			}
 			if(direction === directionConstants.verticalValue) {
-				this.UIValueActionEvent.trigger(100 - (pos - min) / scale * 100);
+				this.UIMouseActionEvent.trigger(100 - (pos - min) / scale * 100);
 			}
 		}
 	}
@@ -184,11 +184,10 @@ class View {
 		for(var i = this.divisionsCount; i > 0; i--) {
 			var instance = document.createElement("div");
 			instance.classList.add("wrunner__division");
+			
 			this.divisionsList.push(instance);
 			this.divisions.appendChild(instance);
 		}
-
-		return this.divisionsList;
 	}
 
 	getDivisionsCount() {
@@ -196,7 +195,7 @@ class View {
 	}
 
 	drawValue(value, limits, currentType) {
-		var pathScale, valueNoteScale, valuecaleMinNoteS, valuecaleMaxNoteS;
+		var pathScale, valueNoteScale, valueMinNoteScale, valueMaxNoteScale;
 		var selected = value.selected;
 		
 		var direction = this.direction.value,
@@ -204,7 +203,13 @@ class View {
 		var type = currentType.type,
 			typeConstants = currentType.typeConstants;
 
-		var clearList = [this.pathPassed, this.handle, this.handleMin, this.handleMax, this.valueNote, this.valueNoteMin, this.valueNoteMax];
+		var clearList = [
+			this.pathPassed, this.handle,
+			this.handleMin, this.handleMax,
+			this.valueNote, this.valueNoteMin,
+			this.valueNoteMax
+		];
+
 		for (var i = 0; i < clearList.length; i++) {
 			clearList[i].style.cssText = "";
 		}
@@ -254,10 +259,10 @@ class View {
 				this.handleMax.style.left = start + selected +"%";
 
 				pathScale = this.path.offsetWidth;
-				valuecaleMinNoteS = this.valueNoteMin.offsetWidth; valuecaleMaxNoteS = this.valueNoteMax.offsetWidth;
+				valueMinNoteScale = this.valueNoteMin.offsetWidth; valueMaxNoteScale = this.valueNoteMax.offsetWidth;
 
-				this.valueNoteMin.style.left = (pathScale * start / 100 - valuecaleMinNoteS / 2) / pathScale * 100 + "%";
-				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valuecaleMaxNoteS / 2) / pathScale * 100 + "%";
+				this.valueNoteMin.style.left = (pathScale * start / 100 - valueMinNoteScale / 2) / pathScale * 100 + "%";
+				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valueMaxNoteScale / 2) / pathScale * 100 + "%";
 			}
 
 			if(direction == directionConstants.verticalValue) {
@@ -269,10 +274,10 @@ class View {
 				this.handleMin.style.top = 100 - start  +"%";
 
 				pathScale = this.path.offsetHeight;
-				valuecaleMinNoteS = this.valueNoteMin.offsetHeight; valuecaleMaxNoteS = this.valueNoteMax.offsetHeight;
+				valueMinNoteScale = this.valueNoteMin.offsetHeight; valueMaxNoteScale = this.valueNoteMax.offsetHeight;
 
-				this.valueNoteMin.style.top = 100 - (pathScale * start / 100 + valuecaleMinNoteS / 2) / pathScale * 100 + "%";
-				this.valueNoteMax.style.top = 100 - (pathScale * (start + selected) / 100 + valuecaleMaxNoteS / 2) / pathScale * 100 + "%";
+				this.valueNoteMin.style.top = 100 - (pathScale * start / 100 + valueMinNoteScale / 2) / pathScale * 100 + "%";
+				this.valueNoteMax.style.top = 100 - (pathScale * (start + selected) / 100 + valueMaxNoteScale / 2) / pathScale * 100 + "%";
 			}
 		}
 
@@ -303,11 +308,11 @@ class View {
 
 				this.directionUpdateEvent.trigger({
 					value: this.direction.value,
-					constants: this.directionConstants
+					constants: Object.assign({}, this.directionConstants)
 				});
 				return {
 					value: this.direction.value,
-					constants: this.directionConstants
+					constants: Object.assign({}, this.directionConstants)
 				};
 			}
 		}
@@ -316,7 +321,7 @@ class View {
 	getDirection() {
 		return {
 			value: this.direction.value,
-			constants: this.directionConstants
+			constants: Object.assign({}, this.directionConstants)
 		};
 	}
 
@@ -340,7 +345,7 @@ class View {
 					value = styles[style].value;
 
 				if (oldValue) el.classList.remove(mark + "_" + styles[style].className + "_" + oldValue);
-				if (value) el.classList.add(mark + "_" + styles[style].className + "_" + value);
+				el.classList.add(mark + "_" + styles[style].className + "_" + value);
 			}
 		}
 
@@ -360,7 +365,7 @@ class View {
 		var mark = this.valueNote.classList[0];
 		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
 
-		for (var i = els.length - 1; i >= 0; i--) {
+		for (var i = 0; i < els.length; i++) {
 			els[i].classList.remove(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"));
 			els[i].classList.add(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
 		}
