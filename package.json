@@ -1,6 +1,6 @@
 {
   "name": "wRunner",
-  "version": "1.2.12",
+  "version": "1.2.13",
   "description": "A slider plugin",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "_moduleAliases": {
     "@helper": "./src/helper.js",
     "@event": "./src/event.js",
-    "@wrunner-nat": "./src/wrunner-native",
+    "@wrunner-native": "./src/wrunner-native",
     "@wrunner-jq": "./src/wrunner-jquery"
   },
   "author": "whiteGloom <karabin.m@yandex.ru> (https://github.com/whiteGloom)",
