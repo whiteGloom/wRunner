@@ -112,9 +112,11 @@ describe("getType method.", () => {
 
 		// The "type" property is an string.
 		expect(typeof result.type === "string").toBeTruthy();
+		expect(result.type).toEqual(model.type);
 
 		// The "typeConstants" property is an object.
 		expect(helper.isObject(result.typeConstants)).toBeTruthy();
+		expect(result.typeConstants).toEqual(model.typeConstants);
 	});
 });
 
@@ -447,7 +449,7 @@ describe("setRangeValue method.", () => {
 	});
 });
 
-describe("setNearestValueViaPercents", () => {
+describe("setNearestValue", () => {
 	describe("When slider's type is 'single'.", () => {
 		beforeAll(() => {
 			model.setType("single");
@@ -459,13 +461,22 @@ describe("setNearestValueViaPercents", () => {
 			model.setSingleValue(50);
 		});
 
-		it("Taking 75, changing value to 75%.", () => {
+		it("Taking 75 and true (change via percents), changes value to 75%.", () => {
 			spyOn(model, "setSingleValue").and.callThrough();
 
-			model.setNearestValueViaPercents(75);
+			model.setNearestValue(75, true, true);
 
 			expect(model.setSingleValue).toHaveBeenCalled();
 			expect(model.singleValue).toEqual(model.valuesCount * 0.75);
+		});
+
+		it("Taking 23, changes value to 23", () => {
+			spyOn(model, "setSingleValue").and.callThrough();
+
+			model.setNearestValue(23, null, true);
+
+			expect(model.setSingleValue).toHaveBeenCalled();
+			expect(model.singleValue).toEqual(23);
 		});
 	});
 
@@ -480,22 +491,40 @@ describe("setNearestValueViaPercents", () => {
 			model.setRangeValue({minValue: 20, maxValue: 80});
 		});
 
-		it("Taking 30, changing minimum value to 30%.", () => {
+		it("Taking 30 and true (change via percents), changes minimum value to 30%.", () => {
 			spyOn(model, "setRangeValue").and.callThrough();
 
-			model.setNearestValueViaPercents(30);
+			model.setNearestValue(30, true, true);
 
 			expect(model.setRangeValue).toHaveBeenCalled();
 			expect(model.rangeValueMin).toEqual(model.valuesCount * 0.3);
 		});
 
-		it("Taking 90, changing minimum value to 90%.", () => {
+		it("Taking 90 and true (change via percents), changes minimum value to 90%.", () => {
 			spyOn(model, "setRangeValue").and.callThrough();
 
-			model.setNearestValueViaPercents(90);
+			model.setNearestValue(90, true, true);
 
 			expect(model.setRangeValue).toHaveBeenCalled();
 			expect(model.rangeValueMax).toEqual(model.valuesCount * 0.9);
+		});
+
+		it("Taking 11 and true (change via percents), changes minimum value to 11.", () => {
+			spyOn(model, "setRangeValue").and.callThrough();
+
+			model.setNearestValue(11, null, true);
+
+			expect(model.setRangeValue).toHaveBeenCalled();
+			expect(model.rangeValueMin).toEqual(11);
+		});
+
+		it("Taking 77 and true (change via percents), changes minimum value to 77.", () => {
+			spyOn(model, "setRangeValue").and.callThrough();
+
+			model.setNearestValue(77, null, true);
+
+			expect(model.setRangeValue).toHaveBeenCalled();
+			expect(model.rangeValueMax).toEqual(77);
 		});
 	});
 });
@@ -555,10 +584,13 @@ describe("setType method.", () => {
 	describe("Normal values - if value is listed in typeConstants. Changes slider's type, returns new type.", () => {
 		for (var constant in model.getType().typeConstants) {
 			it("Taking " + model.getType().typeConstants[constant] + ", changes type to " + model.getType().typeConstants[constant] + ". Returns type.", () => {
-				var result = model.setType(model.getType().typeConstants[constant]);
+				var result = model.setType(model.typeConstants[constant]);
 
-				expect(result).toEqual(model.getType().typeConstants[constant]);
-				expect(result).toEqual(model.type);
+				expect(result.type).toEqual(model.typeConstants[constant]);
+				expect(result.type).toEqual(model.type);
+
+				expect(helper.isObject(result.typeConstants)).toBeTruthy();
+				expect(result.typeConstants).toEqual(model.typeConstants);
 			});
 		}
 	});

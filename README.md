@@ -32,7 +32,7 @@ jQuery версия слайдера требует [jQuery](https://jquery.com/
 		- **[setSingleValue method](#setSingleValue-method "setSingleValue method")**
 		- **[setRangeValue method](#setRangeValue-method "setRangeValue method")**
 		- **[setValueNoteDisplay method](#setValueNoteDisplay-method "setValueNoteDisplay method")**
-		- **[setNearestValueViaPercents method](#setNearestValueViaPercents-method "setNearestValueViaPercents method")**
+		- **[setNearestValue method](#setNearestValue-method "setNearestValue method")**
 		- **[setDivisionsCount method](#setDivisionsCount-method "setDivisionsCount method")**
 		- **[setRoots method](#setRoots-method "setRoots method")**
 		- **[setTheme method](#setTheme-method "setTheme method")**
@@ -158,7 +158,9 @@ $(DOM element).wRunner([options]);
 * **type** - type: string. Avaible values:  перечислены в typeConstants (см. [getTypes method](#getTypes-method "getTypes method")).
 
 *Returns:*
-**string** - тип слайдера.
+**Object**. Properties:
+* **type** - type: string. Тип слайдера.
+* **typeConstants** - type: object. Список зарезервированных значений.
 
 *Triggering:*
 **onTypeUpdate**, передаёт тоже, что и возвращает.
@@ -286,19 +288,20 @@ $(DOM element).wRunner([options]);
 ------------
 
 
-### setNearestValueViaPercents method
+### setNearestValue method
 Меняет ближайшее к передаваемому аргументу значение слайдера.
 
 ```
-.setNearestValueViaPercents(percents)
+.setNearestValue(value, viaPercents)
 ```
 
 *Arguments:*
-* **percents** - type: number. Процентное значение.
+* **value** - type: number. Новое начение.
+* **viaPercents** - type: number. Процентное значение.
 
 *Notes:*
 * **Если тип слайдера - "single", то просто изменит его значение.**
-* **Новое значение расчитывается путём умножения количества допустимых значений на передаваемое значение.**
+* **Новое значение, при аргументе viaPercents равном true, расчитывается путём умножения количества допустимых значений на передаваемое значение.**
 * **Ближайшее значение определяется путём сложения меньшего и большего значений и деления результата на 2. Если передаваемое значение меньше этого результата, то меняется меньшее значение, иначе - большее.**
 
 *Examples:*
@@ -307,7 +310,8 @@ $(DOM element).wRunner([options]);
 .setType("single") // Тип слайдера: "single"
 .setSingleValue(50); // Значение слайдера: 50
 
-.setNearestValueViaPercents(75) // Принимая 75, изменит единичное значение слайдера на 75
+.setNearestValue(75) // Принимая 75, изменит единичное значение слайдера на 75
+.setNearestValue(75, true) // Принимая 75%, изменит единичное значение слайдера на 75
 
 ```
 ```
@@ -315,7 +319,8 @@ $(DOM element).wRunner([options]);
 .setType("single") // Тип слайдера: "range"
 .setRangeValue({minValue: 20, maxValue: 80}); // Меньшее значение 20, большее 80
 
-.setNearestValueViaPercents(75) // Принимая 75, ближайшим будет большее значение слайдера, изменит его на 75
+.setNearestValue(75) // Принимая 75, ближайшим будет большее значение слайдера, изменит его на 75
+.setNearestValue(75, true) // Принимая 75%, ближайшим будет большее значение слайдера, изменит его на 75
 
 ```
 

@@ -36,6 +36,54 @@ class Model {
 		this.typeUpdateEvent = makeEvent();
 	}
 
+	recalculateValue() {
+		if (this.type === this.typeConstants.singleValue) {
+			return this.setSingleValue(null, true);
+		}
+
+		if (this.type === this.typeConstants.rangeValue) {
+			return this.setRangeValue(null, true);
+		}
+	}
+
+	setAValueTo(value, mutable, auto) {
+		// Calculating a stepped value.
+		var stepped = Math.round((+value) / this.step) * this.step;
+
+		// Changing a mutable value.
+		if (stepped < this.minLimit) {
+			this[mutable] = this.minLimit;
+			if (!auto) console.log("The value was equated to the minimum, because it is less than the minimum value.");
+		} else if (stepped > this.maxLimit) {
+			this[mutable] = this.maxLimit;
+			if (!auto) console.log("The value was equated to the maximum, because it is more than the maximum value.");
+		} else {
+			this[mutable] = stepped;
+		}
+	}
+
+	setType(type) {
+		var exist = false;
+		for (var constant in this.typeConstants) {
+			if (type === this.typeConstants[constant]) {
+				exist = true;
+				break;
+			}
+		}
+
+		if (!exist) return;
+		this.type = type;
+
+		this.typeUpdateEvent.trigger({
+			type: this.type,
+			typeConstants: Object.assign({}, this.typeConstants)
+		});
+		return {
+			type: this.type,
+			typeConstants: Object.assign({}, this.typeConstants)
+		};
+	}
+
 	setLimits(limits, auto) {
 		limits = limits ? limits : {};
 
@@ -74,12 +122,12 @@ class Model {
 		};
 	}
 
-	getLimits() {
-		return {
-			minLimit: this.minLimit,
-			maxLimit: this.maxLimit,
-			valuesCount: this.valuesCount
-		};
+	setStep(step) {
+		if (!helper.isNumber(step) || +step <= 0) return;
+		this.step = +step;
+
+		this.stepUpdateEvent.trigger(this.step);
+		return this.step;
 	}
 
 	setSingleValue(value, auto) {
@@ -142,23 +190,15 @@ class Model {
 		};
 	}
 
-	recalculateValue() {
-		if (this.type === this.typeConstants.singleValue) {
-			return this.setSingleValue(null, true);
-		}
+	setNearestValue(value, viaPercents, auto) {
+		if (!helper.isNumber(value)) return;
 
-		if (this.type === this.typeConstants.rangeValue) {
-			return this.setRangeValue(null, true);
-		}
-	}
-
-	setNearestValueViaPercents(percents) {
-		if (!helper.isNumber(percents)) return;
-
-		var value = Math.round(this.valuesCount * +percents / 100 + this.minLimit);
+		var value = viaPercents === false
+			? Math.round(+value)
+			: Math.round(this.valuesCount * +value / 100 + this.minLimit)
 
 		if (this.type === this.typeConstants.singleValue) {
-			return this.setSingleValue(value, true);
+			return this.setSingleValue(value, auto);
 		}
 
 		if (this.type === this.typeConstants.rangeValue) {
@@ -170,20 +210,23 @@ class Model {
 		}
 	}
 
-	setAValueTo(value, mutable, auto) {
-		// Calculating a stepped value.
-		var stepped = Math.round((+value) / this.step) * this.step;
+	getType() {
+		return {
+			type: this.type,
+			typeConstants: Object.assign({}, this.typeConstants)
+		};
+	}
 
-		// Changing a mutable value.
-		if (stepped < this.minLimit) {
-			this[mutable] = this.minLimit;
-			if (!auto) console.log("The value was equated to the minimum, because it is less than the minimum value.");
-		} else if (stepped > this.maxLimit) {
-			this[mutable] = this.maxLimit;
-			if (!auto) console.log("The value was equated to the maximum, because it is more than the maximum value.");
-		} else {
-			this[mutable] = stepped;
-		}
+	getLimits() {
+		return {
+			minLimit: this.minLimit,
+			maxLimit: this.maxLimit,
+			valuesCount: this.valuesCount
+		};
+	}
+
+	getStep() {
+		return this.step;
 	}
 
 	getValue() {
@@ -201,41 +244,6 @@ class Model {
 				selected: this.rangeSelected
 			};
 		}
-	}
-
-	setStep(step) {
-		if (!helper.isNumber(step) || +step <= 0) return;
-		this.step = +step;
-
-		this.stepUpdateEvent.trigger(this.step);
-		return this.step;
-	}
-
-	getStep() {
-		return this.step;
-	}
-
-	setType(type) {
-		var exist = false;
-		for (var constant in this.typeConstants) {
-			if (type === this.typeConstants[constant]) {
-				exist = true;
-				break;
-			}
-		}
-
-		if (!exist) return;
-		this.type = type;
-
-		this.typeUpdateEvent.trigger(this.type);
-		return this.type;
-	}
-
-	getType() {
-		return {
-			type: this.type,
-			typeConstants: Object.assign({}, this.typeConstants)
-		};
 	}
 }
 

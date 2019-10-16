@@ -15,7 +15,16 @@ class Presenter {
 
 	addDefaultEvents() {
 		// Model events
+		this.model.typeUpdateEvent.addHandler(function(data) {
+			this.view.updateDOM(this.model.getType());
+			this.model.recalculateValue();
+		}.bind(this));
+
 		this.model.stepUpdateEvent.addHandler(function(data) {
+			this.model.recalculateValue();
+		}.bind(this));
+
+		this.model.limitsUpdateEvent.addHandler(function(data) {
 			this.model.recalculateValue();
 		}.bind(this));
 
@@ -23,19 +32,14 @@ class Presenter {
 			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 		}.bind(this));
 
-		this.model.limitsUpdateEvent.addHandler(function(data) {
-			this.model.recalculateValue();
-		}.bind(this));
-
-		this.model.typeUpdateEvent.addHandler(function(data) {
-			this.view.updateDOM(this.model.getType());
-			this.model.recalculateValue();
-		}.bind(this));
-
 
 		// View events
+		this.view.rootsUpdateEvent.addHandler(function(data) {
+			this.view.append();
+		}.bind(this));
+
 		this.view.UIMouseActionEvent.addHandler(function(data) {
-			this.model.setNearestValueViaPercents(data, true);
+			this.model.setNearestValue(data, true, true);
 		}.bind(this));
 
 		this.view.themeUpdateEvent.addHandler(function(data) {
@@ -51,10 +55,6 @@ class Presenter {
 		this.view.valueNoteDisplayUpdateEvent.addHandler(function(data) {
 			this.view.applyValueNoteDisplay();
 			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-		}.bind(this));
-
-		this.view.rootsUpdateEvent.addHandler(function(data) {
-			this.view.append();
 		}.bind(this));
 
 		this.view.divisionsCountUpdateEvent.addHandler(function(data) {
@@ -75,32 +75,32 @@ class Presenter {
 	applyUserOptions(options) {
 		options = options ? options : {};
 
-		if (options.step !== undefined) this.model.setStep(options.step);
 		if (options.type !== undefined) this.model.setType(options.type);
 		if (options.limits !== undefined) this.model.setLimits(options.limits);
+		if (options.step !== undefined) this.model.setStep(options.step);
 		if (options.singleValue !== undefined) this.model.setSingleValue(options.singleValue);
 		if (options.rangeValue !== undefined) this.model.setRangeValue(options.rangeValue);
 
 		if (options.roots !== undefined) this.view.setRoots(options.roots);
-		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
-		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
 		if (options.theme !== undefined) this.view.setTheme(options.theme);
 		if (options.direction !== undefined) this.view.setDirection(options.direction);
+		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
+		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
 	}
 
 	applyUserEvents(options) {
 		options = options ? options : {};
 
-		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
 		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
 		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
+		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
 		if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
 
 		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
-		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
-		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
 		if (options.onThemeUpdate !== undefined) this.onThemeUpdate(options.onThemeUpdate);
 		if (options.onDirectionUpdate !== undefined) this.onDirectionUpdate(options.onDirectionUpdate);
+		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
 	}
 
 	triggerEvents() {
