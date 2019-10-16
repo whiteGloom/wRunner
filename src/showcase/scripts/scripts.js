@@ -44,7 +44,7 @@ function test() {
 			},
 
 			onTypeUpdate: function(type) {
-				controllers[index]["slider" + index + "Type"].value = type;
+				controllers[index]["slider" + index + "Type"].value = type.type;
 			},
 
 			onDivisionsCountUpdate: function(count) {

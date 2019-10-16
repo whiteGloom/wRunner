@@ -46,9 +46,9 @@ class Model {
 		}
 	}
 
-	setAValueTo(value, mutable, auto) {
+	setAValueTo(newValue, mutable, auto) {
 		// Calculating a stepped value.
-		var stepped = Math.round((+value) / this.step) * this.step;
+		var stepped = Math.round((+newValue) / this.step) * this.step;
 
 		// Changing a mutable value.
 		if (stepped < this.minLimit) {
@@ -62,34 +62,29 @@ class Model {
 		}
 	}
 
-	setType(type) {
-		var exist = false;
+	setType(newType) {
 		for (var constant in this.typeConstants) {
-			if (type === this.typeConstants[constant]) {
-				exist = true;
-				break;
+			if (newType === this.typeConstants[constant]) {
+				this.type = newType;
+
+				this.typeUpdateEvent.trigger({
+					type: this.type,
+					typeConstants: Object.assign({}, this.typeConstants)
+				});
+				return {
+					type: this.type,
+					typeConstants: Object.assign({}, this.typeConstants)
+				};
 			}
 		}
-
-		if (!exist) return;
-		this.type = type;
-
-		this.typeUpdateEvent.trigger({
-			type: this.type,
-			typeConstants: Object.assign({}, this.typeConstants)
-		});
-		return {
-			type: this.type,
-			typeConstants: Object.assign({}, this.typeConstants)
-		};
 	}
 
-	setLimits(limits, auto) {
-		limits = limits ? limits : {};
+	setLimits(newLimits, auto) {
+		newLimits = newLimits ? newLimits : {};
 
 		// If any argument does not fit, it will take a current value.
-		var min = helper.isNumber(limits.minLimit) ? +limits.minLimit : this.minLimit,
-			max = helper.isNumber(limits.maxLimit) ? +limits.maxLimit : this.maxLimit;
+		var min = helper.isNumber(newLimits.minLimit) ? +newLimits.minLimit : this.minLimit,
+			max = helper.isNumber(newLimits.maxLimit) ? +newLimits.maxLimit : this.maxLimit;
 
 		if (min < max) {
 			this.minLimit = min;
@@ -122,18 +117,18 @@ class Model {
 		};
 	}
 
-	setStep(step) {
-		if (!helper.isNumber(step) || +step <= 0) return;
-		this.step = +step;
+	setStep(newStep) {
+		if (!helper.isNumber(newStep) || +newStep <= 0) return;
+		this.step = +newStep;
 
 		this.stepUpdateEvent.trigger(this.step);
 		return this.step;
 	}
 
-	setSingleValue(value, auto) {
-		value = helper.isNumber(value) ? +value : this.singleValue;
+	setSingleValue(newValue, auto) {
+		newValue = helper.isNumber(newValue) ? +newValue : this.singleValue;
 
-		this.setAValueTo(value, "singleValue", auto);
+		this.setAValueTo(newValue, "singleValue", auto);
 
 		// Update selected
 		this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
@@ -149,15 +144,11 @@ class Model {
 		};
 	}
 
-	setRangeValue(values, auto) {
-		var min, max;
-		if (typeof values !== "object" || values == null) {
-			min = this.rangeValueMin;
-			max = this.rangeValueMax;
-		} else {
-			min = helper.isNumber(values.minValue) ? +values.minValue : this.rangeValueMin;
-			max = helper.isNumber(values.maxValue) ? +values.maxValue : this.rangeValueMax;
-		}
+	setRangeValue(newValues, auto) {
+		if (!helper.isObject(newValues)) newValues = {};
+
+		var min = helper.isNumber(newValues.minValue) ? +newValues.minValue : this.rangeValueMin;
+		var max = helper.isNumber(newValues.maxValue) ? +newValues.maxValue : this.rangeValueMax;
 
 		if (min === max) {
 			max += this.step;

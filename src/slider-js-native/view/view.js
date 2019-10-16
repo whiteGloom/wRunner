@@ -32,12 +32,10 @@ class View {
 		(this.path = document.createElement("div")).classList.add("wrunner__path");
 		(this.pathPassed = document.createElement("div")).classList.add("wrunner__pathPassed");
 
-		// Path handles
 		(this.handle = document.createElement("div")).classList.add("wrunner__handle");
 		(this.handleMin = document.createElement("div")).classList.add("wrunner__handle");
 		(this.handleMax = document.createElement("div")).classList.add("wrunner__handle");
 
-		// Path values
 		(this.valueNote = document.createElement("div")).classList.add("wrunner__valueNote");
 		(this.valueNoteMin = document.createElement("div")).classList.add("wrunner__valueNote");
 		(this.valueNoteMax = document.createElement("div")).classList.add("wrunner__valueNote");
@@ -45,9 +43,17 @@ class View {
 		(this.divisions = document.createElement("div")).classList.add("wrunner__divisions");
 		this.divisionsList = [];
 
-		this.base.appendChild(this.outer);
+		// Init
+		this.buildBaseDOM();
 		this.addEvents();
 		this.addListenners();
+	}
+
+	buildBaseDOM() {
+		this.base.appendChild(this.outer);
+		this.outer.appendChild(this.path);
+		this.path.appendChild(this.pathPassed);
+		this.outer.appendChild(this.divisions);
 	}
 
 	addEvents() {
@@ -66,18 +72,19 @@ class View {
 	}
 
 	updateDOM(type) {
-		this.path.innerHTML = "";
-		this.outer.innerHTML = "";
+		if(type.type === type.typeConstants.singleValue) {
+			this.handleMin.remove();
+			this.handleMax.remove();
+			this.valueNoteMin.remove();
+			this.valueNoteMax.remove();
 
-		this.outer.appendChild(this.path);
-		this.path.appendChild(this.pathPassed);
-		this.outer.appendChild(this.divisions);
-
-		if(type.type == type.typeConstants.singleValue) {
 			this.path.appendChild(this.handle);
 			this.outer.appendChild(this.valueNote);
 		}
-		if(type.type == type.typeConstants.rangeValue) {
+		if(type.type === type.typeConstants.rangeValue) {
+			this.handle.remove();
+			this.valueNote.remove();
+
 			this.path.appendChild(this.handleMin);
 			this.path.appendChild(this.handleMax);
 			this.outer.appendChild(this.valueNoteMin);
@@ -109,7 +116,7 @@ class View {
 
 			// If handle was dragged, stop the function.
 			if (dragged) return;
-			if (target == this.handle || target == this.handleMin || target == this.handleMax) return;
+			if (target === this.handle || target === this.handleMin || target === this.handleMax) return;
 
 			// Else trigger a click.
 			handlerBind(eventUp);
@@ -167,7 +174,7 @@ class View {
 
 		count = Math.round(+count);
 
-		if (count == 1) {
+		if (count === 1) {
 			count++;
 			if (!auto) console.log("Count was increased by one, cause it may not be equal to one.");
 		}
@@ -195,9 +202,7 @@ class View {
 	}
 
 	drawValue(value, limits, currentType) {
-		var pathScale, valueNoteScale, valueNoteMinScale, valueNoteMaxScale;
-		var selected = value.selected;
-		
+		var pathScale, selected = value.selected;
 		var direction = this.direction.value,
 			directionConstants = this.directionConstants;
 		var type = currentType.type,
@@ -214,10 +219,12 @@ class View {
 			clearList[i].style.cssText = "";
 		}
 
-		if(type == typeConstants.singleValue) {
+		if(type === typeConstants.singleValue) {
+			var valueNoteScale;
+
 			this.valueNote.innerHTML = value.value;
 
-			if(direction == directionConstants.horizontalValue) {
+			if(direction === directionConstants.horizontalValue) {
 				// Passed path
 				this.pathPassed.style.width = selected + "%";
 
@@ -229,7 +236,7 @@ class View {
 				this.valueNote.style.left = (pathScale * selected / 100 - valueNoteScale / 2) / pathScale * 100 + "%";
 			}
 
-			if(direction == directionConstants.verticalValue) {
+			if(direction === directionConstants.verticalValue) {
 				// Passed path
 				this.pathPassed.style.height = selected + "%";
 
@@ -242,13 +249,14 @@ class View {
 			}
 		}
 
-		if (type == typeConstants.rangeValue) {
+		if (type === typeConstants.rangeValue) {
+			var valueNoteMinScale, valueNoteMaxScale;
 			var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
 
 			this.valueNoteMin.innerHTML = value.minValue;
 			this.valueNoteMax.innerHTML = value.maxValue;
 
-			if(direction == directionConstants.horizontalValue) {
+			if(direction === directionConstants.horizontalValue) {
 
 				// Passed path
 				this.pathPassed.style.width = selected + "%";
@@ -265,7 +273,7 @@ class View {
 				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2) / pathScale * 100 + "%";
 			}
 
-			if(direction == directionConstants.verticalValue) {
+			if(direction === directionConstants.verticalValue) {
 				this.pathPassed.style.height = selected + "%";
 				this.pathPassed.style.top = 100 - selected - start + "%";
 

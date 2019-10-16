@@ -1,8 +1,9 @@
 {
   "name": "wRunner",
-  "version": "1.2.14",
-  "description": "A slider plugin",
-  "main": "index.js",
+  "version": "1.2.15",
+  "description": "A slider plugin.",
+  "homepage": "https://github.com/whiteGloom/wRunner",
+  "main": "./slider-js-native/wrunner-native.js",
   "scripts": {
     "build": "webpack -p",
     "build-watch": "webpack --watch",
@@ -16,7 +17,7 @@
     "@wrunner-jq": "./src/wrunner-jquery"
   },
   "author": "whiteGloom <karabin.m@yandex.ru> (https://github.com/whiteGloom)",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.6.2",
     "@babel/core": "^7.2.2",

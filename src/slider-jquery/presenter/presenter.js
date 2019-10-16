@@ -118,7 +118,10 @@ class Presenter {
 			});
 		}
 
-		this.model.typeUpdateEvent.trigger(this.model.type);
+		this.model.typeUpdateEvent.trigger({
+			type: this.model.type,
+			typeConstants: Object.assign({}, this.model.typeConstants)
+		});
 		this.model.stepUpdateEvent.trigger(this.model.step);
 		this.model.limitsUpdateEvent.trigger({
 			minLimit: this.model.minLimit,
