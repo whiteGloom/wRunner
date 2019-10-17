@@ -80,7 +80,7 @@ class Model {
 	}
 
 	setLimits(newLimits, auto) {
-		newLimits = newLimits ? newLimits : {};
+		if(!helper.isObject(newLimits)) newLimits = {};
 
 		// If any argument does not fit, it will take a current value.
 		var min = helper.isNumber(newLimits.minLimit) ? +newLimits.minLimit : this.minLimit,
@@ -221,14 +221,14 @@ class Model {
 	}
 
 	getValue() {
-		if(this.type == this.typeConstants.singleValue) {
+		if(this.type === this.typeConstants.singleValue) {
 			return {
 				value: this.singleValue,
 				selected: this.singleSelected
 			};
 		}
 
-		if(this.type == this.typeConstants.rangeValue) {
+		if(this.type === this.typeConstants.rangeValue) {
 			return {
 				minValue: this.rangeValueMin,
 				maxValue: this.rangeValueMax,

@@ -157,9 +157,9 @@ class View {
 		return this.roots;
 	}
 
-	setRoots(roots) {
-		if (!helper.isDOMEl(roots)) return;
-		this.roots = roots;
+	setRoots(newRoots) {
+		if (!helper.isDOMEl(newRoots)) return;
+		this.roots = newRoots;
 
 		this.rootsUpdateEvent.trigger(this.roots);
 		return this.roots;
@@ -169,16 +169,16 @@ class View {
 		return this.roots;
 	}
 
-	setDivisionsCount(count, auto) {
-		if (!helper.isNumber(count) || count < 0) return;
+	setDivisionsCount(newCount, auto) {
+		if (!helper.isNumber(newCount) || newCount < 0) return;
 
-		count = Math.round(+count);
+		newCount = Math.round(+newCount);
 
-		if (count === 1) {
-			count++;
+		if (newCount === 1) {
+			newCount++;
 			if (!auto) console.log("Count was increased by one, cause it may not be equal to one.");
 		}
-		this.divisionsCount = +count;
+		this.divisionsCount = +newCount;
 
 		this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
 		return this.divisionsCount;
@@ -361,9 +361,9 @@ class View {
 		return Object.assign({}, this.styles);
 	}
 
-	setValueNoteDisplay(value) {
-		if (typeof value !== "boolean") return;
-		this.valueNoteDisplay = value;
+	setValueNoteDisplay(newValue) {
+		if (typeof newValue !== "boolean") return;
+		this.valueNoteDisplay = newValue;
 
 		this.valueNoteDisplayUpdateEvent.trigger(this.valueNoteDisplay);
 		return this.valueNoteDisplay;

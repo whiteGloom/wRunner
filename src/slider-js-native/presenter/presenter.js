@@ -20,11 +20,11 @@ class Presenter {
 			this.model.recalculateValue();
 		}.bind(this));
 
-		this.model.stepUpdateEvent.addHandler(function(data) {
+		this.model.limitsUpdateEvent.addHandler(function(data) {
 			this.model.recalculateValue();
 		}.bind(this));
 
-		this.model.limitsUpdateEvent.addHandler(function(data) {
+		this.model.stepUpdateEvent.addHandler(function(data) {
 			this.model.recalculateValue();
 		}.bind(this));
 
@@ -72,6 +72,21 @@ class Presenter {
 		this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 	}
 
+	applyUserEvents(options) {
+		options = options ? options : {};
+
+		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
+		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
+		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
+		if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
+
+		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
+		if (options.onThemeUpdate !== undefined) this.onThemeUpdate(options.onThemeUpdate);
+		if (options.onDirectionUpdate !== undefined) this.onDirectionUpdate(options.onDirectionUpdate);
+		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
+	}
+
 	applyUserOptions(options) {
 		options = options ? options : {};
 
@@ -86,21 +101,6 @@ class Presenter {
 		if (options.direction !== undefined) this.view.setDirection(options.direction);
 		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
 		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
-	}
-
-	applyUserEvents(options) {
-		options = options ? options : {};
-
-		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
-		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
-		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
-		if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
-
-		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
-		if (options.onThemeUpdate !== undefined) this.onThemeUpdate(options.onThemeUpdate);
-		if (options.onDirectionUpdate !== undefined) this.onDirectionUpdate(options.onDirectionUpdate);
-		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
-		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
 	}
 
 	triggerEvents() {

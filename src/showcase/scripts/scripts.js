@@ -23,7 +23,6 @@ function test() {
 	var sliders = [];
 	function makeSlider(index, options, type) {
 		var data = Object.assign(options, {
-
 			onStepUpdate: function(step) {
 				controllers[index]["slider" + index + "Step"].value = step;
 			},
@@ -74,6 +73,7 @@ function test() {
 		} else {
 			sliders[index] = $("#exm" + index).wRunner(data);
 		}
+
 
 		controllers[index]["slider" + index + "Step"].addEventListener("input", function(e) {
 			sliders[index].setStep(controllers[index]["slider" + index + "Step"].value);

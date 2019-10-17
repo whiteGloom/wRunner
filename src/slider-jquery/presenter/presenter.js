@@ -72,6 +72,21 @@ class Presenter {
 		this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 	}
 
+	applyUserEvents(options) {
+		options = options ? options : {};
+
+		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
+		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
+		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
+		if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
+
+		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
+		if (options.onThemeUpdate !== undefined) this.onThemeUpdate(options.onThemeUpdate);
+		if (options.onDirectionUpdate !== undefined) this.onDirectionUpdate(options.onDirectionUpdate);
+		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
+		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
+	}
+
 	applyUserOptions(options) {
 		options = options ? options : {};
 
@@ -86,21 +101,6 @@ class Presenter {
 		if (options.theme !== undefined) this.view.setTheme(options.theme);
 		if (options.direction !== undefined) this.view.setDirection(options.direction);
 		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
-	}
-
-	applyUserEvents(options) {
-		options = options ? options : {};
-
-		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
-		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
-		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
-		if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
-
-		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
-		if (options.onThemeUpdate !== undefined) this.onThemeUpdate(options.onThemeUpdate);
-		if (options.onDirectionUpdate !== undefined) this.onDirectionUpdate(options.onDirectionUpdate);
-		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
-		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
 	}
 
 	triggerEvents() {
