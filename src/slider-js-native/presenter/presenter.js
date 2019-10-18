@@ -6,14 +6,14 @@ class Presenter {
 		this.view = options.view;
 
 		// Plugin load
-		this.addDefaultEvents();
+		this.applyDefaultEvents();
 		this.applyUserEvents(options.userOptions);
 		this.applyUserOptions(options.userOptions);
 		this.initInstance();
 		this.triggerEvents();
 	}
 
-	addDefaultEvents() {
+	applyDefaultEvents() {
 		// Model events
 		this.model.typeUpdateEvent.addHandler(function(data) {
 			this.view.updateDOM(this.model.getType());
@@ -36,6 +36,7 @@ class Presenter {
 		// View events
 		this.view.rootsUpdateEvent.addHandler(function(data) {
 			this.view.append();
+			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 		}.bind(this));
 
 		this.view.UIMouseActionEvent.addHandler(function(data) {
@@ -66,10 +67,9 @@ class Presenter {
 	initInstance() {
 		this.view.updateDOM(this.model.getType());
 		this.view.generateDivisions();
-		this.view.append();
 		this.view.applyValueNoteDisplay();
 		this.view.applyStyles();
-		this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+		this.view.append();
 	}
 
 	applyUserEvents(options) {

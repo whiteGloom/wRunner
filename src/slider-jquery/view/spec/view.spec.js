@@ -593,9 +593,8 @@ describe("applyValueNoteDisplay method.", () => {
 		});
 
 		it("Applying display of value note, returns display.", () => {
-			var result = view.applyValueNoteDisplay();
+			view.applyValueNoteDisplay();
 
-			expect(result).toBeTruthy();
 			expect(view.$valueNote[0]).toHaveClass(view.$valueNote[0].classList[0] + "_display_visible");
 			expect(view.$valueNoteMin[0]).toHaveClass(view.$valueNoteMin[0].classList[0] + "_display_visible");
 			expect(view.$valueNoteMax[0]).toHaveClass(view.$valueNoteMax[0].classList[0] + "_display_visible");
@@ -608,9 +607,8 @@ describe("applyValueNoteDisplay method.", () => {
 		});
 
 		it("Applying display of value note, returns display.", () => {
-			var result = view.applyValueNoteDisplay();
+			view.applyValueNoteDisplay();
 
-			expect(result).toBeFalsy();
 			expect(view.$valueNote[0]).toHaveClass(view.$valueNote[0].classList[0] + "_display_hidden");
 			expect(view.$valueNoteMin[0]).toHaveClass(view.$valueNoteMin[0].classList[0] + "_display_hidden");
 			expect(view.$valueNoteMax[0]).toHaveClass(view.$valueNoteMax[0].classList[0] + "_display_hidden");

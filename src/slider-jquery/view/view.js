@@ -50,17 +50,15 @@ class View {
 
 	addEvents() {
 		this.UIMouseActionEvent = makeEvent();
+		this.rootsUpdateEvent = makeEvent();
 		this.themeUpdateEvent = makeEvent();
 		this.directionUpdateEvent = makeEvent();
-		this.stylesAppliedEvent = makeEvent();
 		this.valueNoteDisplayUpdateEvent = makeEvent();
-		this.rootsUpdateEvent = makeEvent();
 		this.divisionsCountUpdateEvent = makeEvent();
-		this.valueNoteDisplayAppliedEvent = makeEvent();
 	}
 
 	addListenners() {
-		$(this.$path).on("mousedown", this.mouseAction.bind(this));
+		$(this.$path).on("mousedown", this.mouseActionHandler.bind(this));
 	}
 
 	updateDOM(type) {
@@ -84,7 +82,7 @@ class View {
 		}
 	}
 
-	mouseAction(eventDown) {
+	mouseActionHandler(eventDown) {
 		var	dragged = false;
 		var handlerBind = handler.bind(this),
 			upBind = mouseUp.bind(this);
@@ -150,47 +148,29 @@ class View {
 		return this.$roots;
 	}
 
-	setRoots(newRoots) {
-		if (!helper.isDOMEl($(newRoots)[0])) return;
-		this.$roots = $(newRoots);
+	applyStyles() {
+		var styles = [this.theme, this.direction];
+		var els = [
+			this.$base, this.$outer,
+			this.$path, this.$pathPassed,
+			this.$divisions, this.$handle,
+			this.$handleMin, this.$handleMax,
+			this.$valueNote, this.$valueNoteMin,
+			this.$valueNoteMax
+		].concat(this.divisionsList);
 
-		this.rootsUpdateEvent.trigger(this.$roots);
-		return this.$roots;
-	}
+		for (var i = 0; i < els.length; i++) {
+			var $el = els[i];
 
-	getRoots() {
-		return this.$roots;
-	}
+			for(var style in styles) {
+				var name = $el[0].classList[0],
+					oldValue = styles[style].oldValue,
+					value = styles[style].value;
 
-	setDivisionsCount(newCount, auto) {
-		if (!helper.isNumber(newCount) || newCount < 0) return;
-
-		newCount = Math.round(+newCount);
-
-		if (newCount == 1) {
-			newCount++;
-			if (!auto) console.log("Count was increased by one, cause it may not be equal to one.");
+				if (oldValue) $el.removeClass(name + "_" + styles[style].className + "_" + oldValue);
+				$el.addClass(name + "_" + styles[style].className + "_" + value);
+			}
 		}
-		this.divisionsCount = +newCount;
-
-		this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
-		return this.divisionsCount;
-	}
-
-	generateDivisions() {
-		this.$divisions.empty();
-		this.divisionsList.length = 0;
-
-		for(var i = this.divisionsCount; i > 0; i--) {
-			var instance = $("<div class='wrunner__division'>");
-			
-			this.divisionsList.push(instance);
-			instance.appendTo(this.$divisions);
-		}
-	}
-
-	getDivisionsCount() {
-		return this.divisionsCount;
 	}
 
 	drawValue(value, limits, currentType) {
@@ -279,8 +259,53 @@ class View {
 				this.$valueNoteMax.css("top", 100 - (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2) / pathScale * 100 + "%");
 			}
 		}
+	}
 
-		return value;
+	applyValueNoteDisplay() {
+		var els = [this.$valueNote, this.$valueNoteMin, this.$valueNoteMax];
+
+		for (var i = 0; i < els.length; i++) {
+			var mark = els[i][0].classList[0];
+
+			els[i]
+				.removeClass(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"))
+				.addClass(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
+		}
+	}
+
+	generateDivisions() {
+		this.$divisions.empty();
+		this.divisionsList.length = 0;
+
+		for(var i = this.divisionsCount; i > 0; i--) {
+			var instance = $("<div class='wrunner__division'>");
+			
+			this.divisionsList.push(instance);
+			instance.appendTo(this.$divisions);
+		}
+	}
+	
+	setRoots(newRoots) {
+		if (!helper.isDOMEl($(newRoots)[0])) return;
+		this.$roots = $(newRoots);
+
+		this.rootsUpdateEvent.trigger(this.$roots);
+		return this.$roots;
+	}
+
+	setDivisionsCount(newCount, auto) {
+		if (!helper.isNumber(newCount) || newCount < 0) return;
+
+		newCount = Math.round(+newCount);
+
+		if (newCount == 1) {
+			newCount++;
+			if (!auto) console.log("Count was increased by one, cause it may not be equal to one.");
+		}
+		this.divisionsCount = +newCount;
+
+		this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
+		return this.divisionsCount;
 	}
 
 	setTheme(newTheme) {
@@ -290,10 +315,6 @@ class View {
 		this.theme.value = newTheme;
 
 		this.themeUpdateEvent.trigger(this.theme.value);
-		return this.theme.value;
-	}
-
-	getTheme() {
 		return this.theme.value;
 	}
 
@@ -317,41 +338,6 @@ class View {
 		}
 	}
 
-	getDirection() {
-		return {
-			value: this.direction.value,
-			constants: Object.assign({}, this.directionConstants)
-		};
-	}
-
-	applyStyles() {
-		var styles = [this.theme, this.direction];
-		var els = [
-			this.$base, this.$outer,
-			this.$path, this.$pathPassed,
-			this.$divisions, this.$handle,
-			this.$handleMin, this.$handleMax,
-			this.$valueNote, this.$valueNoteMin,
-			this.$valueNoteMax
-		].concat(this.divisionsList);
-
-		for (var i = 0; i < els.length; i++) {
-			var $el = els[i];
-
-			for(var style in styles) {
-				var mark = $el[0].classList[0],
-					oldValue = styles[style].oldValue,
-					value = styles[style].value;
-
-				if (oldValue) $el.removeClass(mark + "_" + styles[style].className + "_" + oldValue);
-				$el.addClass(mark + "_" + styles[style].className + "_" + value);
-			}
-		}
-
-		this.stylesAppliedEvent.trigger(Object.assign({}, this.styles));
-		return Object.assign({}, this.styles);
-	}
-
 	setValueNoteDisplay(newValue) {
 		if (typeof newValue !== "boolean") return;
 		this.valueNoteDisplay = newValue;
@@ -360,23 +346,27 @@ class View {
 		return this.valueNoteDisplay;
 	}
 
-	applyValueNoteDisplay() {
-		var els = [this.$valueNote, this.$valueNoteMin, this.$valueNoteMax];
+	getRoots() {
+		return this.$roots;
+	}
 
-		for (var i = 0; i < els.length; i++) {
-			var mark = els[i][0].classList[0];
+	getTheme() {
+		return this.theme.value;
+	}
 
-			els[i]
-				.removeClass(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"))
-				.addClass(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
-		}
-
-		this.valueNoteDisplayAppliedEvent.trigger(this.valueNoteDisplay);
-		return this.valueNoteDisplay;
+	getDirection() {
+		return {
+			value: this.direction.value,
+			constants: Object.assign({}, this.directionConstants)
+		};
 	}
 
 	getValueNoteDisplay() {
 		return this.valueNoteDisplay;
+	}
+
+	getDivisionsCount() {
+		return this.divisionsCount;
 	}
 }
 
