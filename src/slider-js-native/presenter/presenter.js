@@ -6,14 +6,14 @@ class Presenter {
 		this.view = options.view;
 
 		// Plugin load
-		this.applyDefaultEvents();
-		this.applyUserEvents(options.userOptions);
-		this.applyUserOptions(options.userOptions);
-		this.initInstance();
-		this.triggerEvents();
+		this._applyDefaultEvents();
+		this._applyUserEvents(options.userOptions);
+		this._applyUserOptions(options.userOptions);
+		this._initInstance();
+		this._triggerEvents();
 	}
 
-	applyDefaultEvents() {
+	_applyDefaultEvents() {
 		// Model events
 		this.model.typeUpdateEvent.addHandler(function(data) {
 			this.view.updateDOM(this.model.getType());
@@ -64,7 +64,7 @@ class Presenter {
 		}.bind(this));
 	}
 
-	initInstance() {
+	_initInstance() {
 		this.view.updateDOM(this.model.getType());
 		this.view.generateDivisions();
 		this.view.applyValueNoteDisplay();
@@ -72,7 +72,7 @@ class Presenter {
 		this.view.append();
 	}
 
-	applyUserEvents(options) {
+	_applyUserEvents(options) {
 		options = options ? options : {};
 
 		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
@@ -87,7 +87,7 @@ class Presenter {
 		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
 	}
 
-	applyUserOptions(options) {
+	_applyUserOptions(options) {
 		options = options ? options : {};
 
 		if (options.type !== undefined) this.model.setType(options.type);
@@ -103,7 +103,7 @@ class Presenter {
 		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
 	}
 
-	triggerEvents() {
+	_triggerEvents() {
 		if (this.model.type == this.model.typeConstants.singleValue) {
 			this.model.valueUpdateEvent.trigger({
 				value: this.model.singleValue,

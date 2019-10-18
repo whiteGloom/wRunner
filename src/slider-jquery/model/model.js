@@ -25,15 +25,7 @@ class Model {
 			rangeValue: "range"
 		};
 
-		this.addEvents();
-	}
-
-	addEvents() {
-		this.valueUpdateEvent = makeEvent();
-		this.limitsUpdateEvent = makeEvent();
-		this.stepUpdateEvent = makeEvent();
-		this.percentageUpdateEvent = makeEvent();
-		this.typeUpdateEvent = makeEvent();
+		this._addEvents();
 	}
 
 	recalculateValue() {
@@ -46,17 +38,17 @@ class Model {
 		}
 	}
 
-	setAValueTo(newValue, mutable, auto) {
+	setAValueTo(newValue, mutable, isAuto) {
 		// Calculating a stepped value.
 		var stepped = Math.round((+newValue) / this.step) * this.step;
 
 		// Changing a mutable value.
 		if (stepped < this.minLimit) {
 			this[mutable] = this.minLimit;
-			if (!auto) console.log("The value was equated to the minimum, because it is less than the minimum value.");
+			if (!isAuto) console.log("The value was equated to the minimum, because it is less than the minimum value.");
 		} else if (stepped > this.maxLimit) {
 			this[mutable] = this.maxLimit;
-			if (!auto) console.log("The value was equated to the maximum, because it is more than the maximum value.");
+			if (!isAuto) console.log("The value was equated to the maximum, because it is more than the maximum value.");
 		} else {
 			this[mutable] = stepped;
 		}
@@ -79,7 +71,7 @@ class Model {
 		}
 	}
 
-	setLimits(newLimits, auto) {
+	setLimits(newLimits, isAuto) {
 		if(!helper.isObject(newLimits)) newLimits = {};
 
 		// If any argument does not fit, it will take a current value.
@@ -93,12 +85,12 @@ class Model {
 		if (min === max) {
 			this.minLimit = min;
 			this.maxLimit = max + 1;
-			if (!auto) console.log("Maximum limit was increased by 1, because the minimum limit is equal to the maximum limit.");
+			if (!isAuto) console.log("Maximum limit was increased by 1, because the minimum limit is equal to the maximum limit.");
 		}
 		if (min > max) {
 			this.minLimit = max;
 			this.maxLimit = min;
-			if (!auto) console.log("Limits was reversed, because the maximum limit is less than the minimum limit.");
+			if (!isAuto) console.log("Limits was reversed, because the maximum limit is less than the minimum limit.");
 		}
 
 		// Update count of values.
@@ -125,10 +117,10 @@ class Model {
 		return this.step;
 	}
 
-	setSingleValue(newValue, auto) {
+	setSingleValue(newValue, isAuto) {
 		newValue = helper.isNumber(newValue) ? +newValue : this.singleValue;
 
-		this.setAValueTo(newValue, "singleValue", auto);
+		this.setAValueTo(newValue, "singleValue", isAuto);
 
 		// Update selected
 		this.singleSelected = (this.singleValue - this.minLimit) / this.valuesCount * 100;
@@ -144,7 +136,7 @@ class Model {
 		};
 	}
 
-	setRangeValue(newValues, auto) {
+	setRangeValue(newValues, isAuto) {
 		if (!helper.isObject(newValues)) newValues = {};
 
 		var min = helper.isNumber(newValues.minValue) ? +newValues.minValue : this.rangeValueMin;
@@ -152,17 +144,17 @@ class Model {
 
 		if (min === max) {
 			max += this.step;
-			if (!auto) console.log("The maximum value was increased by step size, because minimum value is equal to maximum value.");
+			if (!isAuto) console.log("The maximum value was increased by step size, because minimum value is equal to maximum value.");
 		}
 		if (min > max) {
 			let clone = max;
 			max = min;
 			min = clone;
-			if (!auto) console.log("The values was reversed, because maximum value is less than minimum value.");
+			if (!isAuto) console.log("The values was reversed, because maximum value is less than minimum value.");
 		}
 		
-		this.setAValueTo(min, "rangeValueMin", auto);
-		this.setAValueTo(max, "rangeValueMax", auto);
+		this.setAValueTo(min, "rangeValueMin", isAuto);
+		this.setAValueTo(max, "rangeValueMax", isAuto);
 
 
 		// Update selected
@@ -181,7 +173,7 @@ class Model {
 		};
 	}
 
-	setNearestValue(value, viaPercents, auto) {
+	setNearestValue(value, viaPercents, isAuto) {
 		if (!helper.isNumber(value)) return;
 
 		var value = viaPercents === false
@@ -189,7 +181,7 @@ class Model {
 			: Math.round(this.valuesCount * +value / 100 + this.minLimit)
 
 		if (this.type === this.typeConstants.singleValue) {
-			return this.setSingleValue(value, auto);
+			return this.setSingleValue(value, isAuto);
 		}
 
 		if (this.type === this.typeConstants.rangeValue) {
@@ -235,6 +227,14 @@ class Model {
 				selected: this.rangeSelected
 			};
 		}
+	}
+
+	_addEvents() {
+		this.valueUpdateEvent = makeEvent();
+		this.limitsUpdateEvent = makeEvent();
+		this.stepUpdateEvent = makeEvent();
+		this.percentageUpdateEvent = makeEvent();
+		this.typeUpdateEvent = makeEvent();
 	}
 }
 

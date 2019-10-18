@@ -1,7 +1,7 @@
 mixin sampleMix(options)
 	-
 		var options = options ? options : {};
-		var title = options.title ? options.title : '';
+		var title = options.title ? options.title : "";
 	.sample
 		if title
 			h1.sample__title= title
@@ -15,14 +15,14 @@ mixin sampleDataMix(options)
 mixin sampleInstanceMix(options)
 	-
 		var options = options ? options : {};
-		var id = options.id ? options.id : '';
+		var id = options.id ? options.id : "";
 	.sample__instance(id = id)
 		block
 
 mixin sampleParameterMix(options)
 	-
 		var options = options ? options : {};
-		var name = options.name ? options.name + ':' : 'name:';
+		var name = options.name ? options.name + ":" : "name:";
 	.sample__parameter
 		em.sample__parameterName= name
 		.sample__parameterValue

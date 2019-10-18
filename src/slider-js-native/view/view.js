@@ -44,29 +44,9 @@ class View {
 		this.divisionsList = [];
 
 		// Init
-		this.buildBaseDOM();
-		this.addEvents();
-		this.addListenners();
-	}
-
-	buildBaseDOM() {
-		this.base.appendChild(this.outer);
-		this.outer.appendChild(this.path);
-		this.path.appendChild(this.pathPassed);
-		this.outer.appendChild(this.divisions);
-	}
-
-	addEvents() {
-		this.UIMouseActionEvent = makeEvent();
-		this.rootsUpdateEvent = makeEvent();
-		this.themeUpdateEvent = makeEvent();
-		this.directionUpdateEvent = makeEvent();
-		this.valueNoteDisplayUpdateEvent = makeEvent();
-		this.divisionsCountUpdateEvent = makeEvent();
-	}
-
-	addListenners() {
-		this.path.addEventListener("mousedown", this.mouseActionHandler.bind(this));
+		this._buildBaseDOM();
+		this._addEvents();
+		this._addListenners();
 	}
 
 	updateDOM(type) {
@@ -87,66 +67,6 @@ class View {
 			this.path.appendChild(this.handleMax);
 			this.outer.appendChild(this.valueNoteMin);
 			this.outer.appendChild(this.valueNoteMax);
-		}
-	}
-
-	mouseActionHandler(eventDown) {
-		var	dragged = false;
-		var handlerBind = handler.bind(this),
-			upBind = mouseUp.bind(this);
-
-		// The handler that indicates that the handle has been dragged.
-		document.body.addEventListener("mousemove", () => dragged = true, {once: true});
-
-		// The handler that called when mouse button released.
-		document.body.addEventListener("mousemove", handlerBind);
-
-		// The handler that called when mouse moved, while button pressed.
-		document.body.addEventListener("mouseup", upBind, {once: true});
-
-
-		// Handlers
-		function mouseUp(eventUp) {
-			var target = eventUp.target;
-
-			// Removing move bind.
-			document.body.removeEventListener("mousemove", handlerBind);
-
-			// If handle was dragged, stop the function.
-			if (dragged) return;
-			if (target === this.handle || target === this.handleMin || target === this.handleMax) return;
-
-			// Else trigger a click.
-			handlerBind(eventUp);
-		}
-
-		function handler(event) {
-			var scale, min, max, pos;
-			var direction = this.direction.value,
-				directionConstants = this.directionConstants;
-
-			if(direction === directionConstants.horizontalValue) {
-				scale = this.path.offsetWidth;
-				min = this.path.getBoundingClientRect().left;
-				pos = event.clientX;
-			}
-			if(direction === directionConstants.verticalValue) {
-				scale = this.path.offsetHeight;
-				min = this.path.getBoundingClientRect().top;
-				pos = event.clientY;
-			}
-
-			max = min + scale;
-
-			// If the dragg is out of slider's range, the function stops.
-			if (pos < min - 10 || pos > max + 10) return;
-
-			if(direction === directionConstants.horizontalValue) {
-				this.UIMouseActionEvent.trigger((pos - min) / scale * 100);
-			}
-			if(direction === directionConstants.verticalValue) {
-				this.UIMouseActionEvent.trigger(100 - (pos - min) / scale * 100);
-			}
 		}
 	}
 
@@ -375,6 +295,86 @@ class View {
 
 	getDivisionsCount() {
 		return this.divisionsCount;
+	}
+
+	_buildBaseDOM() {
+		this.base.appendChild(this.outer);
+		this.outer.appendChild(this.path);
+		this.path.appendChild(this.pathPassed);
+		this.outer.appendChild(this.divisions);
+	}
+
+	_addEvents() {
+		this.UIMouseActionEvent = makeEvent();
+		this.rootsUpdateEvent = makeEvent();
+		this.themeUpdateEvent = makeEvent();
+		this.directionUpdateEvent = makeEvent();
+		this.valueNoteDisplayUpdateEvent = makeEvent();
+		this.divisionsCountUpdateEvent = makeEvent();
+	}
+
+	_addListenners() {
+		this.path.addEventListener("mousedown", this._mouseActionHandler.bind(this));
+	}
+
+	_mouseActionHandler(eventDown) {
+		var	dragged = false;
+		var handlerBind = handler.bind(this),
+			upBind = mouseUp.bind(this);
+
+		// The handler that indicates that the handle has been dragged.
+		document.body.addEventListener("mousemove", () => dragged = true, {once: true});
+
+		// The handler that called when mouse button released.
+		document.body.addEventListener("mousemove", handlerBind);
+
+		// The handler that called when mouse moved, while button pressed.
+		document.body.addEventListener("mouseup", upBind, {once: true});
+
+
+		// Handlers
+		function mouseUp(eventUp) {
+			var target = eventUp.target;
+
+			// Removing move bind.
+			document.body.removeEventListener("mousemove", handlerBind);
+
+			// If handle was dragged, stop the function.
+			if (dragged) return;
+			if (target === this.handle || target === this.handleMin || target === this.handleMax) return;
+
+			// Else trigger a click.
+			handlerBind(eventUp);
+		}
+
+		function handler(event) {
+			var scale, min, max, pos;
+			var direction = this.direction.value,
+				directionConstants = this.directionConstants;
+
+			if(direction === directionConstants.horizontalValue) {
+				scale = this.path.offsetWidth;
+				min = this.path.getBoundingClientRect().left;
+				pos = event.clientX;
+			}
+			if(direction === directionConstants.verticalValue) {
+				scale = this.path.offsetHeight;
+				min = this.path.getBoundingClientRect().top;
+				pos = event.clientY;
+			}
+
+			max = min + scale;
+
+			// If the dragg is out of slider's range, the function stops.
+			if (pos < min - 10 || pos > max + 10) return;
+
+			if(direction === directionConstants.horizontalValue) {
+				this.UIMouseActionEvent.trigger((pos - min) / scale * 100);
+			}
+			if(direction === directionConstants.verticalValue) {
+				this.UIMouseActionEvent.trigger(100 - (pos - min) / scale * 100);
+			}
+		}
 	}
 }
 
