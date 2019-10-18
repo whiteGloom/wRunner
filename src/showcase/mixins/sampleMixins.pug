@@ -1,29 +1,29 @@
 mixin sampleMix(options)
-	-
-		var options = options ? options : {};
-		var title = options.title ? options.title : "";
-	.sample
-		if title
-			h1.sample__title= title
-		.sample__body
-			block
+    -
+        var options = options ? options : {};
+        var title = options.title ? options.title : "";
+    .sample
+        if title
+            h1.sample__title= title
+        .sample__body
+            block
 
 mixin sampleDataMix(options)
-	form.sample__data
-		block
+    form.sample__data
+        block
 
 mixin sampleInstanceMix(options)
-	-
-		var options = options ? options : {};
-		var id = options.id ? options.id : "";
-	.sample__instance(id = id)
-		block
+    -
+        var options = options ? options : {};
+        var id = options.id ? options.id : "";
+    .sample__instance(id = id)
+        block
 
 mixin sampleParameterMix(options)
-	-
-		var options = options ? options : {};
-		var name = options.name ? options.name + ":" : "name:";
-	.sample__parameter
-		em.sample__parameterName= name
-		.sample__parameterValue
-			block
+    -
+        var options = options ? options : {};
+        var name = options.name ? options.name + ":" : "name:";
+    .sample__parameter
+        em.sample__parameterName= name
+        .sample__parameterValue
+            block
