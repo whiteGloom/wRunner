@@ -2,7 +2,7 @@ mixin sampleMix(options)
     -
         var options = options ? options : {};
         var title = options.title ? options.title : "";
-    .sample
+    .sample.js-sample
         if title
             h1.sample__title= title
         .sample__body
@@ -15,8 +15,7 @@ mixin sampleDataMix(options)
 mixin sampleInstanceMix(options)
     -
         var options = options ? options : {};
-        var id = options.id ? options.id : "";
-    .sample__instance(id = id)
+    .sample__instance.js-sample__instance
         block
 
 mixin sampleParameterMix(options)
@@ -25,5 +24,5 @@ mixin sampleParameterMix(options)
         var name = options.name ? options.name + ":" : "name:";
     .sample__parameter
         em.sample__parameterName= name
-        .sample__parameterValue
+        .sample__parameterValue.js-sample__parameterValue
             block

@@ -1,57 +1,52 @@
 document.addEventListener("DOMContentLoaded", test);
 
 function test() {
-	var controllers = [];
-	for (var i = 0; i < 4; i++) {
-		var data = {};
-
-		data["slider" + i + "Step"] = document.getElementById("slider" + i + "Step");
-		data["slider" + i + "MinLimit"] = document.getElementById("slider" + i + "MinLimit");
-		data["slider" + i + "MaxLimit"] = document.getElementById("slider" + i + "MaxLimit");
-		data["slider" + i + "Value"] = document.getElementById("slider" + i + "Value");
-		data["slider" + i + "MinValue"] = document.getElementById("slider" + i + "MinValue");
-		data["slider" + i + "MaxValue"] = document.getElementById("slider" + i + "MaxValue");
-		data["slider" + i + "Type"] = document.getElementById("slider" + i + "Type");
-		data["slider" + i + "DivisionsCount"] = document.getElementById("slider" + i + "DivisionsCount");
-		data["slider" + i + "ValueNoteDisplay"] = document.getElementById("slider" + i + "ValueNoteDisplay");
-		data["slider" + i + "Roots"] = document.getElementById("slider" + i + "Roots");
-		data["slider" + i + "Direction"] = document.getElementById("slider" + i + "Direction");
-
-		controllers.push(data);
-	}
-
 	var sliders = [];
 	function makeSlider(index, options, type) {
+		var block = document.getElementsByClassName("js-sample")[index];
+		var controllers = {};
+		controllers["sliderStep"] = block.getElementsByClassName("js-sample__parameterValue")[0].children[0];
+		controllers["sliderMinLimit"] = block.getElementsByClassName("js-sample__parameterValue")[1].children[0];
+		controllers["sliderMaxLimit"] = block.getElementsByClassName("js-sample__parameterValue")[2].children[0];
+		controllers["sliderValue"] = block.getElementsByClassName("js-sample__parameterValue")[3].children[0];
+		controllers["sliderMinValue"] = block.getElementsByClassName("js-sample__parameterValue")[4].children[0];
+		controllers["sliderMaxValue"] = block.getElementsByClassName("js-sample__parameterValue")[5].children[0];
+		controllers["sliderType"] = block.getElementsByClassName("js-sample__parameterValue")[6].children[0];
+		controllers["sliderDivisionsCount"] = block.getElementsByClassName("js-sample__parameterValue")[7].children[0];
+		controllers["sliderValueNoteDisplay"] = block.getElementsByClassName("js-sample__parameterValue")[8].children[0];
+		controllers["sliderRoots"] = block.getElementsByClassName("js-sample__parameterValue")[9].children[0];
+		controllers["sliderDirection"] = block.getElementsByClassName("js-sample__parameterValue")[10].children[0];
+
 		var data = Object.assign(options, {
 			onStepUpdate: function(step) {
-				controllers[index]["slider" + index + "Step"].value = step;
+				controllers["sliderStep"].value = step;
 			},
 
 			onLimitsUpdate: function(limits) {
-				controllers[index]["slider" + index + "MinLimit"].value = limits.minLimit;
-				controllers[index]["slider" + index + "MaxLimit"].value = limits.maxLimit;
+				controllers["sliderMinLimit"].value = limits.minLimit;
+				controllers["sliderMaxLimit"].value = limits.maxLimit;
 			},
 
 			onValueUpdate: function(value) {
 				if (value.value !== undefined) {
-					controllers[index]["slider" + index + "Value"].value = value.value;
+					controllers["sliderValue"].value = value.value;
 				}
 				if (value.minValue && value.minValue !== undefined || value.maxValue && value.maxValue !== undefined) {
-					controllers[index]["slider" + index + "MinValue"].value = value.minValue;
-					controllers[index]["slider" + index + "MaxValue"].value = value.maxValue;
+					controllers["sliderMinValue"].value = value.minValue;
+					controllers["sliderMaxValue"].value = value.maxValue;
 				}
 			},
 
 			onTypeUpdate: function(type) {
-				controllers[index]["slider" + index + "Type"].value = type.type;
+				controllers["sliderType"].value = type.type;
 			},
 
 			onDivisionsCountUpdate: function(count) {
-				controllers[index]["slider" + index + "DivisionsCount"].value = count;
+				controllers["sliderDivisionsCount"].value = count;
 			},
 
 			onValueNoteDisplayUpdate: function(value) {
-				controllers[index]["slider" + index + "ValueNoteDisplay"].checked = value;
+				controllers["sliderValueNoteDisplay"].checked = value;
 			},
 
 			onRootsUpdate: function(roots) {
@@ -60,68 +55,68 @@ function test() {
 				for (var i = 0; i < roots.classList.length; i++) {
 					str+= "." + roots.classList[i];
 				}
-				controllers[index]["slider" + index + "Roots"].value = str;
+				controllers["sliderRoots"].value = str;
 			},
 
 			onDirectionUpdate: function(direction) {
-				controllers[index]["slider" + index + "Direction"].value = direction.value;
+				controllers["sliderDirection"].value = direction.value;
 			}
 		});
 
 		if (type == "native") {
-			sliders[index] = window.wRunner(data);
+			sliders[index] = window.wRunner(options);
 		} else {
-			sliders[index] = $("#exm" + index).wRunner(data);
+			sliders[index] = $($(".js-sample__instance")[index]).wRunner(options);
 		}
 
 
-		controllers[index]["slider" + index + "Step"].addEventListener("input", function(e) {
-			sliders[index].setStep(controllers[index]["slider" + index + "Step"].value);
+		controllers["sliderStep"].addEventListener("input", function(e) {
+			sliders[index].setStep(controllers["sliderStep"].value);
 		});
 
-		controllers[index]["slider" + index + "MinLimit"].addEventListener("input", function(e) {
-			sliders[index].setLimits({minLimit: controllers[index]["slider" + index + "MinLimit"].value});
+		controllers["sliderMinLimit"].addEventListener("input", function(e) {
+			sliders[index].setLimits({minLimit: controllers["sliderMinLimit"].value});
 		});
 
-		controllers[index]["slider" + index + "MaxLimit"].addEventListener("input", function(e) {
-			sliders[index].setLimits({maxLimit: controllers[index]["slider" + index + "MaxLimit"].value});
+		controllers["sliderMaxLimit"].addEventListener("input", function(e) {
+			sliders[index].setLimits({maxLimit: controllers["sliderMaxLimit"].value});
 		});
 
-		controllers[index]["slider" + index + "Value"].addEventListener("input", function(e) {
-			sliders[index].setSingleValue(controllers[index]["slider" + index + "Value"].value);
+		controllers["sliderValue"].addEventListener("input", function(e) {
+			sliders[index].setSingleValue(controllers["sliderValue"].value);
 		});
 
-		controllers[index]["slider" + index + "MinValue"].addEventListener("input", function(e) {
-			sliders[index].setRangeValue({minValue: controllers[index]["slider" + index + "MinValue"].value});
+		controllers["sliderMinValue"].addEventListener("input", function(e) {
+			sliders[index].setRangeValue({minValue: controllers["sliderMinValue"].value});
 		});
 
-		controllers[index]["slider" + index + "MaxValue"].addEventListener("input", function(e) {
-			sliders[index].setRangeValue({maxValue: controllers[index]["slider" + index + "MaxValue"].value});
+		controllers["sliderMaxValue"].addEventListener("input", function(e) {
+			sliders[index].setRangeValue({maxValue: controllers["sliderMaxValue"].value});
 		});
 
-		controllers[index]["slider" + index + "Type"].addEventListener("input", function(e) {
-			sliders[index].setType(controllers[index]["slider" + index + "Type"].value);
+		controllers["sliderType"].addEventListener("input", function(e) {
+			sliders[index].setType(controllers["sliderType"].value);
 		});
 
-		controllers[index]["slider" + index + "DivisionsCount"].addEventListener("input", function(e) {
-			sliders[index].setDivisionsCount(controllers[index]["slider" + index + "DivisionsCount"].value);
+		controllers["sliderDivisionsCount"].addEventListener("input", function(e) {
+			sliders[index].setDivisionsCount(controllers["sliderDivisionsCount"].value);
 		});
 
-		controllers[index]["slider" + index + "ValueNoteDisplay"].addEventListener("input", function(e) {
-			sliders[index].setValueNoteDisplay(controllers[index]["slider" + index + "ValueNoteDisplay"].checked);
+		controllers["sliderValueNoteDisplay"].addEventListener("input", function(e) {
+			sliders[index].setValueNoteDisplay(controllers["sliderValueNoteDisplay"].checked);
 		});
 
-		controllers[index]["slider" + index + "Direction"].addEventListener("input", function(e) {
-			sliders[index].setDirection(controllers[index]["slider" + index + "Direction"].value);
+		controllers["sliderDirection"].addEventListener("input", function(e) {
+			sliders[index].setDirection(controllers["sliderDirection"].value);
 		});
 	}
 
 	makeSlider(0, {
-		roots: document.getElementById("exm0")
+		roots: document.getElementsByClassName("js-sample__instance")[0],
 	}, "native");
 
 	makeSlider(1, {
-		roots: document.getElementById("exm1"),
+		roots: document.getElementsByClassName("js-sample__instance")[1],
 		direction: "vertical",
 		step: 5,
 		type: "range"
