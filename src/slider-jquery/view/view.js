@@ -310,12 +310,12 @@ class View {
 	}
 
 	_mouseActionHandler(eventDown) {
-		var	dragged = false;
+		var	wasDragged = false;
 		var handlerBind = handler.bind(this),
 			upBind = mouseUp.bind(this);
 
 		// The handler that indicates that the handle has been dragged.
-		$(document.body).one("mousemove", () => dragged = true);
+		$(document.body).one("mousemove", () => wasDragged = true);
 
 		// The handler that called when mouse moved, while button pressed.
 		$(document.body).on("mousemove.moveAction", handlerBind);
@@ -332,7 +332,7 @@ class View {
 			$(document.body).off("mousemove.moveAction", handlerBind);
 
 			// If handle was dragged, stop the function.
-			if (dragged) return;
+			if (wasDragged) return;
 			if ($target.is(this.$handle) || $target.is(this.$handleMin) || $target.is(this.$handleMax)) return;
 
 			// Else trigger a click.
@@ -357,7 +357,7 @@ class View {
 
 			max = min + scale;
 
-			// If the dragg is out of slider's range, the function stops.
+			// If the dragging is out of slider's range, the function stops.
 			if (pos < min - 10 || pos > max + 10) return;
 
 			if(direction === directionConstants.horizontalValue) {
