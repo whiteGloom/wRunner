@@ -86,9 +86,7 @@ class View {
 			this.$valueNoteMax
 		].concat(this.divisionsList);
 
-		for (var i = 0; i < els.length; i++) {
-			var $el = els[i];
-
+		els.forEach (($el) => {
 			for(var style in styles) {
 				var name = $el[0].classList[0],
 					oldValue = styles[style].oldValue,
@@ -97,7 +95,7 @@ class View {
 				if (oldValue) $el.removeClass(name + "_" + styles[style].className + "_" + oldValue);
 				$el.addClass(name + "_" + styles[style].className + "_" + value);
 			}
-		}
+		});
 	}
 
 	drawValue(value, limits, currentType) {
@@ -114,9 +112,9 @@ class View {
 			this.$valueNoteMax
 		];
 
-		for (var i = 0; i < clearList.length; i++) {
-			clearList[i].attr("style", "");
-		}
+		clearList.forEach(($el) => {
+			$el.attr("style", "");
+		});
 
 		if(type === typeConstants.singleValue) {
 			var valueNoteScale;
@@ -191,13 +189,13 @@ class View {
 	applyValueNoteDisplay() {
 		var els = [this.$valueNote, this.$valueNoteMin, this.$valueNoteMax];
 
-		for (var i = 0; i < els.length; i++) {
-			var mark = els[i][0].classList[0];
+		els.forEach(($el) => {
+			var mark = $el[0].classList[0];
 
-			els[i]
+			$el
 				.removeClass(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"))
 				.addClass(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
-		}
+		});
 	}
 
 	generateDivisions() {

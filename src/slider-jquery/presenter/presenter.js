@@ -13,6 +13,42 @@ class Presenter {
 		this._triggerEvents();
 	}
 
+	onValueUpdate(handler) {
+		this.model.valueUpdateEvent.addHandler(handler);
+	}
+
+	onStepUpdate(handler) {
+		this.model.stepUpdateEvent.addHandler(handler);
+	}
+
+	onLimitsUpdate(handler) {
+		this.model.limitsUpdateEvent.addHandler(handler);
+	}
+
+	onTypeUpdate(handler) {
+		this.model.typeUpdateEvent.addHandler(handler);
+	}
+
+	onThemeUpdate(handler) {
+		this.view.themeUpdateEvent.addHandler(handler);
+	}
+
+	onDirectionUpdate(handler) {
+		this.view.directionUpdateEvent.addHandler(handler);
+	}
+
+	onValueNoteDisplayUpdate(handler) {
+		this.view.valueNoteDisplayUpdateEvent.addHandler(handler);
+	}
+
+	onRootsUpdate(handler) {
+		this.view.rootsUpdateEvent.addHandler(handler);
+	}
+
+	onDivisionsCountUpdate(handler) {
+		this.view.divisionsCountUpdateEvent.addHandler(handler);
+	}
+
 	_applyDefaultEvents() {
 		// Model events
 		this.model.typeUpdateEvent.addHandler(function(data) {
@@ -137,42 +173,6 @@ class Presenter {
 		this.view.valueNoteDisplayUpdateEvent.trigger(this.view.valueNoteDisplay);
 		this.view.rootsUpdateEvent.trigger(this.view.$roots);
 		this.view.divisionsCountUpdateEvent.trigger(this.view.divisionsCount);
-	}
-
-	onValueUpdate(handler) {
-		this.model.valueUpdateEvent.addHandler(handler);
-	}
-
-	onStepUpdate(handler) {
-		this.model.stepUpdateEvent.addHandler(handler);
-	}
-
-	onLimitsUpdate(handler) {
-		this.model.limitsUpdateEvent.addHandler(handler);
-	}
-
-	onTypeUpdate(handler) {
-		this.model.typeUpdateEvent.addHandler(handler);
-	}
-
-	onThemeUpdate(handler) {
-		this.view.themeUpdateEvent.addHandler(handler);
-	}
-
-	onDirectionUpdate(handler) {
-		this.view.directionUpdateEvent.addHandler(handler);
-	}
-
-	onValueNoteDisplayUpdate(handler) {
-		this.view.valueNoteDisplayUpdateEvent.addHandler(handler);
-	}
-
-	onRootsUpdate(handler) {
-		this.view.rootsUpdateEvent.addHandler(handler);
-	}
-
-	onDivisionsCountUpdate(handler) {
-		this.view.divisionsCountUpdateEvent.addHandler(handler);
 	}
 }
 
