@@ -304,10 +304,12 @@ class View {
 	}
 
 	_addListenners() {
-		$(this.$path).on("mousedown.downAction", this._mouseActionHandler.bind(this));
+		$(this.$path).on("mousedown.downAction", this._mouseDownActionHandler.bind(this));
 	}
 
-	_mouseActionHandler(eventDown) {
+	_mouseDownActionHandler(eventDown) {
+		if (eventDown.button !== 0) return;
+
 		var	wasDragged = false;
 		var handlerBind = handler.bind(this),
 			upBind = mouseUp.bind(this);

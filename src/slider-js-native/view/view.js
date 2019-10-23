@@ -312,10 +312,12 @@ class View {
 	}
 
 	_addListenners() {
-		this.path.addEventListener("mousedown", this._mouseActionHandler.bind(this));
+		this.path.addEventListener("mousedown", this._mouseDownActionHandler.bind(this));
 	}
 
-	_mouseActionHandler(eventDown) {
+	_mouseDownActionHandler(eventDown) {
+		if (eventDown.button !== 0) return;
+
 		var	wasDragged = false;
 		var handlerBind = handler.bind(this),
 			upBind = mouseUp.bind(this);
