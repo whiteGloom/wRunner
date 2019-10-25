@@ -1,7 +1,10 @@
-# Шо ита? [RU]
-[↓ К навигации](#Навигация "↓ К навигации")
+# Languages
+* **[Русский](#шо-ита-ru "Русский")**
 
-**wRunner v 1.2.25** — плагин, добавляющий слайдер (бегунок) для выбора значения.
+# Шо ита? [RU]
+[↓ К навигации](#Навигация "↓ К навигации") | **[↑ To languages](#Languags)**
+
+**wRunner** — плагин, добавляющий слайдер (бегунок) для выбора значения.
 В плагине есть возможность устанавливать темы, шаг, минимальное и максимальное значение и т.д. Имеет два вида — одиночное и диапазон, а так же вертикальное и горизонтальное положение.
 Имеет две реализации — на "чистом" JS и на основе jQuery.
 
@@ -19,101 +22,59 @@
 * **[Jasmine](https://jasmine.github.io/ "Jasmine")**
 * **[ES Lint](https://eslint.org/ "ES Lint")**
 
-## Внимание
+**Внимание!**
 jQuery версия слайдера требует [jQuery](https://jquery.com/ "jQuery"), версией не ниже 3.4.1
 
-# Навигация
+## Навигация
 * **[Шо ита? [RU]](#шо-ита-ru "Шо ита? [RU]")**
-* **Навигация**
-* **[Инструкция](#Инструкция "Инструкция")**
-	+ **[Для работы с исходным кодом](#Для-работы-с-исходным-кодом "Для работы с исходным кодом")**
-	+ **[Создание экземпляра](#Создание-экземпляра "Создание экземпляра")**
-	+ **[Методы](#Методы "Методы")**
-		- **[setType method](#setType-method "setType method")**
-		- **[setLimits method](#setLimits-method "setLimits method")**
-		- **[setStep method](#setStep-method "setStep method")**
-		- **[setSingleValue method](#setSingleValue-method "setSingleValue method")**
-		- **[setRangeValue method](#setRangeValue-method "setRangeValue method")**
-		- **[setValueNoteDisplay method](#setValueNoteDisplay-method "setValueNoteDisplay method")**
-		- **[setNearestValue method](#setNearestValue-method "setNearestValue method")**
-		- **[setDivisionsCount method](#setDivisionsCount-method "setDivisionsCount method")**
-		- **[setRoots method](#setRoots-method "setRoots method")**
-		- **[setTheme method](#setTheme-method "setTheme method")**
-		- **[setDirection method](#setDirection-method "setDirection method")**
-		- **[getType method](#getType-method "getType method")**
-		- **[getStep method](#getStep-method "getStep method")**
-		- **[getLimits method](#getLimits-method "getLimits method")**
-		- **[getValue method](#getValue-method "getValue method")**
-		- **[getRoots method](#getRoots-method "getRoots method")**
-		- **[getValueNoteDisplay method](#getValueNoteDisplay-method "getValueNoteDisplay method")**
-		- **[getDivisionsCount method](#getDivisionsCount-method "getDivisionsCount method")**
-		- **[getTheme method](#getTheme-method "getTheme method")**
-		- **[getDirection method](#getDirection-method "getDirection method")**
-	+ **[События](#События "События")**
-		- **[onStepUpdate method](#onStepUpdate-method "onStepUpdate method")**
-		- **[onTypeUpdate method](#onTypeUpdate-method "onTypeUpdate method")**
-		- **[onLimitsUpdate method](#onLimitsUpdate-method "onLimitsUpdate method")**
-		- **[onValueUpdate method](#onValueUpdate-method "onValueUpdate method")**
-		- **[onRootsUpdate method](#onRootsUpdate-method "onRootsUpdate method")**
-		- **[onDivisionsCountUpdate method](#onDivisionsCountUpdate-method "onDivisionsCountUpdate method")**
-		- **[onValueNoteDisplayUpdate method](#onValueNoteDisplayUpdate-method "onValueNoteDisplayUpdate method")**
-		- **[onThemeUpdate method](#onThemeUpdate-method "onThemeUpdate method")**
-		- **[onDirectionUpdate method](#onDirectionUpdate-method "onDirectionUpdate method")**
-* **[Всё.](#Всё. "Всё.")**
+	* **Навигация**
+	* **[Инструкция для пользователя](#Инструкция "Инструкция для пользователя")**
+		+ **[Создание экземпляра](#Создание-экземпляра "Создание экземпляра")**
+	+ **[Инструкция для работы с исходным кодом](#Инструкция-для-работы-с-исходным-кодом "Инструкция для работы с исходным кодом")**
+		+ **[Методы](#Методы "Методы")**
+			- **[setType method](#setType-method "setType method")**
+			- **[setLimits method](#setLimits-method "setLimits method")**
+			- **[setStep method](#setStep-method "setStep method")**
+			- **[setSingleValue method](#setSingleValue-method "setSingleValue method")**
+			- **[setRangeValue method](#setRangeValue-method "setRangeValue method")**
+			- **[setValueNoteDisplay method](#setValueNoteDisplay-method "setValueNoteDisplay method")**
+			- **[setNearestValue method](#setNearestValue-method "setNearestValue method")**
+			- **[setDivisionsCount method](#setDivisionsCount-method "setDivisionsCount method")**
+			- **[setRoots method](#setRoots-method "setRoots method")**
+			- **[setTheme method](#setTheme-method "setTheme method")**
+			- **[setDirection method](#setDirection-method "setDirection method")**
+			- **[getType method](#getType-method "getType method")**
+			- **[getStep method](#getStep-method "getStep method")**
+			- **[getLimits method](#getLimits-method "getLimits method")**
+			- **[getValue method](#getValue-method "getValue method")**
+			- **[getRoots method](#getRoots-method "getRoots method")**
+			- **[getValueNoteDisplay method](#getValueNoteDisplay-method "getValueNoteDisplay method")**
+			- **[getDivisionsCount method](#getDivisionsCount-method "getDivisionsCount method")**
+			- **[getTheme method](#getTheme-method "getTheme method")**
+			- **[getDirection method](#getDirection-method "getDirection method")**
+		+ **[События](#События "События")**
+			- **[onStepUpdate method](#onStepUpdate-method "onStepUpdate method")**
+			- **[onTypeUpdate method](#onTypeUpdate-method "onTypeUpdate method")**
+			- **[onLimitsUpdate method](#onLimitsUpdate-method "onLimitsUpdate method")**
+			- **[onValueUpdate method](#onValueUpdate-method "onValueUpdate method")**
+			- **[onRootsUpdate method](#onRootsUpdate-method "onRootsUpdate method")**
+			- **[onDivisionsCountUpdate method](#onDivisionsCountUpdate-method "onDivisionsCountUpdate method")**
+			- **[onValueNoteDisplayUpdate method](#onValueNoteDisplayUpdate-method "onValueNoteDisplayUpdate method")**
+			- **[onThemeUpdate method](#onThemeUpdate-method "onThemeUpdate method")**
+			- **[onDirectionUpdate method](#onDirectionUpdate-method "onDirectionUpdate method")**
+	* **[Всё.](#Всё. "Всё.")**
 
-# Инструкция
+## Инструкция для пользователя
 
-## Для работы с исходным кодом
-**Развёртывание проекта**
-Для установки зависимостей использовать:
-
-```
-npm install
-```
-
-**Команды npm**
-
-* `npm run build` - разовая сборка проекта;
-* `npm run build-watch` - запуск автоматической пересборки;
-* `npm run build-live` - запуск сервера;
-* `npm run test` - запуск тестов;
-
-**Aliases (сокращения):**
-Алиасы прописываются в файле package.json (находится в корневом каталоге), в параметре "**_moduleAliases**", и должны начинаться с символа "**@**".
-Webpack и Jasmine автоматически подгрузят сокращения.
-
-*Пример:*
-```
-// Создание сокращения.
-// Файл "package.json":
-{
-	...
-	"scripts": { ... },
-	"_moduleAliases": {
-		"@ИмяСокращения": "./путьДоСокращения",
-		"@test": "./test.js"
-	},
-	...
-}
-```
-[↑ К навигации](#Навигация "↑ К навигации")
-
-## Создание экземпляра:
+### Создание экземпляра
 **Для JS Native версии:**
-Подключить на странице файл **wrunner-native.js**
-
-```
-var slider = wRunner([options]);
-```
+1. Подключить на странице файл **wrunner-native.js**
+2. Выполнить команду: `var slider = wRunner(options);`
 
 **Для jQuery версии:**
-Подключить на странице **jquery**, версией не меньше 3.4.1
-
-Подключить на странице файл **wrunner-jquery.js**
-
-```
-$(DOM element).wRunner([options]);
-```
+1. Подключить на странице **jquery**, версией не меньше 3.4.1
+2. Подключить на странице файл **wrunner-jquery.js**
+3. Выполнить команду: `$(DOM element).wRunner([options]);`
 
 *Arguments:*
 * **options** - type: object. Properties:
@@ -149,9 +110,45 @@ $(DOM element).wRunner([options]);
 
 [↑ К навигации](#Навигация "↑ К навигации")
 
-## Методы
 
-### setType method
+## Инструкция для работы с исходным кодом
+**Развёртывание проекта**
+Для установки зависимостей использовать:
+
+```
+npm install
+```
+
+**Команды npm**
+
+* `npm run build` - разовая сборка проекта;
+* `npm run build-watch` - запуск автоматической пересборки;
+* `npm run build-live` - запуск сервера;
+* `npm run test` - запуск тестов;
+
+**Aliases (сокращения):**
+Алиасы прописываются в файле package.json (находится в корневом каталоге), в параметре "**_moduleAliases**", и должны начинаться с символа "**@**".
+Webpack и Jasmine автоматически подгрузят сокращения.
+
+*Пример:*
+```
+// Создание сокращения.
+// Файл "package.json":
+{
+	...
+	"scripts": { ... },
+	"_moduleAliases": {
+		"@ИмяСокращения": "./путьДоСокращения",
+		"@test": "./test.js"
+	},
+	...
+}
+```
+[↑ К навигации](#Навигация "↑ К навигации")
+
+### Методы
+
+#### setType method
 Меняет тип слайдера.
 
 ```
@@ -176,7 +173,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### setLimits method
+#### setLimits method
 Меняет минимально и максимально возможные значения слайдера.
 
 ```
@@ -207,7 +204,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### setStep method
+#### setStep method
 Меняет шаг слайдера.
 
 ```
@@ -230,7 +227,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### setSingleValue method
+#### setSingleValue method
 Меняет значение слайдера для типа "single". Если сменить тип слайдера, значение сохраниется. Можно использовать и тогда, когда тип слайдера иной.
 
 ```
@@ -256,7 +253,7 @@ $(DOM element).wRunner([options]);
 
 ------------
 
-### setRangeValue method
+#### setRangeValue method
 Меняет значение слайдера для типа "range". Если сменить тип слайдера, значение сохраняется. Можно использовать и тогда, когда тип слайдера иной.
 
 ```
@@ -282,7 +279,7 @@ $(DOM element).wRunner([options]);
 *Triggering:*
 **onValueUpdate**, передаёт тоже, что и возвращает.
 
-### setValueNoteDisplay method
+#### setValueNoteDisplay method
 Меняет отображение показателя значения над бегунком.
 
 ```
@@ -303,7 +300,7 @@ $(DOM element).wRunner([options]);
 ------------
 
 
-### setNearestValue method
+#### setNearestValue method
 Меняет ближайшее к передаваемому аргументу значение слайдера.
 
 ```
@@ -348,7 +345,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### setDivisionsCount method
+#### setDivisionsCount method
 Меняет количество делений под слайдером.
 
 ```
@@ -375,7 +372,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### setRoots method
+#### setRoots method
 Менеят корневой элемент слайдера.
 
 ```
@@ -398,7 +395,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### setTheme method
+#### setTheme method
 Меняет тему слайдера.
 
 ```
@@ -420,7 +417,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### setDirection method
+#### setDirection method
 Меняет положение слайдера.
 
 ```
@@ -444,7 +441,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### getType method
+#### getType method
 Возвращает типы слайдера
 
 ```
@@ -464,7 +461,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### getStep method
+#### getStep method
 Возвращает текущий шаг слайдера
 
 ```
@@ -480,7 +477,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### getLimits method
+#### getLimits method
 Возвращает текущие минимально и максимально возможные значения слайдера
 
 ```
@@ -499,7 +496,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### getValue method
+#### getValue method
 Возвращает значение слайдера.
 
 ```
@@ -523,7 +520,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### getRoots method
+#### getRoots method
 Возвращает текущий корневой элемент слайдера.
 
 ```
@@ -539,7 +536,7 @@ $(DOM element).wRunner([options]);
 
 
 
-### getValueNoteDisplay method
+#### getValueNoteDisplay method
 Возвращает отображение показателя значения над бегунком.
 
 ```
@@ -555,7 +552,7 @@ getValueNoteDisplay()
 
 
 
-### getDivisionsCount method
+#### getDivisionsCount method
 Возвращает количество делений под слайдером.
 
 ```
@@ -571,7 +568,7 @@ getValueNoteDisplay()
 
 
 
-### getTheme method
+#### getTheme method
 Возвращает тему слайдера.
 
 ```
@@ -587,7 +584,7 @@ getValueNoteDisplay()
 
 
 
-### getDirection method
+#### getDirection method
 Возвращает положение слайдера.
 
 ```
@@ -603,9 +600,9 @@ getValueNoteDisplay()
 
 ------------
 
-## События
+### События
 
-### onStepUpdate method
+#### onStepUpdate method
 Устанавливает функцию-обработчик, вызываемую при обновлении шага слайдера
 
 ```
@@ -623,7 +620,7 @@ getValueNoteDisplay()
 
 
 
-### onTypeUpdate method
+#### onTypeUpdate method
 Устанавливает функцию-обработчик, вызываемую при обновлении типа слайдера
 
 ```
@@ -641,7 +638,7 @@ getValueNoteDisplay()
 
 
 
-### onLimitsUpdate method
+#### onLimitsUpdate method
 Устанавливает функцию-обработчик, вызываемую при обновлении крайних значений слайдера
 
 ```
@@ -659,7 +656,7 @@ getValueNoteDisplay()
 
 
 
-### onValueUpdate method
+#### onValueUpdate method
 Устанавливает функцию-обработчик, вызываемую при обновлении значений слайдера
 
 ```
@@ -677,7 +674,7 @@ getValueNoteDisplay()
 
 
 
-### onRootsUpdate method
+#### onRootsUpdate method
 Устанавливает функцию-обработчик, вызываемую при обновлении корневого элемента слайдера
 
 ```
@@ -695,7 +692,7 @@ getValueNoteDisplay()
 
 
 
-### onDivisionsCountUpdate method
+#### onDivisionsCountUpdate method
 Устанавливает функцию-обработчик, вызываемую при изменении количества делений внизу слайдера
 
 ```
@@ -713,7 +710,7 @@ getValueNoteDisplay()
 
 
 
-### onValueNoteDisplayUpdate method
+#### onValueNoteDisplayUpdate method
 Устанавливает функцию-обработчик, вызываемую при изменении отображения показателя значения над бегунком
 
 ```
@@ -731,7 +728,7 @@ getValueNoteDisplay()
 
 
 
-### onThemeUpdate method
+#### onThemeUpdate method
 Устанавливает функцию-обработчик, вызываемую при обновлении темы слайдера
 
 ```
@@ -749,7 +746,7 @@ getValueNoteDisplay()
 
 
 
-### onDirectionUpdate method
+#### onDirectionUpdate method
 Устанавливает функцию-обработчик, вызываемую при обновлении положения слайдера
 
 ```
@@ -766,5 +763,5 @@ getValueNoteDisplay()
 ------------
 
 
-# Всё.
+## Всё.
 **-whiteGloom**
