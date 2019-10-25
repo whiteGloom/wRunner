@@ -191,56 +191,6 @@ describe("isObject method.", () => {
 	});
 });
 
-describe("isArray method.", () => {
-	describe("If type of value is a array, returns true.", () => {
-		it("Taking [], returns true.", () => {
-			expect(helper.isArray([])).toBeTruthy();
-		});
-	});
-
-	describe("If type of value is not a array, returns false.", () => {
-		it("Taking {}, returns false.", () => {
-			expect(helper.isArray({})).toBeFalsy();
-		});
-
-		it("Taking {}, returns false.", () => {
-			expect(helper.isArray({})).toBeFalsy();
-		});
-
-		it("Taking null, returns false.", () => {
-			expect(helper.isArray(null)).toBeFalsy();
-		});
-
-		it("Taking 'dadaya', returns false.", () => {
-			expect(helper.isArray("dadaya")).toBeFalsy();
-		});
-
-		it("Taking '123', returns false.", () => {
-			expect(helper.isArray("123")).toBeFalsy();
-		});
-
-		it("Taking 123, returns false.", () => {
-			expect(helper.isArray(123)).toBeFalsy();
-		});
-
-		it("Taking undefined, returns false.", () => {
-			expect(helper.isArray(undefined)).toBeFalsy();
-		});
-
-		it("Taking NaN, returns false.", () => {
-			expect(helper.isArray(NaN)).toBeFalsy();
-		});
-
-		it("Taking false, returns false.", () => {
-			expect(helper.isArray(false)).toBeFalsy();
-		});
-
-		it("Taking true, returns false.", () => {
-			expect(helper.isArray(true)).toBeFalsy();
-		});
-	});
-});
-
 describe("isDOMEl method.", () => {
 	describe("If element is a dom element, returns true.", () => {
 		it("Taking document.body, returns true.", () => {
