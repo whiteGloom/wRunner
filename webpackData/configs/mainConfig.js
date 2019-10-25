@@ -1,18 +1,18 @@
 module.exports = function(options) {
 	options = options ? options : {};
-	var base = options.base;
+	var workFolder = options.workFolder;
 	
 	return {
 		mode: "development",
 		entry: {
-			"showcase": base + "/src/showcase/index.js",
-			"styles": base + "/src/showcase/static.js",
-			"wrunner-native": base + "/src/slider-js-native/wrunner-native.js",
-			"wrunner-jquery": base + "/src/slider-jquery/wrunner-jquery.js",
-			"wrunner-default-theme": base + "/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js"
+			"showcase": workFolder + "/src/showcase/index.js",
+			"styles": workFolder + "/src/showcase/static.js",
+			"wrunner-native": workFolder + "/src/slider-js-native/wrunner-native.js",
+			"wrunner-jquery": workFolder + "/src/slider-jquery/wrunner-jquery.js",
+			"wrunner-default-theme": workFolder + "/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js"
 		},
 		output: {
-			path: base + "/prod/",
+			path: workFolder + "/prod/",
 			filename: (data) => {
 				switch(data.chunk.name) {
 					case "styles":

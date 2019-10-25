@@ -3,7 +3,7 @@ const HtmlBeautifyPlugin = require("html-beautify-webpack-plugin");
 
 module.exports = function(options) {
 	options = options ? options : {};
-	var base = options.base;
+	var workFolder = options.workFolder;
 	return {
 		module: {
 			rules: [
@@ -16,7 +16,7 @@ module.exports = function(options) {
 		},
 		plugins: [
 			new HTMLWebpackPlugin({
-				template: base + "/src/showcase/views/index.pug",
+				template: workFolder + "/src/showcase/views/index.pug",
 				filename: "index.html",
 				inject: false,
 				minify: false

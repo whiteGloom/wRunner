@@ -1,26 +1,23 @@
 // External modules
-const path	= require('path'); // Плагин для упрощения работы с путями
 const merge	= require('webpack-merge');
 
-//
-var folder = path.join(__dirname);	// Переменная, хранящая абсолютный путь до рабочего каталога
-
 // Local modules
-const base		= require(folder + "/webpackAdds/base.js");
-const babel		= require(folder + "/webpackAdds/babel.js");
-const pug		= require(folder + "/webpackAdds/pug.js");
-const stylus	= require(folder + "/webpackAdds/stylus.js");
-const statics	= require(folder + "/webpackAdds/statics.js");
-const aliases	= require(folder + "/webpackAdds/aliases.js");
+const mainConfig = require("./webpackData/configs/mainConfig.js");
+const babelConfig = require("./webpackData/configs/babelConfig.js");
+const pugConfig = require("./webpackData/configs/pugConfig.js");
+const stylusConfig = require("./webpackData/configs/stylusConfig.js");
+const staticsConfig = require("./webpackData/configs/staticsConfig.js");
+const aliasesConfig = require("./webpackData/configs/aliasesConfig.js");
 
-// Configuration
+var workFolder = process.cwd();
+
 module.exports = function() {
 	return merge([
-		base({base: folder}),
-		babel(),
-		pug({base: folder}),
-		stylus(),
-		statics(),
-		aliases({base: folder})
+		mainConfig({workFolder}),
+		babelConfig(),
+		pugConfig({workFolder}),
+		stylusConfig(),
+		staticsConfig(),
+		aliasesConfig({workFolder})
 	])
 }

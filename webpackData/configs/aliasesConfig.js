@@ -1,12 +1,12 @@
-const packageAliases = require("../package.json")._moduleAliases;
+const packageAliases = require("../../package.json")._moduleAliases;
 
 module.exports = function(options) {
 	options = options ? options : {};
-	var base = options.base;
+	var workFolder = options.workFolder;
 
 	var aliases = {};
 	for(var key in packageAliases) {
-		aliases[key] = base + packageAliases[key].slice(1);
+		aliases[key] = workFolder + packageAliases[key].slice(1);
 	}
 
 	return {

@@ -1,9 +1,9 @@
 {
-  "name": "wRunner",
-  "version": "1.2.25",
+  "name": "wrunner",
+  "version": "1.2.26",
   "description": "A slider plugin.",
   "homepage": "https://github.com/whiteGloom/wRunner",
-  "main": "./slider-js-native/wrunner-native.js",
+  "main": "webpack.config.js",
   "scripts": {
     "build": "webpack -p",
     "build-watch": "webpack --watch",
@@ -33,7 +33,6 @@
     "jsdom": "^15.1.1",
     "mini-css-extract-plugin": "^0.5.0",
     "module-alias": "^2.2.2",
-    "path": "^0.12.7",
     "pug": "^2.0.3",
     "pug-loader": "^2.4.0",
     "style-loader": "^0.23.1",
@@ -50,5 +49,20 @@
   },
   "contributors": [
     "whiteGloom <karabin.m@yandex.ru> (https://github.com/whiteGloom)"
-  ]
+  ],
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whiteGloom/wRunner.git"
+  },
+  "keywords": [
+    "slider",
+    "js",
+    "jquery"
+  ],
+  "bugs": {
+    "url": "https://github.com/whiteGloom/wRunner/issues"
+  }
 }
