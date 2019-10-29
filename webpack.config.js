@@ -1,5 +1,5 @@
 // External modules
-const merge	= require('webpack-merge');
+const merge	= require("webpack-merge");
 
 // Local modules
 const mainConfig = require("./webpackData/configs/mainConfig.js");
@@ -19,5 +19,5 @@ module.exports = function() {
 		stylusConfig(),
 		staticsConfig(),
 		aliasesConfig({workFolder})
-	])
-}
+	]);
+};

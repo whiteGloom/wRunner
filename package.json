@@ -1,9 +1,9 @@
 {
   "name": "wrunner",
-  "version": "1.2.29",
+  "version": "1.2.30",
   "description": "A slider plugin.",
   "homepage": "https://github.com/whiteGloom/wRunner",
-  "main": "webpack.config.js",
+  "main": "./prod/wrunner-native.js",
   "scripts": {
     "build": "webpack -p",
     "build-watch": "webpack --watch",
