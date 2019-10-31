@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", test);
 
 function test() {
 	makeSlider(0, {
-		roots: document.getElementsByClassName("js-sample__instance")[0],
+		roots: document.getElementsByClassName("js-sample__instance")[0]
 	}, "native");
 
 	makeSlider(1, {
@@ -55,16 +55,6 @@ function test() {
 				$maxLimitController.val(limits.maxLimit);
 			},
 
-			onValueUpdate: function(value) {
-				if (value.value !== undefined) {
-					$valueController.val(value.value);
-				}
-				if (value.minValue && value.minValue !== undefined || value.maxValue && value.maxValue !== undefined) {
-					$minValueController.val(value.minValue);
-					$maxValueController.val(value.maxValue);
-				}
-			},
-
 			onTypeUpdate: function(type) {
 				if (type.value === $typeControllers[0].val()) {
 					$typeControllers[0][0].checked = true;
@@ -82,16 +72,18 @@ function test() {
 				}
 			},
 
-			onDivisionsCountUpdate: function(count) {
-				$divisionsCountController.val(count);
-			},
-
-			onValueNoteDisplayUpdate: function(value) {
-				$valueNoteDisplayController[0].checked = value;
+			onValueUpdate: function(value) {
+				if (value.value !== undefined) {
+					$valueController.val(value.value);
+				}
+				if (value.minValue && value.minValue !== undefined || value.maxValue && value.maxValue !== undefined) {
+					$minValueController.val(value.minValue);
+					$maxValueController.val(value.maxValue);
+				}
 			},
 
 			onRootsUpdate: function(roots) {
-				$roots = $(roots);
+				var $roots = $(roots);
 				var str = "";
 				for (var i = 0; i < $roots[0].classList.length; i++) {
 					str+= "." + $roots[0].classList[i];
@@ -106,6 +98,14 @@ function test() {
 				if (direction.value === $directionControllers[1].val()) {
 					$directionControllers[1][0].checked = true;
 				}
+			},
+
+			onValueNoteDisplayUpdate: function(value) {
+				$valueNoteDisplayController[0].checked = value;
+			},
+
+			onDivisionsCountUpdate: function(count) {
+				$divisionsCountController.val(count);
 			}
 		});
 
@@ -176,6 +176,14 @@ function test() {
 			}
 		});
 
+		$typeControllers[0].on("input", (e) => {
+			sliders[index].setType($typeControllers[0].val());
+		});
+
+		$typeControllers[1].on("input", (e) => {
+			sliders[index].setType($typeControllers[1].val());
+		});
+
 		$valueController.on("focus", (e) => {
 			var snapshot = $valueController.val();
 			$valueController.on("keydown", keyPressHandler);
@@ -233,12 +241,16 @@ function test() {
 			}
 		});
 
-		$typeControllers[0].on("input", (e) => {
-			sliders[index].setType($typeControllers[0].val());
+		$directionControllers[0].on("input", (e) => {
+			sliders[index].setDirection($directionControllers[0].val());
 		});
 
-		$typeControllers[1].on("input", (e) => {
-			sliders[index].setType($typeControllers[1].val());
+		$directionControllers[1].on("input", (e) => {
+			sliders[index].setDirection($directionControllers[1].val());
+		});
+
+		$valueNoteDisplayController.on("input", (e) => {
+			sliders[index].setValueNoteDisplay($valueNoteDisplayController[0].checked);
 		});
 
 		$divisionsCountController.on("focus", (e) => {
@@ -258,18 +270,6 @@ function test() {
 					$divisionsCountController.blur();
 				}
 			}
-		});
-
-		$valueNoteDisplayController.on("input", (e) => {
-			sliders[index].setValueNoteDisplay($valueNoteDisplayController[0].checked);
-		});
-
-		$directionControllers[0].on("input", (e) => {
-			sliders[index].setDirection($directionControllers[0].val());
-		});
-
-		$directionControllers[1].on("input", (e) => {
-			sliders[index].setDirection($directionControllers[1].val());
 		});
 	}
 }
