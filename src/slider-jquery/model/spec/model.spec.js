@@ -104,15 +104,15 @@ describe("getStep method.", () => {
 });
 
 describe("getType method.", () => {
-	it("Returns { type: *slider's type*, typeConstants: *object - list of reserved type names* }.", () => {
+	it("Returns { value: *slider's type*, typeConstants: *object - list of reserved type names* }.", () => {
 		var result = model.getType();
 
 		// The result is an object.
 		expect(helper.isObject(result)).toBeTruthy();
 
-		// The "type" property is an string.
-		expect(typeof result.type === "string").toBeTruthy();
-		expect(result.type).toEqual(model.type);
+		// The "value" property is an string.
+		expect(typeof result.value === "string").toBeTruthy();
+		expect(result.value).toEqual(model.type);
 
 		// The "typeConstants" property is an object.
 		expect(helper.isObject(result.typeConstants)).toBeTruthy();
@@ -581,13 +581,13 @@ describe("setStep method.", () => {
 });
 
 describe("setType method.", () => {
-	describe("Normal values - if value is listed in typeConstants. Changes slider's type, returns new type.", () => {
+	describe("Normal values - if value is listed in typeConstants. Changes slider's type, returns {type: **type**, typeConstants: **list of reserved types**}.", () => {
 		for (var constant in model.getType().typeConstants) {
-			it("Taking " + model.getType().typeConstants[constant] + ", changes type to " + model.getType().typeConstants[constant] + ". Returns type.", () => {
+			it("Taking " + model.getType().typeConstants[constant] + ", changes type to " + model.getType().typeConstants[constant], () => {
 				var result = model.setType(model.typeConstants[constant]);
 
-				expect(result.type).toEqual(model.typeConstants[constant]);
-				expect(result.type).toEqual(model.type);
+				expect(result.value).toEqual(model.typeConstants[constant]);
+				expect(result.value).toEqual(model.type);
 
 				expect(helper.isObject(result.typeConstants)).toBeTruthy();
 				expect(result.typeConstants).toEqual(model.typeConstants);

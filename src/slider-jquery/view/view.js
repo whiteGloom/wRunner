@@ -49,7 +49,7 @@ class View {
 	}
 
 	updateDOM(type) {
-		if(type.type === type.typeConstants.singleValue) {
+		if(type.value === type.typeConstants.singleValue) {
 			this.$handleMin.detach();
 			this.$handleMax.detach();
 			this.$valueNoteMin.detach();
@@ -58,7 +58,7 @@ class View {
 			this.$handle.appendTo(this.$path);
 			this.$valueNote.appendTo(this.$outer);
 		}
-		if(type.type === type.typeConstants.rangeValue) {
+		if(type.value === type.typeConstants.rangeValue) {
 			this.$handle.detach();
 			this.$valueNote.detach();
 
@@ -102,7 +102,7 @@ class View {
 		var pathScale, selected = value.selected;
 		var direction = this.direction.value,
 			directionConstants = this.directionConstants;
-		var type = currentType.type,
+		var type = currentType.value,
 			typeConstants = currentType.typeConstants;
 
 		var clearList = [

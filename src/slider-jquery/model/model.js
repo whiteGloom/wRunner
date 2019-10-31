@@ -60,11 +60,11 @@ class Model {
 				this.type = newType;
 
 				this.typeUpdateEvent.trigger({
-					type: this.type,
+					value: this.type,
 					typeConstants: Object.assign({}, this.typeConstants)
 				});
 				return {
-					type: this.type,
+					value: this.type,
 					typeConstants: Object.assign({}, this.typeConstants)
 				};
 			}
@@ -195,7 +195,7 @@ class Model {
 
 	getType() {
 		return {
-			type: this.type,
+			value: this.type,
 			typeConstants: Object.assign({}, this.typeConstants)
 		};
 	}

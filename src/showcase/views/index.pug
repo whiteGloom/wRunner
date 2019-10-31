@@ -16,7 +16,7 @@ html
             each title, index in ["Js native", "Js native", "jQuery", "jQuery"]
                 +pageElMix
                     +sampleMix({title: title})
-                        +sampleInstanceMix()
+                        +sampleInstanceMix
                         +sampleDataMix
                             +sampleParameterMix({name: "step"})
                                 input(type="text")
@@ -24,21 +24,31 @@ html
                                 input(type="text")
                             +sampleParameterMix({name: "maxLimit"})
                                 input(type="text")
+                            +sampleParameterMix({name: "sliderType"})
+                                label
+                                    input(type="radio" value="single" name="type")
+                                    | Single
+                                label
+                                    input(type="radio" value="range" name="type")
+                                    | Range
                             +sampleParameterMix({name: "value"})
                                 input(type="text")
                             +sampleParameterMix({name: "minValue"})
                                 input(type="text")
                             +sampleParameterMix({name: "maxValue"})
                                 input(type="text")
-                            +sampleParameterMix({name: "sliderType"})
-                                input(type="text")
-                            +sampleParameterMix({name: "sliderDivisionsCount"})
-                                input(type="text")
-                            +sampleParameterMix({name: "sliderValueNoteDisplay"})
-                                input(type="checkbox")
                             +sampleParameterMix({name: "sliderRoots"})
                                 input(type="text")
                             +sampleParameterMix({name: "sliderDirection"})
+                                label
+                                    input(type="radio" value="horizontal" name="direction")
+                                    | Horizontal
+                                label
+                                    input(type="radio" value="vertical" name="direction")
+                                    | Vertical
+                            +sampleParameterMix({name: "sliderValueNoteDisplay"})
+                                input(type="checkbox")
+                            +sampleParameterMix({name: "sliderDivisionsCount"})
                                 input(type="text")
         script(src="./vendors.js")
         script(src="./scripts/scripts.js")

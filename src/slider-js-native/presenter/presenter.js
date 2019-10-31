@@ -155,7 +155,7 @@ class Presenter {
 		}
 
 		this.model.typeUpdateEvent.trigger({
-			type: this.model.type,
+			value: this.model.type,
 			typeConstants: Object.assign({}, this.model.typeConstants)
 		});
 		this.model.stepUpdateEvent.trigger(this.model.step);
