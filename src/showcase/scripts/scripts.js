@@ -32,64 +32,62 @@ function test() {
 	function makeSlider(index, options, type) {
 		var sliders = [];
 
-		var controllersHolders = document
-			.getElementsByClassName("js-sample")[index]
-			.getElementsByClassName("js-sample__parameterValue");
-		var stepController = controllersHolders[0].children[0],
-			minLimitController = controllersHolders[1].children[0],
-			maxLimitController = controllersHolders[2].children[0],
-			typeControllers = controllersHolders[3].children,
-			valueController = controllersHolders[4].children[0],
-			minValueController = controllersHolders[5].children[0],
-			maxValueController = controllersHolders[6].children[0],
-			rootsController = controllersHolders[7].children[0],
-			directionControllers = controllersHolders[8].children,
-			valueNoteDisplayController = controllersHolders[9].children[0],
-			divisionsCountController = controllersHolders[10].children[0];
+		var $controllersHolders = $($(".js-sample")[index]).find(".js-sample__parameterValue");
+		var $stepController = $controllersHolders.eq(0).find("input"),
+			$minLimitController = $controllersHolders.eq(1).find("input"),
+			$maxLimitController = $controllersHolders.eq(2).find("input"),
+			$typeControllers = [$controllersHolders.eq(3).find("input").eq(0), $controllersHolders.eq(3).find("input").eq(1)],
+			$valueController = $controllersHolders.eq(4).find("input"),
+			$minValueController = $controllersHolders.eq(5).find("input"),
+			$maxValueController = $controllersHolders.eq(6).find("input"),
+			$rootsController = $controllersHolders.eq(7).find("input"),
+			$directionControllers = [$controllersHolders.eq(8).find("input").eq(0), $controllersHolders.eq(8).find("input").eq(1)],
+			$valueNoteDisplayController = $controllersHolders.eq(9).find("input"),
+			$divisionsCountController = $controllersHolders.eq(10).find("input");
 
 		options = Object.assign(options, {
 			onStepUpdate: function(step) {
-				stepController.value = step;
+				$stepController.val(step);
 			},
 
 			onLimitsUpdate: function(limits) {
-				minLimitController.value = limits.minLimit;
-				maxLimitController.value = limits.maxLimit;
+				$minLimitController.val(limits.minLimit);
+				$maxLimitController.val(limits.maxLimit);
 			},
 
 			onValueUpdate: function(value) {
 				if (value.value !== undefined) {
-					valueController.value = value.value;
+					$valueController.val(value.value);
 				}
 				if (value.minValue && value.minValue !== undefined || value.maxValue && value.maxValue !== undefined) {
-					minValueController.value = value.minValue;
-					maxValueController.value = value.maxValue;
+					$minValueController.val(value.minValue);
+					$maxValueController.val(value.maxValue);
 				}
 			},
 
 			onTypeUpdate: function(type) {
-				if (type.value === typeControllers[0].children[0].value) {
-					typeControllers[0].children[0].checked = true;
+				if (type.value === $typeControllers[0].val()) {
+					$typeControllers[0][0].checked = true;
 
-					minValueController.parentNode.parentNode.style.visibility = "hidden";
-					maxValueController.parentNode.parentNode.style.visibility = "hidden";
-					valueController.parentNode.parentNode.style.visibility = "visible";
+					$minValueController.parent().parent().css("visibility", "hidden");
+					$maxValueController.parent().parent().css("visibility", "hidden");
+					$valueController.parent().parent().css("visibility", "visible");
 				}
-				if (type.value === typeControllers[1].children[0].value) {
-					typeControllers[1].children[0].checked = true;
+				if (type.value === $typeControllers[1].val()) {
+					$typeControllers[1][0].checked = true;
 
-					valueController.parentNode.parentNode.style.visibility = "hidden";
-					minValueController.parentNode.parentNode.style.visibility = "visible";
-					maxValueController.parentNode.parentNode.style.visibility = "visible";
+					$valueController.parent().parent().css("visibility", "hidden");
+					$minValueController.parent().parent().css("visibility", "visible");
+					$maxValueController.parent().parent().css("visibility", "visible");
 				}
 			},
 
 			onDivisionsCountUpdate: function(count) {
-				divisionsCountController.value = count;
+				$divisionsCountController.val(count);
 			},
 
 			onValueNoteDisplayUpdate: function(value) {
-				valueNoteDisplayController.checked = value;
+				$valueNoteDisplayController[0].checked = value;
 			},
 
 			onRootsUpdate: function(roots) {
@@ -98,15 +96,15 @@ function test() {
 				for (var i = 0; i < $roots[0].classList.length; i++) {
 					str+= "." + $roots[0].classList[i];
 				}
-				rootsController.value = str;
+				$rootsController.value = str;
 			},
 
 			onDirectionUpdate: function(direction) {
-				if (direction.value === directionControllers[0].children[0].value) {
-					directionControllers[0].children[0].checked = true;
+				if (direction.value === $directionControllers[0].val()) {
+					$directionControllers[0][0].checked = true;
 				}
-				if (direction.value === directionControllers[1].children[0].value) {
-					directionControllers[1].children[0].checked = true;
+				if (direction.value === $directionControllers[1].val()) {
+					$directionControllers[1][0].checked = true;
 				}
 			}
 		});
@@ -121,157 +119,157 @@ function test() {
 
 
 		// Change slider parameters using conrtollers
-		stepController.addEventListener("focus", (e) => {
-			var snapshot = stepController.value;
-			stepController.addEventListener("keydown", keyPressHandler);
-			stepController.addEventListener("blur", () => {
-				stepController.removeEventListener("keydown", keyPressHandler);
+		$stepController.on("focus", (e) => {
+			var snapshot = $stepController.val();
+			$stepController.on("keydown", keyPressHandler);
+			$stepController.on("blur", () => {
+				$stepController.off("keydown", keyPressHandler);
 			});
 
 			function keyPressHandler(e) {
 				if (e.key === "Enter") {
-					sliders[index].setStep(stepController.value);
-					stepController.blur();
+					sliders[index].setStep($stepController.val());
+					$stepController.blur();
 				}
 				if (e.key === "Escape") {
-					stepController.value = snapshot;
-					stepController.blur();
+					$stepController.val(snapshot);
+					$stepController.blur();
 				}
 			}
 		});
 
-		minLimitController.addEventListener("focus", (e) => {
-			var snapshot = minLimitController.value;
-			minLimitController.addEventListener("keydown", keyPressHandler);
-			minLimitController.addEventListener("blur", () => {
-				minLimitController.removeEventListener("keydown", keyPressHandler);
+		$minLimitController.on("focus", (e) => {
+			var snapshot = $minLimitController.val();
+			$minLimitController.on("keydown", keyPressHandler);
+			$minLimitController.on("blur", () => {
+				$minLimitController.off("keydown", keyPressHandler);
 			});
 
 			function keyPressHandler(e) {
 				if (e.key === "Enter") {
-					sliders[index].setLimits({minLimit: minLimitController.value});
-					minLimitController.blur();
+					sliders[index].setLimits({minLimit: $minLimitController.val()});
+					$minLimitController.blur();
 				}
 				if (e.key === "Escape") {
-					minLimitController.value = snapshot;
-					minLimitController.blur();
+					$minLimitController.val(snapshot);
+					$minLimitController.blur();
 				}
 			}
 		});
 
-		maxLimitController.addEventListener("focus", (e) => {
-			var snapshot = maxLimitController.value;
-			maxLimitController.addEventListener("keydown", keyPressHandler);
-			maxLimitController.addEventListener("blur", () => {
-				maxLimitController.removeEventListener("keydown", keyPressHandler);
+		$maxLimitController.on("focus", (e) => {
+			var snapshot = $maxLimitController.val();
+			$maxLimitController.on("keydown", keyPressHandler);
+			$maxLimitController.on("blur", () => {
+				$maxLimitController.off("keydown", keyPressHandler);
 			});
 
 			function keyPressHandler(e) {
 				if (e.key === "Enter") {
-					sliders[index].setLimits({maxLimit: maxLimitController.value});
-					maxLimitController.blur();
+					sliders[index].setLimits({maxLimit: $maxLimitController.val()});
+					$maxLimitController.blur();
 				}
 				if (e.key === "Escape") {
-					maxLimitController.value = snapshot;
-					maxLimitController.blur();
+					$maxLimitController.val(snapshot);
+					$maxLimitController.blur();
 				}
 			}
 		});
 
-		valueController.addEventListener("focus", (e) => {
-			var snapshot = valueController.value;
-			valueController.addEventListener("keydown", keyPressHandler);
-			valueController.addEventListener("blur", () => {
-				valueController.removeEventListener("keydown", keyPressHandler);
+		$valueController.on("focus", (e) => {
+			var snapshot = $valueController.val();
+			$valueController.on("keydown", keyPressHandler);
+			$valueController.on("blur", () => {
+				$valueController.off("keydown", keyPressHandler);
 			});
 
 			function keyPressHandler(e) {
 				if (e.key === "Enter") {
-					sliders[index].setSingleValue(valueController.value);
-					valueController.blur();
+					sliders[index].setSingleValue($valueController.val());
+					$valueController.blur();
 				}
 				if (e.key === "Escape") {
-					valueController.value = snapshot;
-					valueController.blur();
+					$valueController.val(snapshot);
+					$valueController.blur();
 				}
 			}
 		});
 
-		minValueController.addEventListener("focus", (e) => {
-			var snapshot = minValueController.value;
-			minValueController.addEventListener("keydown", keyPressHandler);
-			minValueController.addEventListener("blur", () => {
-				minValueController.removeEventListener("keydown", keyPressHandler);
+		$minValueController.on("focus", (e) => {
+			var snapshot = $minValueController.val();
+			$minValueController.on("keydown", keyPressHandler);
+			$minValueController.on("blur", () => {
+				$minValueController.off("keydown", keyPressHandler);
 			});
 
 			function keyPressHandler(e) {
 				if (e.key === "Enter") {
-					sliders[index].setRangeValue({minValue: minValueController.value});
-					minValueController.blur();
+					sliders[index].setRangeValue({minValue: $minValueController.val()});
+					$minValueController.blur();
 				}
 				if (e.key === "Escape") {
-					minValueController.value = snapshot;
-					minValueController.blur();
+					$minValueController.val(snapshot);
+					$minValueController.blur();
 				}
 			}
 		});
 
-		maxValueController.addEventListener("focus", (e) => {
-			var snapshot = maxValueController.value;
-			maxValueController.addEventListener("keydown", keyPressHandler);
-			maxValueController.addEventListener("blur", () => {
-				maxValueController.removeEventListener("keydown", keyPressHandler);
+		$maxValueController.on("focus", (e) => {
+			var snapshot = $maxValueController.val();
+			$maxValueController.on("keydown", keyPressHandler);
+			$maxValueController.on("blur", () => {
+				$maxValueController.off("keydown", keyPressHandler);
 			});
 
 			function keyPressHandler(e) {
 				if (e.key === "Enter") {
-					sliders[index].setRangeValue({maxValue: maxValueController.value});
-					maxValueController.blur();
+					sliders[index].setRangeValue({maxValue: $maxValueController.val()});
+					$maxValueController.blur();
 				}
 				if (e.key === "Escape") {
-					maxValueController.value = snapshot;
-					maxValueController.blur();
+					$maxValueController.val(snapshot);
+					$maxValueController.blur();
 				}
 			}
 		});
 
-		typeControllers[0].children[0].addEventListener("click", (e) => {
-			sliders[index].setType(typeControllers[0].children[0].value);
+		$typeControllers[0].on("input", (e) => {
+			sliders[index].setType($typeControllers[0].val());
 		});
 
-		typeControllers[1].children[0].addEventListener("click", (e) => {
-			sliders[index].setType(typeControllers[1].children[0].value);
+		$typeControllers[1].on("input", (e) => {
+			sliders[index].setType($typeControllers[1].val());
 		});
 
-		divisionsCountController.addEventListener("focus", (e) => {
-			var snapshot = divisionsCountController.value;
-			divisionsCountController.addEventListener("keydown", keyPressHandler);
-			divisionsCountController.addEventListener("blur", () => {
-				divisionsCountController.removeEventListener("keydown", keyPressHandler);
+		$divisionsCountController.on("focus", (e) => {
+			var snapshot = $divisionsCountController.val();
+			$divisionsCountController.on("keydown", keyPressHandler);
+			$divisionsCountController.on("blur", () => {
+				$divisionsCountController.off("keydown", keyPressHandler);
 			});
 
 			function keyPressHandler(e) {
 				if (e.key === "Enter") {
-					sliders[index].setDivisionsCount(divisionsCountController.value);
-					divisionsCountController.blur();
+					sliders[index].setDivisionsCount($divisionsCountController.val());
+					$divisionsCountController.blur();
 				}
 				if (e.key === "Escape") {
-					divisionsCountController.value = snapshot;
-					divisionsCountController.blur();
+					$divisionsCountController.val(snapshot);
+					$divisionsCountController.blur();
 				}
 			}
 		});
 
-		valueNoteDisplayController.addEventListener("input", (e) => {
-			sliders[index].setValueNoteDisplay(valueNoteDisplayController.checked);
+		$valueNoteDisplayController.on("input", (e) => {
+			sliders[index].setValueNoteDisplay($valueNoteDisplayController[0].checked);
 		});
 
-		directionControllers[0].children[0].addEventListener("click", (e) => {
-			sliders[index].setDirection(directionControllers[0].children[0].value);
+		$directionControllers[0].on("input", (e) => {
+			sliders[index].setDirection($directionControllers[0].val());
 		});
 
-		directionControllers[1].children[0].addEventListener("click", (e) => {
-			sliders[index].setDirection(directionControllers[1].children[0].value);
+		$directionControllers[1].on("input", (e) => {
+			sliders[index].setDirection($directionControllers[1].val());
 		});
 	}
 }
