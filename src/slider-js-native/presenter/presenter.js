@@ -140,39 +140,16 @@ class Presenter {
 	}
 
 	_triggerEvents() {
-		if (this.model.type == this.model.typeConstants.singleValue) {
-			this.model.valueUpdateEvent.trigger({
-				value: this.model.singleValue,
-				selected: this.model.singleSelected
-			});
-		}
-		if (this.model.type == this.model.typeConstants.rangeValue) {
-			this.model.valueUpdateEvent.trigger({
-				minValue: this.model.rangeMinValue,
-				maxValue: this.model.rangeMaxValue,
-				selected: this.model.rangeSelected
-			});
-		}
-
-		this.model.typeUpdateEvent.trigger({
-			value: this.model.type,
-			typeConstants: Object.assign({}, this.model.typeConstants)
-		});
+		this.model.valueUpdateEvent.trigger(this.model.getValue());
+		this.model.typeUpdateEvent.trigger(this.model.getType());
 		this.model.stepUpdateEvent.trigger(this.model.step);
-		this.model.limitsUpdateEvent.trigger({
-			minLimit: this.model.minLimit,
-			maxLimit: this.model.maxLimit,
-			valuesCount: this.model.valuesCount
-		});
+		this.model.limitsUpdateEvent.trigger(this.model.getLimits());
 
-		this.view.themeUpdateEvent.trigger(this.view.theme.value);
-		this.view.directionUpdateEvent.trigger({
-			value: this.view.direction.value,
-			constants: Object.assign({}, this.view.directionConstants)
-		});
-		this.view.valueNoteDisplayUpdateEvent.trigger(this.view.valueNoteDisplay);
-		this.view.rootsUpdateEvent.trigger(this.view.roots);
-		this.view.divisionsCountUpdateEvent.trigger(this.view.divisionsCount);
+		this.view.themeUpdateEvent.trigger(this.view.getTheme());
+		this.view.directionUpdateEvent.trigger(this.view.getDirection());
+		this.view.valueNoteDisplayUpdateEvent.trigger(this.view.getValueNoteDisplay());
+		this.view.rootsUpdateEvent.trigger(this.view.getRoots());
+		this.view.divisionsCountUpdateEvent.trigger(this.view.getDivisionsCount());
 	}
 }
 
