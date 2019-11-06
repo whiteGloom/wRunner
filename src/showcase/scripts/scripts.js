@@ -88,7 +88,7 @@ function test() {
 				for (var i = 0; i < $roots[0].classList.length; i++) {
 					str+= "." + $roots[0].classList[i];
 				}
-				$rootsController.value = str;
+				$rootsController.val(str);
 			},
 
 			onDirectionUpdate: function(direction) {
