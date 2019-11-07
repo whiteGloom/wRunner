@@ -1,9 +1,10 @@
-const HTMLWebpackPlugin = require("html-webpack-plugin");
-const HtmlBeautifyPlugin = require("html-beautify-webpack-plugin");
+import HTMLWebpackPlugin from "html-webpack-plugin";
+import HtmlBeautifyPlugin from "html-beautify-webpack-plugin";
 
-module.exports = function(options) {
+export default function(options) {
 	options = options ? options : {};
 	var workFolder = options.workFolder;
+
 	return {
 		module: {
 			rules: [
@@ -32,4 +33,4 @@ module.exports = function(options) {
 			})
 		]
 	};
-};
+}

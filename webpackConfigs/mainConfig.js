@@ -1,6 +1,6 @@
-var RemoveServiceOutputsPlugin = require("remove-service-outputs-plugin").default;
+import RemoveServiceOutputsPlugin from "remove-service-outputs-plugin";
 
-module.exports = function(options) {
+export default function(options) {
 	options = options ? options : {};
 	var workFolder = options.workFolder;
 	
@@ -44,4 +44,4 @@ module.exports = function(options) {
 		},
 		devtool: "none"
 	};
-};
+}

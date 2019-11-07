@@ -1,5 +1,4 @@
-module.exports = function(options) {
-	options = options ? options : {};
+export default function() {
 	return {
 		module: {
 			rules: [
@@ -11,4 +10,4 @@ module.exports = function(options) {
 			]
 		}
 	};
-};
+}

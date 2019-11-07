@@ -1,7 +1,6 @@
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
-module.exports = function(options) {
-	options = options ? options : {};
+export default function() {
 	return {
 		module: {
 			rules: [
@@ -23,4 +22,4 @@ module.exports = function(options) {
 			})
 		]
 	};
-};
+}

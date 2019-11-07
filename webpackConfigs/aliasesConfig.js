@@ -1,6 +1,6 @@
 const packageAliases = require("../package.json")._moduleAliases;
 
-module.exports = function(options) {
+export default function(options) {
 	options = options ? options : {};
 	
 	var aliases = {};
@@ -13,4 +13,4 @@ module.exports = function(options) {
 			alias: aliases
 		}
 	};
-};
+}
