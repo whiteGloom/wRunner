@@ -1,6 +1,6 @@
 {
   "name": "wrunner",
-  "version": "1.2.35",
+  "version": "1.2.36",
   "description": "A slider plugin.",
   "homepage": "https://github.com/whiteGloom/wRunner",
   "main": "./prod/wrunner-native.js",
