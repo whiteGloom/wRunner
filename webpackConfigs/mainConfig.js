@@ -1,9 +1,10 @@
+var RemoveServiceOutputsPlugin = require("remove-service-outputs-plugin").default;
+
 module.exports = function(options) {
 	options = options ? options : {};
 	var workFolder = options.workFolder;
 	
 	return {
-		mode: "development",
 		entry: {
 			"showcase": workFolder + "/src/showcase/index.js",
 			"styles": workFolder + "/src/showcase/static.js",
@@ -15,9 +16,6 @@ module.exports = function(options) {
 			path: workFolder + "/prod/",
 			filename: (data) => {
 				switch(data.chunk.name) {
-					case "styles":
-					case "wrunner-default-theme":
-						return "scripts/tmp/[name].js";
 					case "showcase":
 						return "scripts/scripts.js";
 					default: 
@@ -25,13 +23,11 @@ module.exports = function(options) {
 				}
 			}
 		},
-		module: {
-			rules: [
-
-			]
-		},
 		plugins: [
-		
+			new RemoveServiceOutputsPlugin([
+				["styles", /.*\.js$/],
+				["wrunner-default-theme", /.*\.js$/]
+			])
 		],
 		optimization: {
 			splitChunks: {
@@ -46,12 +42,6 @@ module.exports = function(options) {
 				}
 			}
 		},
-		resolve : {
-			
-		},
-		devtool: "none",
-		devServer: {
-			stats: "errors-only"
-		}
+		devtool: "none"
 	};
 };
