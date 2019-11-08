@@ -33,12 +33,12 @@ class View {
 		(this.pathPassed = document.createElement("div")).classList.add("wrunner__pathPassed");
 
 		(this.handle = document.createElement("div")).classList.add("wrunner__handle");
-		(this.handleMin = document.createElement("div")).classList.add("wrunner__handle");
-		(this.handleMax = document.createElement("div")).classList.add("wrunner__handle");
+		(this.handleMin = document.createElement("div")).classList.add("wrunner__handleMin");
+		(this.handleMax = document.createElement("div")).classList.add("wrunner__handleMax");
 
 		(this.valueNote = document.createElement("div")).classList.add("wrunner__valueNote");
-		(this.valueNoteMin = document.createElement("div")).classList.add("wrunner__valueNote");
-		(this.valueNoteMax = document.createElement("div")).classList.add("wrunner__valueNote");
+		(this.valueNoteMin = document.createElement("div")).classList.add("wrunner__valueNoteMin");
+		(this.valueNoteMax = document.createElement("div")).classList.add("wrunner__valueNoteMax");
 
 		(this.divisions = document.createElement("div")).classList.add("wrunner__divisions");
 		this.divisionsList = [];

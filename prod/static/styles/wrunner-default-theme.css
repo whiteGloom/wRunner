@@ -63,6 +63,70 @@
   background-color: #aa3d9c;
 }
 
+.wrunner__handleMax_theme_default.wrunner__handleMax_direction_horizontal {
+  margin-top: -0.35rem;
+  margin-left: -0.6rem;
+}
+
+.wrunner__handleMax_theme_default.wrunner__handleMax_direction_vertical {
+  margin-top: -0.6rem;
+  margin-left: -0.4rem;
+}
+
+.wrunner__handleMax_theme_default.wrunner__handleMax {
+  position: absolute;
+  height: 1.25rem;
+  width: 1.25rem;
+  border-radius: 40%;
+  background-color: #cf579a;
+  transition-duration: 0.2s;
+  transition-property: transform, background-color, border-radius;
+  cursor: pointer;
+  z-index: 1;
+}
+.wrunner__handleMax_theme_default.wrunner__handleMax:hover {
+  transform: scale(1.1);
+  border-radius: 50%;
+  background-color: #c54a8e;
+}
+.wrunner__handleMax_theme_default.wrunner__handleMax:active {
+  transform: scale(0.9);
+  border-radius: 50%;
+  background-color: #aa3d9c;
+}
+
+.wrunner__handleMin_theme_default.wrunner__handleMin_direction_horizontal {
+  margin-top: -0.35rem;
+  margin-left: -0.6rem;
+}
+
+.wrunner__handleMin_theme_default.wrunner__handleMin_direction_vertical {
+  margin-top: -0.6rem;
+  margin-left: -0.4rem;
+}
+
+.wrunner__handleMin_theme_default.wrunner__handleMin {
+  position: absolute;
+  height: 1.25rem;
+  width: 1.25rem;
+  border-radius: 40%;
+  background-color: #cf579a;
+  transition-duration: 0.2s;
+  transition-property: transform, background-color, border-radius;
+  cursor: pointer;
+  z-index: 1;
+}
+.wrunner__handleMin_theme_default.wrunner__handleMin:hover {
+  transform: scale(1.1);
+  border-radius: 50%;
+  background-color: #c54a8e;
+}
+.wrunner__handleMin_theme_default.wrunner__handleMin:active {
+  transform: scale(0.9);
+  border-radius: 50%;
+  background-color: #aa3d9c;
+}
+
 .wrunner__outer_theme_default.wrunner__outer_direction_horizontal {
   height: 4rem;
   width: 100%;
@@ -159,6 +223,112 @@
   cursor: default;
 }
 .wrunner__valueNote_theme_default.wrunner__valueNote::after {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 0;
+  width: 0;
+}
+
+.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_horizontal {
+  top: 0;
+  min-width: 1.5rem;
+  border-radius: 0.8rem 0.3rem 0.8rem 0.3rem;
+}
+.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_horizontal::after {
+  left: 50%;
+  margin-left: -0.25rem;
+  bottom: -0.5rem;
+  border: 0.25rem solid transparent;
+  border-top-color: #c54a8e;
+}
+
+.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_vertical {
+  left: 2.5rem;
+  min-width: 1.5rem;
+  border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
+}
+.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_vertical::after {
+  top: 50%;
+  margin-top: -0.25rem;
+  left: -0.5rem;
+  border: 0.25rem solid transparent;
+  border-right-color: #c54a8e;
+}
+
+.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_display_hidden {
+  display: none;
+}
+
+.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_display_visible {
+  display: block;
+}
+
+.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax {
+  position: absolute;
+  padding: 0.35rem;
+  background-color: #c54a8e;
+  text-align: center;
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: lato;
+  font-weight: 900;
+  cursor: default;
+}
+.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax::after {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 0;
+  width: 0;
+}
+
+.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_horizontal {
+  top: 0;
+  min-width: 1.5rem;
+  border-radius: 0.8rem 0.3rem 0.8rem 0.3rem;
+}
+.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_horizontal::after {
+  left: 50%;
+  margin-left: -0.25rem;
+  bottom: -0.5rem;
+  border: 0.25rem solid transparent;
+  border-top-color: #c54a8e;
+}
+
+.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_vertical {
+  left: 2.5rem;
+  min-width: 1.5rem;
+  border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
+}
+.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_vertical::after {
+  top: 50%;
+  margin-top: -0.25rem;
+  left: -0.5rem;
+  border: 0.25rem solid transparent;
+  border-right-color: #c54a8e;
+}
+
+.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_display_hidden {
+  display: none;
+}
+
+.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_display_visible {
+  display: block;
+}
+
+.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin {
+  position: absolute;
+  padding: 0.35rem;
+  background-color: #c54a8e;
+  text-align: center;
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: lato;
+  font-weight: 900;
+  cursor: default;
+}
+.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin::after {
   content: '';
   position: absolute;
   display: block;

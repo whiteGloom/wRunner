@@ -33,12 +33,12 @@ class View {
 		this.$pathPassed = $("<div class='wrunner__pathPassed'>").appendTo(this.$path);
 
 		this.$handle = $("<div class='wrunner__handle'>");
-		this.$handleMin = $("<div class='wrunner__handle'>");
-		this.$handleMax = $("<div class='wrunner__handle'>");
+		this.$handleMin = $("<div class='wrunner__handleMin'>");
+		this.$handleMax = $("<div class='wrunner__handleMax'>");
 
 		this.$valueNote = $("<div class='wrunner__valueNote'>");
-		this.$valueNoteMin = $("<div class='wrunner__valueNote'>");
-		this.$valueNoteMax = $("<div class='wrunner__valueNote'>");
+		this.$valueNoteMin = $("<div class='wrunner__valueNoteMin'>");
+		this.$valueNoteMax = $("<div class='wrunner__valueNoteMax'>");
 
 		this.$divisions = $("<div class='wrunner__divisions'>").appendTo(this.$outer);
 		this.divisionsList = [];

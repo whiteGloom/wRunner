@@ -1,5 +1,4 @@
 // External modules
-import webpackMerge from "webpack-merge";
 import WebpackLoader from "webpack-loader";
 
 // Local modules
