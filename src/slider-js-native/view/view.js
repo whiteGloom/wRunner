@@ -86,7 +86,7 @@ class View {
 			this.valueNoteMax
 		].concat(this.divisionsList);
 
-		els.forEach((el) => {
+		els.forEach(el => {
 			for(var style in styles) {
 				var name = el.classList[0],
 					oldValue = styles[style].oldValue,
@@ -112,11 +112,16 @@ class View {
 			this.valueNoteMax
 		];
 
-		clearList.forEach((el) => {
+		clearList.forEach(el => {
 			el.style.cssText = "";
 		});
 
-		if(type === typeConstants.singleValue) {
+		if (type === typeConstants.singleValue) drawSingleValue.call(this);
+
+		if (type === typeConstants.rangeValue) drawRangeValue.call(this);
+
+
+		function drawSingleValue() {
 			var valueNoteScale;
 
 			this.valueNote.innerHTML = value.value;
@@ -146,7 +151,7 @@ class View {
 			}
 		}
 
-		if (type === typeConstants.rangeValue) {
+		function drawRangeValue() {
 			var valueNoteMinScale, valueNoteMaxScale;
 			var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
 
@@ -190,7 +195,7 @@ class View {
 	applyValueNoteDisplay() {
 		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
 
-		els.forEach((el) => {
+		els.forEach(el => {
 			var mark = el.classList[0];
 
 			el.classList.remove(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"));
