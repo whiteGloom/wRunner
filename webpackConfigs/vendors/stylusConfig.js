@@ -1,6 +1,9 @@
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
-export default function() {
+export default function(options) {
+	var options = options ? options : {};
+	var path = options.path;
+	
 	return {
 		module: {
 			rules: [
@@ -18,7 +21,7 @@ export default function() {
 		},
 		plugins: [
 			new MiniCssExtractPlugin({
-				filename: "static/styles/[name].css"
+				filename: path
 			})
 		]
 	};

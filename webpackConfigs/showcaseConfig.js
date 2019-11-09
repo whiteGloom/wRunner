@@ -1,4 +1,5 @@
 import RemoveServiceOutputsPlugin from "remove-service-outputs-plugin";
+import webpack from "webpack";
 
 export default function(options) {
 	options = options ? options : {};
@@ -6,21 +7,24 @@ export default function(options) {
 	
 	return {
 		entry: {
+			"scripts": workFolder + "/src/showcase/index.js",
+			"styles": workFolder + "/src/showcase/static.js",
 			"wrunner-native": workFolder + "/src/slider-js-native/wrunner-native.js",
 			"wrunner-jquery": workFolder + "/src/slider-jquery/wrunner-jquery.js",
 			"wrunner-default-theme": workFolder + "/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js"
 		},
 		output: {
-			path: workFolder + "/prod/",
+			path: workFolder + "/docs/",
 			filename: (data) => {
 				switch(data.chunk.name) {
 					default: 
-						return "[name].js";
+						return "scripts/[name].js";
 				}
 			}
 		},
 		plugins: [
 			new RemoveServiceOutputsPlugin([
+				["styles", /.*\.js$/],
 				["wrunner-default-theme", /.*\.js$/]
 			])
 		],
@@ -30,7 +34,7 @@ export default function(options) {
 					vendors: {
 						test: /[\\/](vendors|node_modules)[\\/]/,
 						name: "vendors",
-						filename: "[name].js",
+						filename: "/scripts/[name].js",
 						chunks: "all"
 					},
 					default: false

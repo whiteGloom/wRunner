@@ -68,12 +68,12 @@ jQuery версия слайдера требует [jQuery](https://jquery.com/
 
 ### Создание экземпляра
 **Для JS Native версии:**
-1. Подключить на странице файл **wrunner-native.js**
+1. Подключить на странице файл **[wrunner-native.js](./prod/wrunner-native.js "wrunner-native.js")**
 2. Выполнить команду: `var slider = wRunner(options);`
 
 **Для jQuery версии:**
 1. Подключить на странице **jquery**, версией не меньше 3.4.1
-2. Подключить на странице файл **wrunner-jquery.js**
+2. Подключить на странице файл **[wrunner-jquery.js](./prod/wrunner-jquery.js "wrunner-jquery.js")**
 3. Выполнить команду: `$(DOM element).wRunner([options]);`
 
 *Arguments:*

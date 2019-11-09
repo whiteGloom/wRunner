@@ -1,4 +1,4 @@
-const packageAliases = require("../package.json")._moduleAliases;
+const packageAliases = require("../../package.json")._moduleAliases;
 
 export default function(options) {
 	options = options ? options : {};

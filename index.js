@@ -3,27 +3,36 @@ import WebpackLoader from "webpack-loader";
 
 // Local modules
 import makeMainConfig from "./webpackConfigs/mainConfig.js";
-import makeBabelConfig from "./webpackConfigs/babelConfig.js";
-import makePugConfig from "./webpackConfigs/pugConfig.js";
-import makeStylusConfig from "./webpackConfigs/stylusConfig.js";
-import makeStaticsConfig from "./webpackConfigs/staticsConfig.js";
-import makeAliasesConfig from "./webpackConfigs/aliasesConfig.js";
+import makeShowcaseConfig from "./webpackConfigs/showcaseConfig.js";
+import makeBabelConfig from "./webpackConfigs/vendors/babelConfig.js";
+import makePugConfig from "./webpackConfigs/vendors/pugConfig.js";
+import makeStylusConfig from "./webpackConfigs/vendors/stylusConfig.js";
+import makeStaticsConfig from "./webpackConfigs/vendors/staticsConfig.js";
+import makeAliasesConfig from "./webpackConfigs/vendors/aliasesConfig.js";
 
 var workFolder = process.cwd();
 var npmArguments = process.argv.slice(2);
 var webpackLoader = new WebpackLoader();
 
 // Config
-webpackLoader.makeNewConfig("main", [
-	makeMainConfig({workFolder}),
+webpackLoader.makeNewConfig("showcase", [
+	makeShowcaseConfig({workFolder}),
 	makeBabelConfig(),
 	makePugConfig({workFolder}),
-	makeStylusConfig(),
+	makeStylusConfig({path: "static/styles/[name].css"}),
 	makeStaticsConfig(),
 	makeAliasesConfig({workFolder})
 ], "production");
 
-webpackLoader.addToDevServerConfig({stats: "errors-only"});
+webpackLoader.makeNewConfig("main", [
+	makeMainConfig({workFolder}),
+	makeBabelConfig(),
+	makeStylusConfig({path: "/themes/[name].css"}),
+	makeStaticsConfig(),
+	makeAliasesConfig({workFolder})
+], "production");
+
+webpackLoader.addToDevServerConfig({stats: "errors-only", contentBase: "./docs/", historyApiFallback: true});
 
 // Init
 // If mode is build
