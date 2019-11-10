@@ -39,6 +39,7 @@ class View {
 		(this.valueNote = document.createElement("div")).classList.add("wrunner__valueNote");
 		(this.valueNoteMin = document.createElement("div")).classList.add("wrunner__valueNoteMin");
 		(this.valueNoteMax = document.createElement("div")).classList.add("wrunner__valueNoteMax");
+		(this.valueNoteCommon = document.createElement("div")).classList.add("wrunner__valueNoteCommon");
 
 		(this.divisions = document.createElement("div")).classList.add("wrunner__divisions");
 		this.divisionsList = [];
@@ -55,6 +56,7 @@ class View {
 			this.handleMax.remove();
 			this.valueNoteMin.remove();
 			this.valueNoteMax.remove();
+			this.valueNoteCommon.remove();
 
 			this.path.appendChild(this.handle);
 			this.outer.appendChild(this.valueNote);
@@ -67,6 +69,7 @@ class View {
 			this.path.appendChild(this.handleMax);
 			this.outer.appendChild(this.valueNoteMin);
 			this.outer.appendChild(this.valueNoteMax);
+			this.outer.appendChild(this.valueNoteCommon);
 		}
 	}
 
@@ -83,7 +86,7 @@ class View {
 			this.divisions, this.handle,
 			this.handleMin, this.handleMax,
 			this.valueNote, this.valueNoteMin,
-			this.valueNoteMax
+			this.valueNoteMax, this.valueNoteCommon
 		].concat(this.divisionsList);
 
 		els.forEach(el => {
@@ -109,7 +112,7 @@ class View {
 			this.pathPassed, this.handle,
 			this.handleMin, this.handleMax,
 			this.valueNote, this.valueNoteMin,
-			this.valueNoteMax
+			this.valueNoteMax, this.valueNoteCommon
 		];
 
 		clearList.forEach(el => {
@@ -152,13 +155,14 @@ class View {
 		}
 
 		function drawRangeValue() {
-			var valueNoteMinScale, valueNoteMaxScale;
+			var valueNoteMinScale, valueNoteMaxScale, valueNoteCommonScale, maxPos, minPos, commonPos;
 			var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
 
 			this.valueNoteMin.innerHTML = value.minValue;
 			this.valueNoteMax.innerHTML = value.maxValue;
 
 			if(direction === directionConstants.horizontalValue) {
+				this.valueNoteCommon.innerHTML = value.minValue + " - " + value.maxValue;
 
 				// Passed path
 				this.pathPassed.style.width = selected + "%";
@@ -169,13 +173,22 @@ class View {
 				this.handleMax.style.left = start + selected +"%";
 
 				pathScale = this.path.offsetWidth;
-				valueNoteMinScale = this.valueNoteMin.offsetWidth; valueNoteMaxScale = this.valueNoteMax.offsetWidth;
+				valueNoteMinScale = this.valueNoteMin.offsetWidth;
+				valueNoteMaxScale = this.valueNoteMax.offsetWidth;
+				valueNoteCommonScale = this.valueNoteCommon.offsetWidth;
 
-				this.valueNoteMin.style.left = (pathScale * start / 100 - valueNoteMinScale / 2) / pathScale * 100 + "%";
-				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2) / pathScale * 100 + "%";
+				minPos = (pathScale * start / 100 - valueNoteMinScale / 2);
+				maxPos = (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2);
+				commonPos = (pathScale * (start + selected / 2) / 100 - valueNoteCommonScale / 2)
+
+				this.valueNoteMin.style.left = minPos / pathScale * 100 + "%";
+				this.valueNoteMax.style.left = maxPos / pathScale * 100 + "%";
+				this.valueNoteCommon.style.left = commonPos / pathScale * 100 + "%";
 			}
 
 			if(direction === directionConstants.verticalValue) {
+				this.valueNoteCommon.innerHTML = value.maxValue + "<br>|<br>" + value.minValue;
+
 				this.pathPassed.style.height = selected + "%";
 				this.pathPassed.style.top = 100 - selected - start + "%";
 
@@ -184,16 +197,23 @@ class View {
 				this.handleMin.style.top = 100 - start  +"%";
 
 				pathScale = this.path.offsetHeight;
-				valueNoteMinScale = this.valueNoteMin.offsetHeight; valueNoteMaxScale = this.valueNoteMax.offsetHeight;
+				valueNoteMinScale = this.valueNoteMin.offsetHeight;
+				valueNoteMaxScale = this.valueNoteMax.offsetHeight;
+				valueNoteCommonScale = this.valueNoteCommon.offsetHeight;
 
-				this.valueNoteMin.style.top = 100 - (pathScale * start / 100 + valueNoteMinScale / 2) / pathScale * 100 + "%";
-				this.valueNoteMax.style.top = 100 - (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2) / pathScale * 100 + "%";
+				minPos = (pathScale * start / 100 + valueNoteMinScale / 2);
+				maxPos = (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2);
+				commonPos = (pathScale * (start + selected / 2) / 100 + valueNoteCommonScale / 2);
+
+				this.valueNoteMin.style.top = 100 - minPos / pathScale * 100 + "%";
+				this.valueNoteMax.style.top = 100 - maxPos / pathScale * 100 + "%";
+				this.valueNoteCommon.style.top = 100 - commonPos / pathScale * 100 + "%";
 			}
 		}
 	}
 
 	applyValueNoteDisplay() {
-		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
+		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax, this.valueNoteCommon];
 
 		els.forEach(el => {
 			var mark = el.classList[0];
