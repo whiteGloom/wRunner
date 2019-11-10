@@ -2,37 +2,51 @@
 import WebpackLoader from "webpack-loader";
 
 // Local modules
-import makeMainConfig from "./webpackConfigs/mainConfig.js";
-import makeShowcaseConfig from "./webpackConfigs/showcaseConfig.js";
-import makeBabelConfig from "./webpackConfigs/vendors/babelConfig.js";
-import makePugConfig from "./webpackConfigs/vendors/pugConfig.js";
-import makeStylusConfig from "./webpackConfigs/vendors/stylusConfig.js";
-import makeStaticsConfig from "./webpackConfigs/vendors/staticsConfig.js";
-import makeAliasesConfig from "./webpackConfigs/vendors/aliasesConfig.js";
+import getAliasesConfig from "./webpackConfigs/vendors/aliasesConfig.js";
+import getBabelConfig from "./webpackConfigs/vendors/babelConfig.js";
+import getStylusConfig from "./webpackConfigs/vendors/stylusConfig.js";
+import getPugConfig from "./webpackConfigs/vendors/pugConfig.js";
+import getStaticsConfig from "./webpackConfigs/vendors/staticsConfig.js";
 
+import getMainConfig from "./webpackConfigs/mainConfig.js";
+import getShowcaseConfig from "./webpackConfigs/showcaseConfig.js";
+
+
+// Variables
 var workFolder = process.cwd();
 var npmArguments = process.argv.slice(2);
 var webpackLoader = new WebpackLoader();
 
+
 // Config
-webpackLoader.makeNewConfig("showcase", [
-	makeShowcaseConfig({workFolder}),
-	makeBabelConfig(),
-	makePugConfig({workFolder}),
-	makeStylusConfig({path: "static/styles/[name].css"}),
-	makeStaticsConfig(),
-	makeAliasesConfig({workFolder})
-], "production");
-
 webpackLoader.makeNewConfig("main", [
-	makeMainConfig({workFolder}),
-	makeBabelConfig(),
-	makeStylusConfig({path: "/themes/[name].css"}),
-	makeStaticsConfig(),
-	makeAliasesConfig({workFolder})
+	getMainConfig({workFolder}),
+	getBabelConfig(),
+	getStylusConfig({path: "/themes/[name].css"}),
+	getStaticsConfig(),
+	getAliasesConfig({workFolder})
 ], "production");
 
-webpackLoader.addToDevServerConfig({stats: "errors-only", contentBase: "./docs/", historyApiFallback: true});
+webpackLoader.makeNewConfig("showcase", [
+	getShowcaseConfig({workFolder}),
+	getBabelConfig(),
+	getPugConfig({workFolder}),
+	getStylusConfig({path: "static/styles/[name].css"}),
+	getStaticsConfig(),
+	getAliasesConfig({workFolder})
+], "production");
+
+webpackLoader.addToDevServerConfig({
+	before: function(app, server) {
+		app.get("/", (req, res) => {
+			res.redirect("/docs/docs/");
+		});
+	},
+	stats: "errors-warnings",
+	publicPath: "/docs/",
+	open: true
+});
+
 
 // Init
 // If mode is build

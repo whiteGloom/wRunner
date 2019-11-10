@@ -1,5 +1,4 @@
 import RemoveServiceOutputsPlugin from "remove-service-outputs-plugin";
-import webpack from "webpack";
 
 export default function(options) {
 	options = options ? options : {};
@@ -15,7 +14,7 @@ export default function(options) {
 		},
 		output: {
 			path: workFolder + "/docs/",
-			filename: (data) => {
+			filename: data => {
 				switch(data.chunk.name) {
 					default: 
 						return "scripts/[name].js";
@@ -28,13 +27,16 @@ export default function(options) {
 				["wrunner-default-theme", /.*\.js$/]
 			])
 		],
+		performance: {
+			hints: false
+		},
 		optimization: {
 			splitChunks: {
 				cacheGroups: {
 					vendors: {
 						test: /[\\/](vendors|node_modules)[\\/]/,
 						name: "vendors",
-						filename: "/scripts/[name].js",
+						filename: "./scripts/[name].js",
 						chunks: "all"
 					},
 					default: false

@@ -68,4 +68,9 @@ label {
   color: #fff;
   text-shadow: 3px 5px 4px rgba(0,0,0,0.6);
 }
+label,
+input[type="radio"],
+input[type="checkbox"] {
+  cursor: pointer;
+}
 

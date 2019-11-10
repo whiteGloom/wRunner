@@ -12,7 +12,7 @@ export default function(options) {
 		},
 		output: {
 			path: workFolder + "/prod/",
-			filename: (data) => {
+			filename: data => {
 				switch(data.chunk.name) {
 					default: 
 						return "[name].js";
@@ -24,6 +24,9 @@ export default function(options) {
 				["wrunner-default-theme", /.*\.js$/]
 			])
 		],
+		performance: {
+			hints: false
+		},
 		optimization: {
 			splitChunks: {
 				cacheGroups: {
