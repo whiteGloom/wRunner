@@ -15,7 +15,7 @@ var view = new viewModule();
 describe("updateDOM method.", () => {
 	describe("When type is 'single'.", () => {
 		it("Rebuild plugin structure.", () => {
-			view.updateDOM({type: "single", typeConstants: {singleValue: "single", rangeValue: "range"}});
+			view.updateDOM({value: "single", typeConstants: {singleValue: "single", rangeValue: "range"}});
 
 			expect(view.path.parentNode == view.outer).toBeTruthy();
 			expect(view.pathPassed.parentNode == view.path).toBeTruthy();
@@ -28,16 +28,16 @@ describe("updateDOM method.", () => {
 
 	describe("When type is 'range'.", () => {
 		it("Rebuild plugin structure.", () => {
-			view.updateDOM({type: "range", typeConstants: {singleValue: "single", rangeValue: "range"}});
+			view.updateDOM({value: "range", typeConstants: {singleValue: "single", rangeValue: "range"}});
 
 			expect(view.path.parentNode == view.outer).toBeTruthy();
 			expect(view.pathPassed.parentNode == view.path).toBeTruthy();
 			expect(view.divisions.parentNode == view.outer).toBeTruthy();
 
-			expect(view.handleMin.parentNode == view.path);
-			expect(view.handleMax.parentNode == view.path);
-			expect(view.valueNoteMin.parentNode == view.outer);
-			expect(view.valueNoteMax.parentNode == view.outer);
+			expect(view.handleMin.parentNode == view.path).toBeTruthy();
+			expect(view.handleMax.parentNode == view.path).toBeTruthy();
+			expect(view.valueNoteMin.parentNode == view.outer).toBeTruthy();
+			expect(view.valueNoteMax.parentNode == view.outer).toBeTruthy();
 		});
 	});
 });

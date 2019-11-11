@@ -111,7 +111,6 @@ describe("getType method.", () => {
 		expect(helper.isObject(result)).toBeTruthy();
 
 		// The "value" property is an string.
-		console.log(result.value)
 		expect(typeof result.value === "string").toBeTruthy();
 		expect(result.value).toEqual(model.type);
 

@@ -16,7 +16,7 @@ var view = new viewModule();
 describe("updateDOM method.", () => {
 	describe("When type is 'single'.", () => {
 		it("Rebuild plugin structure.", () => {
-			view.updateDOM({type: "single", typeConstants: {singleValue: "single", rangeValue: "range"}});
+			view.updateDOM({value: "single", typeConstants: {singleValue: "single", rangeValue: "range"}});
 
 			expect(view.$path.parent().is(view.$outer)).toBeTruthy();
 			expect(view.$pathPassed.parent().is(view.$path)).toBeTruthy();
@@ -29,7 +29,7 @@ describe("updateDOM method.", () => {
 
 	describe("When type is 'range'.", () => {
 		it("Rebuild plugin structure.", () => {
-			view.updateDOM({type: "range", typeConstants: {singleValue: "single", rangeValue: "range"}});
+			view.updateDOM({value: "range", typeConstants: {singleValue: "single", rangeValue: "range"}});
 
 			expect(view.$path.parent().is(view.$outer)).toBeTruthy();
 			expect(view.$pathPassed.parent().is(view.$path)).toBeTruthy();
