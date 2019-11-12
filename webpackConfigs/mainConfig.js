@@ -6,8 +6,8 @@ export default function(options) {
 	
 	return {
 		entry: {
-			"wrunner-native": workFolder + "/src/slider-js-native/wrunner-native.js",
-			"wrunner-jquery": workFolder + "/src/slider-jquery/wrunner-jquery.js",
+			"wrunner-native": workFolder + "/src/wRunner/wrunner-native.js",
+			"wrunner-jquery": workFolder + "/src/wRunner/wrunner-jquery.js",
 			"wrunner-default-theme": workFolder + "/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js"
 		},
 		output: {

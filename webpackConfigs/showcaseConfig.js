@@ -8,8 +8,8 @@ export default function(options) {
 		entry: {
 			"scripts": workFolder + "/src/showcase/index.js",
 			"styles": workFolder + "/src/showcase/static.js",
-			"wrunner-native": workFolder + "/src/slider-js-native/wrunner-native.js",
-			"wrunner-jquery": workFolder + "/src/slider-jquery/wrunner-jquery.js",
+			"wrunner-native": workFolder + "/src/wRunner/wrunner-native.js",
+			"wrunner-jquery": workFolder + "/src/wRunner/wrunner-jquery.js",
 			"wrunner-default-theme": workFolder + "/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js"
 		},
 		output: {
