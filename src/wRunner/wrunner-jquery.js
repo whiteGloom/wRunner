@@ -5,7 +5,7 @@ import presenterModule from "./presenter/presenter.js";
 ;(function($) {
 	$.fn.wRunner = function(userOptions) {
 		userOptions = userOptions ? userOptions : {};
-		userOptions.$roots = this;
+		userOptions.roots = this[0];
 
 		const structure = new function() {
 			this.Model = modelModule;

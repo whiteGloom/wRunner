@@ -44,6 +44,7 @@ webpackLoader.addToDevServerConfig({
 	},
 	stats: "errors-warnings",
 	publicPath: "/docs/",
+	overlay: true,
 	open: true
 });
 
