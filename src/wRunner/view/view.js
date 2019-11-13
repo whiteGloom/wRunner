@@ -10,6 +10,11 @@ class View {
 		this.roots = document.body;
 		this.divisionsCount = 5;
 		this.valueNoteDisplay = true;
+		this.valueNoteRangeMode = "separate";
+		this.valueNoteRangeModeConstants = {
+			separateValue: "separate",
+			commonValue: "common"
+		};
 		this.theme = {
 			value: "default",
 			className: "theme",
@@ -20,7 +25,6 @@ class View {
 			className: "direction",
 			oldValue: null
 		};
-
 		this.directionConstants = {
 			horizontalValue: "horizontal",
 			verticalValue: "vertical"
@@ -101,12 +105,10 @@ class View {
 		});
 	}
 
-	drawValue(value, limits, currentType) {
+	drawValue(value, limits, type) {
 		var pathScale, selected = value.selected;
 		var direction = this.direction.value,
 			directionConstants = this.directionConstants;
-		var type = currentType.value,
-			typeConstants = currentType.typeConstants;
 
 		var clearList = [
 			this.pathPassed, this.handle,
@@ -119,9 +121,9 @@ class View {
 			el.style.cssText = "";
 		});
 
-		if (type === typeConstants.singleValue) drawSingleValue.call(this);
+		if (type.value === type.typeConstants.singleValue) drawSingleValue.call(this);
 
-		if (type === typeConstants.rangeValue) drawRangeValue.call(this);
+		if (type.value === type.typeConstants.rangeValue) drawRangeValue.call(this);
 
 
 		function drawSingleValue() {
@@ -179,11 +181,24 @@ class View {
 
 				minPos = (pathScale * start / 100 - valueNoteMinScale / 2);
 				maxPos = (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2);
-				commonPos = (pathScale * (start + selected / 2) / 100 - valueNoteCommonScale / 2)
+				commonPos = (pathScale * (start + selected / 2) / 100 - valueNoteCommonScale / 2);
 
 				this.valueNoteMin.style.left = minPos / pathScale * 100 + "%";
 				this.valueNoteMax.style.left = maxPos / pathScale * 100 + "%";
 				this.valueNoteCommon.style.left = commonPos / pathScale * 100 + "%";
+
+				if(maxPos - minPos > (valueNoteMinScale + valueNoteMaxScale) / 2) {
+					if(this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.separateValue) {
+						this.valueNoteRangeMode = this.valueNoteRangeModeConstants.separateValue;
+						this.valueNoteRangeModeUpdateEvent.trigger();
+					}
+				}
+				if(maxPos - minPos < (valueNoteMinScale + valueNoteMaxScale) / 2) {
+					if(this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.commonValue) {
+						this.valueNoteRangeMode = this.valueNoteRangeModeConstants.commonValue;
+						this.valueNoteRangeModeUpdateEvent.trigger();
+					}
+				}
 			}
 
 			if(direction === directionConstants.verticalValue) {
@@ -208,19 +223,126 @@ class View {
 				this.valueNoteMin.style.top = 100 - minPos / pathScale * 100 + "%";
 				this.valueNoteMax.style.top = 100 - maxPos / pathScale * 100 + "%";
 				this.valueNoteCommon.style.top = 100 - commonPos / pathScale * 100 + "%";
+
+				// valueNoteRangeMode
+				if(maxPos - minPos > (valueNoteMinScale + valueNoteMaxScale) / 2) {
+					if(this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.separateValue) {
+						this.valueNoteRangeMode = this.valueNoteRangeModeConstants.separateValue;
+						this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
+					}
+				}
+				if(maxPos - minPos < (valueNoteMinScale + valueNoteMaxScale) / 2) {
+					if(this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.commonValue) {
+						this.valueNoteRangeMode = this.valueNoteRangeModeConstants.commonValue;
+						this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
+					}
+				}
 			}
 		}
 	}
 
-	applyValueNoteDisplay() {
-		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax, this.valueNoteCommon];
+	applyValueNoteDisplay(type) {
+		setSingleDisplay.call(this);
+		setRangeDisplay.call(this);
 
-		els.forEach(el => {
-			var mark = el.classList[0];
 
-			el.classList.remove(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"));
-			el.classList.add(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
-		});
+		function setSingleDisplay() {
+			var els = [this.valueNote];
+
+			els.forEach(el => {
+				var mark = el.classList[0];
+
+				if (this.valueNoteDisplay === true) {
+					if (el.classList.contains(mark + "_display_hidden")) {
+						el.classList.remove(mark + "_display_hidden");
+					}
+					if (!el.classList.contains(mark + "_display_visible")) {
+						el.classList.add(mark + "_display_visible");
+					}
+				}
+				if (this.valueNoteDisplay === false) {
+					if (el.classList.contains(mark + "_display_visible")) {
+						el.classList.remove(mark + "_display_visible");
+					}
+					if (!el.classList.contains(mark + "_display_hidden")) {
+						el.classList.add(mark + "_display_hidden");
+					}
+				}
+			});
+		}
+
+		function setRangeDisplay() {
+			var els = [this.valueNoteMin, this.valueNoteMax, this.valueNoteCommon];
+			var elsCommon = [this.valueNoteCommon];
+			var elsSeparate = [this.valueNoteMin, this.valueNoteMax];
+
+			if (this.valueNoteDisplay === true) {
+				// Separate
+				if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.separateValue) {
+					// Set to visible
+					elsSeparate.forEach(el => {
+						var mark = el.classList[0];
+
+						if (el.classList.contains(mark + "_display_hidden")) {
+							el.classList.remove(mark + "_display_hidden");
+						}
+						if (!el.classList.contains(mark + "_display_visible")) {
+							el.classList.add(mark + "_display_visible");
+						}
+					});
+					// Set to hidden
+					elsCommon.forEach(el => {
+						var mark = el.classList[0];
+
+						if (el.classList.contains(mark + "_display_visible")) {
+							el.classList.remove(mark + "_display_visible");
+						}
+						if (!el.classList.contains(mark + "_display_hidden")) {
+							el.classList.add(mark + "_display_hidden");
+						}
+					});
+				}
+
+				// Common
+				if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.commonValue) {
+					// Set to visible
+					elsCommon.forEach(el => {
+						var mark = el.classList[0];
+
+						if (el.classList.contains(mark + "_display_hidden")) {
+							el.classList.remove(mark + "_display_hidden");
+						}
+						if (!el.classList.contains(mark + "_display_visible")) {
+							el.classList.add(mark + "_display_visible");
+						}
+					});
+					// Set to hidden
+					elsSeparate.forEach(el => {
+						var mark = el.classList[0];
+
+						if (el.classList.contains(mark + "_display_visible")) {
+							el.classList.remove(mark + "_display_visible");
+						}
+						if (!el.classList.contains(mark + "_display_hidden")) {
+							el.classList.add(mark + "_display_hidden");
+						}
+					});
+				}
+			}
+
+			if (this.valueNoteDisplay === false) {
+				els.forEach(el => {
+					var mark = el.classList[0];
+
+					if (el.classList.contains(mark + "_display_visible")) {
+						el.classList.remove(mark + "_display_visible");
+					}
+					if (!el.classList.contains(mark + "_display_hidden")) {
+						el.classList.add(mark + "_display_hidden");
+					}
+				});
+			}
+		}
 	}
 
 	generateDivisions() {
@@ -333,6 +455,7 @@ class View {
 		this.themeUpdateEvent = makeEvent();
 		this.directionUpdateEvent = makeEvent();
 		this.valueNoteDisplayUpdateEvent = makeEvent();
+		this.valueNoteRangeModeUpdateEvent = makeEvent();
 		this.divisionsCountUpdateEvent = makeEvent();
 	}
 
