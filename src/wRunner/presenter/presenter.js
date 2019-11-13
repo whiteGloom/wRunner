@@ -102,6 +102,10 @@ class Presenter {
 		this.view.valueNoteRangeModeUpdateEvent.addHandler(function(data) {
 			this.view.applyValueNoteDisplay();
 		}.bind(this));
+
+		this.view.windowResizeEvent.addHandler(function() {
+			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+		}.bind(this));
 	}
 
 	_initInstance() {

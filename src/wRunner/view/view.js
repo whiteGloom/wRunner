@@ -471,10 +471,12 @@ class View {
 		this.valueNoteDisplayUpdateEvent = makeEvent();
 		this.valueNoteRangeModeUpdateEvent = makeEvent();
 		this.divisionsCountUpdateEvent = makeEvent();
+		this.windowResizeEvent = makeEvent();
 	}
 
 	_addListenners() {
 		this.path.addEventListener("mousedown", this._mouseDownActionHandler.bind(this));
+		window.addEventListener("resize", this.windowResizeEvent.trigger)
 	}
 
 	_mouseDownActionHandler(eventDown) {
