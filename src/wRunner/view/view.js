@@ -10,6 +10,11 @@ class View {
 		this.roots = document.body;
 		this.divisionsCount = 5;
 		this.valueNoteDisplay = true;
+		this.valueNoteRangeMode = "separate";
+		this.valueNoteRangeModeConstants = {
+			separateValue: "separate",
+			commonValue: "common"
+		};
 		this.theme = {
 			value: "default",
 			className: "theme",
@@ -20,7 +25,6 @@ class View {
 			className: "direction",
 			oldValue: null
 		};
-
 		this.directionConstants = {
 			horizontalValue: "horizontal",
 			verticalValue: "vertical"
@@ -39,6 +43,7 @@ class View {
 		(this.valueNote = document.createElement("div")).classList.add("wrunner__valueNote");
 		(this.valueNoteMin = document.createElement("div")).classList.add("wrunner__valueNoteMin");
 		(this.valueNoteMax = document.createElement("div")).classList.add("wrunner__valueNoteMax");
+		(this.valueNoteCommon = document.createElement("div")).classList.add("wrunner__valueNoteCommon");
 
 		(this.divisions = document.createElement("div")).classList.add("wrunner__divisions");
 		this.divisionsList = [];
@@ -55,6 +60,7 @@ class View {
 			this.handleMax.remove();
 			this.valueNoteMin.remove();
 			this.valueNoteMax.remove();
+			this.valueNoteCommon.remove();
 
 			this.path.appendChild(this.handle);
 			this.outer.appendChild(this.valueNote);
@@ -67,6 +73,7 @@ class View {
 			this.path.appendChild(this.handleMax);
 			this.outer.appendChild(this.valueNoteMin);
 			this.outer.appendChild(this.valueNoteMax);
+			this.outer.appendChild(this.valueNoteCommon);
 		}
 	}
 
@@ -83,7 +90,7 @@ class View {
 			this.divisions, this.handle,
 			this.handleMin, this.handleMax,
 			this.valueNote, this.valueNoteMin,
-			this.valueNoteMax
+			this.valueNoteMax, this.valueNoteCommon
 		].concat(this.divisionsList);
 
 		els.forEach(el => {
@@ -98,27 +105,25 @@ class View {
 		});
 	}
 
-	drawValue(value, limits, currentType) {
+	drawValue(value, limits, type) {
 		var pathScale, selected = value.selected;
 		var direction = this.direction.value,
 			directionConstants = this.directionConstants;
-		var type = currentType.value,
-			typeConstants = currentType.typeConstants;
 
 		var clearList = [
 			this.pathPassed, this.handle,
 			this.handleMin, this.handleMax,
 			this.valueNote, this.valueNoteMin,
-			this.valueNoteMax
+			this.valueNoteMax, this.valueNoteCommon
 		];
 
 		clearList.forEach(el => {
 			el.style.cssText = "";
 		});
 
-		if (type === typeConstants.singleValue) drawSingleValue.call(this);
+		if (type.value === type.typeConstants.singleValue) drawSingleValue.call(this);
 
-		if (type === typeConstants.rangeValue) drawRangeValue.call(this);
+		if (type.value === type.typeConstants.rangeValue) drawRangeValue.call(this);
 
 
 		function drawSingleValue() {
@@ -152,13 +157,14 @@ class View {
 		}
 
 		function drawRangeValue() {
-			var valueNoteMinScale, valueNoteMaxScale;
+			var valueNoteMinScale, valueNoteMaxScale, valueNoteCommonScale, maxPos, minPos, commonPos;
 			var start = (value.minValue - limits.minLimit) / limits.valuesCount * 100;
 
 			this.valueNoteMin.innerHTML = value.minValue;
 			this.valueNoteMax.innerHTML = value.maxValue;
 
 			if(direction === directionConstants.horizontalValue) {
+				this.valueNoteCommon.innerHTML = value.minValue + " - " + value.maxValue;
 
 				// Passed path
 				this.pathPassed.style.width = selected + "%";
@@ -169,13 +175,35 @@ class View {
 				this.handleMax.style.left = start + selected +"%";
 
 				pathScale = this.path.offsetWidth;
-				valueNoteMinScale = this.valueNoteMin.offsetWidth; valueNoteMaxScale = this.valueNoteMax.offsetWidth;
+				valueNoteMinScale = this.valueNoteMin.offsetWidth;
+				valueNoteMaxScale = this.valueNoteMax.offsetWidth;
+				valueNoteCommonScale = this.valueNoteCommon.offsetWidth;
 
-				this.valueNoteMin.style.left = (pathScale * start / 100 - valueNoteMinScale / 2) / pathScale * 100 + "%";
-				this.valueNoteMax.style.left = (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2) / pathScale * 100 + "%";
+				minPos = (pathScale * start / 100 - valueNoteMinScale / 2);
+				maxPos = (pathScale * (start + selected) / 100 - valueNoteMaxScale / 2);
+				commonPos = (pathScale * (start + selected / 2) / 100 - valueNoteCommonScale / 2);
+
+				this.valueNoteMin.style.left = minPos / pathScale * 100 + "%";
+				this.valueNoteMax.style.left = maxPos / pathScale * 100 + "%";
+				this.valueNoteCommon.style.left = commonPos / pathScale * 100 + "%";
+
+				if(maxPos - minPos > (valueNoteMinScale + valueNoteMaxScale) / 2) {
+					if(this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.separateValue) {
+						this.valueNoteRangeMode = this.valueNoteRangeModeConstants.separateValue;
+						this.valueNoteRangeModeUpdateEvent.trigger();
+					}
+				}
+				if(maxPos - minPos < (valueNoteMinScale + valueNoteMaxScale) / 2) {
+					if(this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.commonValue) {
+						this.valueNoteRangeMode = this.valueNoteRangeModeConstants.commonValue;
+						this.valueNoteRangeModeUpdateEvent.trigger();
+					}
+				}
 			}
 
 			if(direction === directionConstants.verticalValue) {
+				this.valueNoteCommon.innerHTML = value.maxValue + "<br>|<br>" + value.minValue;
+
 				this.pathPassed.style.height = selected + "%";
 				this.pathPassed.style.top = 100 - selected - start + "%";
 
@@ -184,23 +212,137 @@ class View {
 				this.handleMin.style.top = 100 - start  +"%";
 
 				pathScale = this.path.offsetHeight;
-				valueNoteMinScale = this.valueNoteMin.offsetHeight; valueNoteMaxScale = this.valueNoteMax.offsetHeight;
+				valueNoteMinScale = this.valueNoteMin.offsetHeight;
+				valueNoteMaxScale = this.valueNoteMax.offsetHeight;
+				valueNoteCommonScale = this.valueNoteCommon.offsetHeight;
 
-				this.valueNoteMin.style.top = 100 - (pathScale * start / 100 + valueNoteMinScale / 2) / pathScale * 100 + "%";
-				this.valueNoteMax.style.top = 100 - (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2) / pathScale * 100 + "%";
+				minPos = (pathScale * start / 100 + valueNoteMinScale / 2);
+				maxPos = (pathScale * (start + selected) / 100 + valueNoteMaxScale / 2);
+				commonPos = (pathScale * (start + selected / 2) / 100 + valueNoteCommonScale / 2);
+
+				this.valueNoteMin.style.top = 100 - minPos / pathScale * 100 + "%";
+				this.valueNoteMax.style.top = 100 - maxPos / pathScale * 100 + "%";
+				this.valueNoteCommon.style.top = 100 - commonPos / pathScale * 100 + "%";
+
+				// valueNoteRangeMode
+				if(maxPos - minPos > (valueNoteMinScale + valueNoteMaxScale) / 2) {
+					if(this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.separateValue) {
+						this.valueNoteRangeMode = this.valueNoteRangeModeConstants.separateValue;
+						this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
+					}
+				}
+				if(maxPos - minPos < (valueNoteMinScale + valueNoteMaxScale) / 2) {
+					if(this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.commonValue) {
+						this.valueNoteRangeMode = this.valueNoteRangeModeConstants.commonValue;
+						this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
+					}
+				}
 			}
 		}
 	}
 
-	applyValueNoteDisplay() {
-		var els = [this.valueNote, this.valueNoteMin, this.valueNoteMax];
+	applyValueNoteDisplay(type) {
+		setSingleDisplay.call(this);
+		setRangeDisplay.call(this);
 
-		els.forEach(el => {
-			var mark = el.classList[0];
 
-			el.classList.remove(mark + "_display_" + (!this.valueNoteDisplay ? "visible" : "hidden"));
-			el.classList.add(mark + "_display_" + (this.valueNoteDisplay ? "visible" : "hidden"));
-		});
+		function setSingleDisplay() {
+			var els = [this.valueNote];
+
+			els.forEach(el => {
+				var mark = el.classList[0];
+
+				if (this.valueNoteDisplay === true) {
+					if (el.classList.contains(mark + "_display_hidden")) {
+						el.classList.remove(mark + "_display_hidden");
+					}
+					if (!el.classList.contains(mark + "_display_visible")) {
+						el.classList.add(mark + "_display_visible");
+					}
+				}
+				if (this.valueNoteDisplay === false) {
+					if (el.classList.contains(mark + "_display_visible")) {
+						el.classList.remove(mark + "_display_visible");
+					}
+					if (!el.classList.contains(mark + "_display_hidden")) {
+						el.classList.add(mark + "_display_hidden");
+					}
+				}
+			});
+		}
+
+		function setRangeDisplay() {
+			var els = [this.valueNoteMin, this.valueNoteMax, this.valueNoteCommon];
+			var elsCommon = [this.valueNoteCommon];
+			var elsSeparate = [this.valueNoteMin, this.valueNoteMax];
+
+			if (this.valueNoteDisplay === true) {
+				// Separate
+				if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.separateValue) {
+					// Set to visible
+					elsSeparate.forEach(el => {
+						var mark = el.classList[0];
+
+						if (el.classList.contains(mark + "_display_hidden")) {
+							el.classList.remove(mark + "_display_hidden");
+						}
+						if (!el.classList.contains(mark + "_display_visible")) {
+							el.classList.add(mark + "_display_visible");
+						}
+					});
+					// Set to hidden
+					elsCommon.forEach(el => {
+						var mark = el.classList[0];
+
+						if (el.classList.contains(mark + "_display_visible")) {
+							el.classList.remove(mark + "_display_visible");
+						}
+						if (!el.classList.contains(mark + "_display_hidden")) {
+							el.classList.add(mark + "_display_hidden");
+						}
+					});
+				}
+
+				// Common
+				if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.commonValue) {
+					// Set to visible
+					elsCommon.forEach(el => {
+						var mark = el.classList[0];
+
+						if (el.classList.contains(mark + "_display_hidden")) {
+							el.classList.remove(mark + "_display_hidden");
+						}
+						if (!el.classList.contains(mark + "_display_visible")) {
+							el.classList.add(mark + "_display_visible");
+						}
+					});
+					// Set to hidden
+					elsSeparate.forEach(el => {
+						var mark = el.classList[0];
+
+						if (el.classList.contains(mark + "_display_visible")) {
+							el.classList.remove(mark + "_display_visible");
+						}
+						if (!el.classList.contains(mark + "_display_hidden")) {
+							el.classList.add(mark + "_display_hidden");
+						}
+					});
+				}
+			}
+
+			if (this.valueNoteDisplay === false) {
+				els.forEach(el => {
+					var mark = el.classList[0];
+
+					if (el.classList.contains(mark + "_display_visible")) {
+						el.classList.remove(mark + "_display_visible");
+					}
+					if (!el.classList.contains(mark + "_display_hidden")) {
+						el.classList.add(mark + "_display_hidden");
+					}
+				});
+			}
+		}
 	}
 
 	generateDivisions() {
@@ -313,6 +455,7 @@ class View {
 		this.themeUpdateEvent = makeEvent();
 		this.directionUpdateEvent = makeEvent();
 		this.valueNoteDisplayUpdateEvent = makeEvent();
+		this.valueNoteRangeModeUpdateEvent = makeEvent();
 		this.divisionsCountUpdateEvent = makeEvent();
 	}
 

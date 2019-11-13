@@ -54,6 +54,7 @@ class Presenter {
 		this.model.typeUpdateEvent.addHandler(function(data) {
 			this.view.updateDOM(this.model.getType());
 			this.model.recalculateValue();
+			this.view.applyValueNoteDisplay();
 		}.bind(this));
 
 		this.model.limitsUpdateEvent.addHandler(function(data) {
@@ -91,12 +92,15 @@ class Presenter {
 
 		this.view.valueNoteDisplayUpdateEvent.addHandler(function(data) {
 			this.view.applyValueNoteDisplay();
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
 		}.bind(this));
 
 		this.view.divisionsCountUpdateEvent.addHandler(function(data) {
 			this.view.generateDivisions();
 			this.view.applyStyles();
+		}.bind(this));
+
+		this.view.valueNoteRangeModeUpdateEvent.addHandler(function(data) {
+			this.view.applyValueNoteDisplay();
 		}.bind(this));
 	}
 

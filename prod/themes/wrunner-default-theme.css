@@ -191,7 +191,7 @@
 }
 
 .wrunner__valueNote_theme_default.wrunner__valueNote_direction_vertical {
-  left: 2.5rem;
+  left: 2.4rem;
   min-width: 1.5rem;
   border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
 }
@@ -204,11 +204,11 @@
 }
 
 .wrunner__valueNote_theme_default.wrunner__valueNote_display_hidden {
-  display: none;
+  opacity: 0;
 }
 
 .wrunner__valueNote_theme_default.wrunner__valueNote_display_visible {
-  display: block;
+  opacity: 1;
 }
 
 .wrunner__valueNote_theme_default.wrunner__valueNote {
@@ -221,8 +221,63 @@
   font-family: lato;
   font-weight: 900;
   cursor: default;
+  transition: 0.2s opacity;
 }
 .wrunner__valueNote_theme_default.wrunner__valueNote::after {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 0;
+  width: 0;
+}
+
+.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_direction_horizontal {
+  top: 0;
+  min-width: 1.5rem;
+  border-radius: 0.8rem 0.3rem 0.8rem 0.3rem;
+}
+.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_direction_horizontal::after {
+  left: 50%;
+  margin-left: -0.25rem;
+  bottom: -0.5rem;
+  border: 0.25rem solid transparent;
+  border-top-color: #c54a8e;
+}
+
+.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_direction_vertical {
+  left: 2.4rem;
+  min-width: 1.5rem;
+  border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
+}
+.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_direction_vertical::after {
+  top: 50%;
+  margin-top: -0.25rem;
+  left: -0.5rem;
+  border: 0.25rem solid transparent;
+  border-right-color: #c54a8e;
+}
+
+.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_display_hidden {
+  opacity: 0;
+}
+
+.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_display_visible {
+  opacity: 1;
+}
+
+.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon {
+  position: absolute;
+  padding: 0.35rem;
+  background-color: #c54a8e;
+  text-align: center;
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: lato;
+  font-weight: 900;
+  cursor: default;
+  transition: 0.2s opacity;
+}
+.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon::after {
   content: '';
   position: absolute;
   display: block;
@@ -244,7 +299,7 @@
 }
 
 .wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_vertical {
-  left: 2.5rem;
+  left: 2.4rem;
   min-width: 1.5rem;
   border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
 }
@@ -257,11 +312,11 @@
 }
 
 .wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_display_hidden {
-  display: none;
+  opacity: 0;
 }
 
 .wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_display_visible {
-  display: block;
+  opacity: 1;
 }
 
 .wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax {
@@ -274,6 +329,7 @@
   font-family: lato;
   font-weight: 900;
   cursor: default;
+  transition: 0.2s opacity;
 }
 .wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax::after {
   content: '';
@@ -297,7 +353,7 @@
 }
 
 .wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_vertical {
-  left: 2.5rem;
+  left: 2.4rem;
   min-width: 1.5rem;
   border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
 }
@@ -310,11 +366,11 @@
 }
 
 .wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_display_hidden {
-  display: none;
+  opacity: 0;
 }
 
 .wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_display_visible {
-  display: block;
+  opacity: 1;
 }
 
 .wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin {
@@ -327,6 +383,7 @@
   font-family: lato;
   font-weight: 900;
   cursor: default;
+  transition: 0.2s opacity;
 }
 .wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin::after {
   content: '';
