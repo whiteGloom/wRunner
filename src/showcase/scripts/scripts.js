@@ -32,7 +32,7 @@ function test() {
 	function makeSlider(index, options, type) {
 		var sliders = [];
 
-		var $controllersHolders = $($(".js-sample")[index]).find(".js-sample__parameterValue");
+		var $controllersHolders = $($(".js-sample")[index]).find(".js-sample__parameter-value");
 		var $stepController = $controllersHolders.eq(0).find("input"),
 			$minLimitController = $controllersHolders.eq(1).find("input"),
 			$maxLimitController = $controllersHolders.eq(2).find("input"),

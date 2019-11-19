@@ -1,0 +1,23 @@
+mixin sample(options)
+    -
+        options = options || {};
+        const {title = "", data = []} = options;
+    .sample.js-sample
+        h1.sample__title= title
+        .sample__body
+            .sample__instance.js-sample__instance
+            form.sample__data
+                for item in data
+                    .sample__parameter
+                        em.sample__parameter-name= item.title
+                        .sample__parameter-value.js-sample__parameter-value
+                            case item.type
+                                when "radio"
+                                    for radioItem in item.data
+                                        label
+                                            input(type="radio" value=radioItem.value name=radioItem.name)
+                                            = radioItem.label
+                                when "checkbox"
+                                    input(type="checkbox")
+                                default
+                                    input(type="text")

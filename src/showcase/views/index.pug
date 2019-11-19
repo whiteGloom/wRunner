@@ -1,4 +1,4 @@
-include ../mixins/mixinsList
+include ../blocks/content/content
 
 doctype html
 html
@@ -12,44 +12,7 @@ html
         link(rel="stylesheet" type="text/css" href="static/styles/styles.css")
         link(rel="stylesheet" type="text/css" href="static/styles/wrunner-default-theme.css")
     body
-        +pageMix
-            each title, index in ["Js native", "Js native", "jQuery", "jQuery"]
-                +pageElMix
-                    +sampleMix({title: title})
-                        +sampleInstanceMix
-                        +sampleDataMix
-                            +sampleParameterMix({name: "step"})
-                                input(type="text")
-                            +sampleParameterMix({name: "minLimit"})
-                                input(type="text")
-                            +sampleParameterMix({name: "maxLimit"})
-                                input(type="text")
-                            +sampleParameterMix({name: "sliderType"})
-                                label
-                                    input(type="radio" value="single" name="type")
-                                    | Single
-                                label
-                                    input(type="radio" value="range" name="type")
-                                    | Range
-                            +sampleParameterMix({name: "value"})
-                                input(type="text")
-                            +sampleParameterMix({name: "minValue"})
-                                input(type="text")
-                            +sampleParameterMix({name: "maxValue"})
-                                input(type="text")
-                            +sampleParameterMix({name: "sliderRoots"})
-                                input(type="text")
-                            +sampleParameterMix({name: "sliderDirection"})
-                                label
-                                    input(type="radio" value="horizontal" name="direction")
-                                    | Horizontal
-                                label
-                                    input(type="radio" value="vertical" name="direction")
-                                    | Vertical
-                            +sampleParameterMix({name: "sliderValueNoteDisplay"})
-                                input(type="checkbox")
-                            +sampleParameterMix({name: "sliderDivisionsCount"})
-                                input(type="text")
+        +content({data: ["Js native", "Js native", "jQuery", "jQuery"]})
         script(src="./scripts/vendors.js")
         script(src="./scripts/scripts.js")
         script(src="./scripts/wrunner-native.js")

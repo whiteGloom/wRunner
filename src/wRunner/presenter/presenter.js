@@ -1,6 +1,6 @@
 class Presenter {
 	constructor(options) {
-		options = options ? options : {};
+		options = options || {};
 
 		this.model = options.model;
 		this.view = options.view;
@@ -117,7 +117,7 @@ class Presenter {
 	}
 
 	_applyUserEvents(options) {
-		options = options ? options : {};
+		options = options || {};
 
 		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
 		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
@@ -132,7 +132,7 @@ class Presenter {
 	}
 
 	_applyUserOptions(options) {
-		options = options ? options : {};
+		options = options || {};
 
 		if (options.type !== undefined) this.model.setType(options.type);
 		if (options.limits !== undefined) this.model.setLimits(options.limits);

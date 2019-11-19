@@ -153,6 +153,8 @@ class View {
 			if(direction === directionConstants.verticalValue) {
 				clearList.forEach(el => {
 					if (el.style.top !== "") el.style.top = "";
+					if (el.style.left !== "") el.style.left = "";
+					if (el.style.width !== "") el.style.width = "";
 				});
 
 				// Passed path
