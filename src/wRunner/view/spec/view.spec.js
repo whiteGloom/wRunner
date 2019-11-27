@@ -1,624 +1,610 @@
 // Requirements
-const jsdom = require("jsdom");
+import helper from '@helper';
+import ViewModule from '../view';
 
-const {JSDOM} = jsdom;
-const window = (new JSDOM("<body><div id='root'></div></body>", { runScripts: "outside-only" })).window;
+const jsdom = require('jsdom');
+
+const { JSDOM } = jsdom;
+const { window } = (new JSDOM('<body><div id="root"></div></body>', { runScripts: 'outside-only' }));
 global.window = window;
 global.document = window.document;
+window.requestAnimationFrame = function gag(callback) {
+  setTimeout(callback, 0);
+};
 
 
-import helper from "@helper";
-import viewModule from "../view.js";
+const view = new ViewModule();
 
-var view = new viewModule();
+describe('updateDOM method.', () => {
+  describe('When type is "single".', () => {
+    it('Rebuild plugin structure.', () => {
+      view.updateDOM({ value: 'single', typeConstants: { singleValue: 'single', rangeValue: 'range' } });
 
-describe("updateDOM method.", () => {
-	describe("When type is 'single'.", () => {
-		it("Rebuild plugin structure.", () => {
-			view.updateDOM({value: "single", typeConstants: {singleValue: "single", rangeValue: "range"}});
+      expect(view.path.parentNode === view.outer).toBeTruthy();
+      expect(view.pathPassed.parentNode === view.path).toBeTruthy();
+      expect(view.divisionsBlock.parentNode === view.outer).toBeTruthy();
 
-			expect(view.path.parentNode == view.outer).toBeTruthy();
-			expect(view.pathPassed.parentNode == view.path).toBeTruthy();
-			expect(view.divisions.parentNode == view.outer).toBeTruthy();
+      expect(view.handle.parentNode === view.path);
+      expect(view.valueNote.parentNode === view.outer);
+    });
+  });
 
-			expect(view.handle.parentNode == view.path);
-			expect(view.valueNote.parentNode == view.outer);
-		});
-	});
+  describe('When type is "range".', () => {
+    it('Rebuild plugin structure.', () => {
+      view.updateDOM({ value: 'range', typeConstants: { singleValue: 'single', rangeValue: 'range' } });
 
-	describe("When type is 'range'.", () => {
-		it("Rebuild plugin structure.", () => {
-			view.updateDOM({value: "range", typeConstants: {singleValue: "single", rangeValue: "range"}});
+      expect(view.path.parentNode === view.outer).toBeTruthy();
+      expect(view.pathPassed.parentNode === view.path).toBeTruthy();
+      expect(view.divisionsBlock.parentNode === view.outer).toBeTruthy();
 
-			expect(view.path.parentNode == view.outer).toBeTruthy();
-			expect(view.pathPassed.parentNode == view.path).toBeTruthy();
-			expect(view.divisions.parentNode == view.outer).toBeTruthy();
-
-			expect(view.handleMin.parentNode == view.path).toBeTruthy();
-			expect(view.handleMax.parentNode == view.path).toBeTruthy();
-			expect(view.valueNoteMin.parentNode == view.outer).toBeTruthy();
-			expect(view.valueNoteMax.parentNode == view.outer).toBeTruthy();
-		});
-	});
+      expect(view.handleMin.parentNode === view.path).toBeTruthy();
+      expect(view.handleMax.parentNode === view.path).toBeTruthy();
+      expect(view.valueNoteMin.parentNode === view.outer).toBeTruthy();
+      expect(view.valueNoteMax.parentNode === view.outer).toBeTruthy();
+      expect(view.valueNoteCommon.parentNode === view.outer).toBeTruthy();
+    });
+  });
 });
 
-describe("append method.", () => {
-	it("Applying slider's roots.", () => {
-		view.append();
+describe('append method.', () => {
+  it('Applying sliders roots.', () => {
+    view.append();
 
-		expect(view.base.parentNode == view.roots).toBeTruthy();
-	});
+    expect(view.mainNode.parentNode === view.roots).toBeTruthy();
+  });
 });
 
-describe("setRoots method.", () => {
-	describe("Normal value - DOM el.", () => {
-		it("Chaning roots, returns roots.", () => {
-			var result = view.setRoots(document.getElementById("root"));
+describe('setRoots method.', () => {
+  describe('Normal value - DOM el.', () => {
+    it('Chaning roots, returns roots.', () => {
+      const result = view.setRoots(document.getElementById('root'));
 
-			expect(result).toEqual(document.getElementById("root"));
-			expect(result).toEqual(view.roots);
-		});
-	});
+      expect(result).toEqual(document.getElementById('root'));
+      expect(result).toEqual(view.roots);
+    });
+  });
 
-	describe("If you try to set roots as a not DOM el, it will returns undefined.", () => {
-		beforeEach(() => {
-			view.setRoots(document.body);
-		});
+  describe('If you try to set roots as a not DOM el, it will returns undefined.', () => {
+    beforeEach(() => {
+      view.setRoots(document.body);
+    });
 
-		it("Taking NaN, returns undefined.", () => {
-			var result = view.setRoots(NaN);
+    it('Taking NaN, returns undefined.', () => {
+      const result = view.setRoots(NaN);
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
 
-		it("Taking {}, returns undefined.", () => {
-			var result = view.setRoots({});
+    it('Taking {}, returns undefined.', () => {
+      const result = view.setRoots({});
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
 
-		it("Taking 123, returns undefined.", () => {
-			var result = view.setRoots(123);
+    it('Taking 123, returns undefined.', () => {
+      const result = view.setRoots(123);
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
 
-		it("Taking null, returns undefined.", () => {
-			var result = view.setRoots(null);
+    it('Taking null, returns undefined.', () => {
+      const result = view.setRoots(null);
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
 
-		it("Taking undefined, returns undefined.", () => {
-			var result = view.setRoots(undefined);
+    it('Taking undefined, returns undefined.', () => {
+      const result = view.setRoots(undefined);
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
 
-		it("Taking false, returns undefined.", () => {
-			var result = view.setRoots(false);
+    it('Taking false, returns undefined.', () => {
+      const result = view.setRoots(false);
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
 
-		it("Taking true, returns undefined.", () => {
-			var result = view.setRoots(true);
+    it('Taking true, returns undefined.', () => {
+      const result = view.setRoots(true);
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
 
-		it("Taking [], returns undefined.", () => {
-			var result = view.setRoots([]);
+    it('Taking [], returns undefined.', () => {
+      const result = view.setRoots([]);
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
 
-		it("Taking 'dadaya', returns undefined.", () => {
-			var result = view.setRoots("dadaya");
+    it('Taking "dadaya", returns undefined.', () => {
+      const result = view.setRoots('dadaya');
 
-			expect(result).toBeUndefined();
-			expect(view.roots).toEqual(document.body);
-		});
-	});
+      expect(result).toBeUndefined();
+      expect(view.roots).toEqual(document.body);
+    });
+  });
 });
 
-describe("getRoots method.", () => {
-	it("Returns slider's roots.", () => {
-		var result = view.getRoots();
+describe('getRoots method.', () => {
+  it('Returns sliders roots.', () => {
+    const result = view.getRoots();
 
-		expect(helper.isDOMEl(result)).toBeTruthy();
-	});
+    expect(helper.isDOMEl(result)).toBeTruthy();
+  });
 });
 
-describe("setDivisionsCount method.", () => {
-	describe("Changing divisions count, returns divisions count.", () => {
-		it("Taking 3, returns 3.", () => {
-			var result = view.setDivisionsCount(3);
+describe('setDivisionsCount method.', () => {
+  describe('Changing divisionsBlock count, returns divisionsBlock count.', () => {
+    it('Taking 3, returns 3.', () => {
+      view.setDivisionsCount(3);
 
-			expect(result).toEqual(3);
-			expect(result).toEqual(view.divisionsCount);
-		});
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
 
-		it("Taking 2, returns 2.", () => {
-			var result = view.setDivisionsCount(2);
+    it('Taking 2, returns 2.', () => {
+      view.setDivisionsCount(2);
 
-			expect(result).toEqual(2);
-			expect(result).toEqual(view.divisionsCount);
-		});
+      expect(view.divisionsBlockCount).toEqual(2);
+    });
 
-		it("Taking 0, returns 0.", () => {
-			var result = view.setDivisionsCount(0);
+    it('Taking 0, returns 0.', () => {
+      view.setDivisionsCount(0);
 
-			expect(result).toEqual(0);
-			expect(result).toEqual(view.divisionsCount);
-		});
-	});
+      expect(view.divisionsBlockCount).toEqual(0);
+    });
+  });
 
-	describe("If you try to set divisions count as 1, it will set divisions count to 2.", () => {
-		it("Taking 1, changing divisions count to 2.", () => {
-			var result = view.setDivisionsCount(1, true);
+  describe('If you try to set divisionsBlock count as 1, it will set divisionsBlock count to 2.', () => {
+    it('Taking 1, changing divisionsBlock count to 2.', () => {
+      view.setDivisionsCount(1);
 
-			expect(result).toEqual(2);
-			expect(result).toEqual(view.divisionsCount);
-		});
-	});
+      expect(view.divisionsBlockCount).toEqual(2);
+    });
+  });
 
-	describe("If you try to set divisions count as not a number or a number, that is less than 0, returns undefined.", () => {
-		beforeEach(() => {
-			view.setDivisionsCount(3);
-		});
+  describe('If you try to set divisionsBlock count as not a number or a number, that is less than 0, returns undefined.', () => {
+    beforeEach(() => {
+      view.setDivisionsCount(3);
+    });
 
-		it("Taking -1, returns undefined.", () => {
-			var result = view.setDivisionsCount(-1);
+    it('Taking -1, returns undefined.', () => {
+      view.setDivisionsCount(-1);
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking -100, returns undefined.", () => {
-			var result = view.setDivisionsCount(-100);
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking -100, returns undefined.", () => {
-			var result = view.setDivisionsCount(-100);
+    it('Taking -100, returns undefined.', () => {
+      view.setDivisionsCount(-100);
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking undefined, returns undefined.", () => {
-			var result = view.setDivisionsCount(undefined);
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking NaN, returns undefined.", () => {
-			var result = view.setDivisionsCount(NaN);
+    it('Taking -100, returns undefined.', () => {
+      view.setDivisionsCount(-100);
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking false, returns undefined.", () => {
-			var result = view.setDivisionsCount(false);
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking null, returns undefined.", () => {
-			var result = view.setDivisionsCount(null);
+    it('Taking undefined, returns undefined.', () => {
+      view.setDivisionsCount(undefined);
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking {}, returns undefined.", () => {
-			var result = view.setDivisionsCount({});
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking [], returns undefined.", () => {
-			var result = view.setDivisionsCount([]);
+    it('Taking NaN, returns undefined.', () => {
+      view.setDivisionsCount(NaN);
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-		
-		it("Taking 'dadaya', returns undefined.", () => {
-			var result = view.setDivisionsCount("dadaya");
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
 
-			expect(result).toBeUndefined();
-			expect(view.divisionsCount).toEqual(3);
-		});
-	});
+    it('Taking false, returns undefined.', () => {
+      view.setDivisionsCount(false);
+
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
+
+    it('Taking null, returns undefined.', () => {
+      view.setDivisionsCount(null);
+
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
+
+    it('Taking {}, returns undefined.', () => {
+      view.setDivisionsCount({});
+
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
+
+    it('Taking [], returns undefined.', () => {
+      view.setDivisionsCount([]);
+
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
+
+    it('Taking "dadaya", returns undefined.', () => {
+      view.setDivisionsCount('dadaya');
+
+      expect(view.divisionsBlockCount).toEqual(3);
+    });
+  });
 });
 
-describe("generateDivisions method.", () => {
-	beforeAll(() => {
-		view.setDivisionsCount(3);
-	});
+describe('generateDivisionsBlock method.', () => {
+  beforeAll(() => {
+    view.setDivisionsCount(3);
+  });
 
-	it("Generate divisions for slider's.", () => {
-		view.generateDivisions();
+  it('Generate divisionsBlock for sliders.', () => {
+    view.generateDivisionsBlock();
 
-		expect(view.divisionsList.length).toEqual(3);
+    expect(view.divisionsBlockList.length).toEqual(3);
 
-		for(var i = 0; i < view.divisionsList.length; i++) {
-			expect(helper.isDOMEl(view.divisionsList[i])).toBeTruthy();
-			expect(view.divisionsList[i].parentNode).toEqual(view.divisions);
-		}
-	});
+    for (let i = 0; i < view.divisionsBlockList.length; i += 1) {
+      expect(helper.isDOMEl(view.divisionsBlockList[i])).toBeTruthy();
+      expect(view.divisionsBlockList[i].parentNode).toEqual(view.divisionsBlock);
+    }
+  });
 });
 
-describe("getDivisionsCount method.", () => {
-	it("Returns count of divisions.", () => {
-		var result = view.getDivisionsCount();
+describe('getDivisionsCount method.', () => {
+  it('Returns count of divisionsBlock.', () => {
+    const result = view.getDivisionsCount();
 
-		expect(result).toEqual(view.divisionsCount);
-	});
+    expect(result).toEqual(view.divisionsCount);
+  });
 });
 
-describe("setTheme method.", () => {
-	describe("Changes slider's theme, returns theme.", () => {
-		it("Taking 'someTheme', returns 'someTheme'", () => {
-			var result = view.setTheme("someTheme");
+describe('setTheme method.', () => {
+  describe('Changes sliders theme, returns theme.', () => {
+    it('Taking "someTheme", returns "someTheme"', () => {
+      const result = view.setTheme('someTheme');
 
-			expect(result).toEqual("someTheme");
-			expect(result).toEqual(view.theme.value);
-		});
+      expect(result).toEqual('someTheme');
+      expect(result).toEqual(view.theme.value);
+    });
 
-		it("Taking 'someAnotherTheme', returns 'someAnotherTheme'", () => {
-			var result = view.setTheme("someAnotherTheme");
+    it('Taking "someAnotherTheme", returns "someAnotherTheme"', () => {
+      const result = view.setTheme('someAnotherTheme');
 
-			expect(result).toEqual("someAnotherTheme");
-			expect(result).toEqual(view.theme.value);
-		});
-	});
+      expect(result).toEqual('someAnotherTheme');
+      expect(result).toEqual(view.theme.value);
+    });
+  });
 
-	describe("If you try to set theme as a not string, returns undefined.", () => {
-		beforeEach(() => {
-			view.setTheme("default");
-		});
+  describe('If you try to set theme as a not string, returns undefined.', () => {
+    beforeEach(() => {
+      view.setTheme('default');
+    });
 
-		it("Taking NaN, returns undefined", () => {
-			var result = view.setTheme(NaN);
+    it('Taking NaN, returns undefined', () => {
+      const result = view.setTheme(NaN);
 
-			expect(result).toBeUndefined();
-			// Theme stays the same.
-			expect(view.theme.value).toEqual("default");
-		});
+      expect(result).toBeUndefined();
+      // Theme stays the same.
+      expect(view.theme.value).toEqual('default');
+    });
 
-		it("Taking true, returns undefined", () => {
-			var result = view.setTheme(true);
+    it('Taking true, returns undefined', () => {
+      const result = view.setTheme(true);
 
-			expect(result).toBeUndefined();
-			// Theme stays the same.
-			expect(view.theme.value).toEqual("default");
-		});
+      expect(result).toBeUndefined();
+      // Theme stays the same.
+      expect(view.theme.value).toEqual('default');
+    });
 
-		it("Taking false, returns undefined", () => {
-			var result = view.setTheme(false);
+    it('Taking false, returns undefined', () => {
+      const result = view.setTheme(false);
 
-			expect(result).toBeUndefined();
-			// Theme stays the same.
-			expect(view.theme.value).toEqual("default");
-		});
+      expect(result).toBeUndefined();
+      // Theme stays the same.
+      expect(view.theme.value).toEqual('default');
+    });
 
-		it("Taking 123, returns undefined", () => {
-			var result = view.setTheme(123);
+    it('Taking 123, returns undefined', () => {
+      const result = view.setTheme(123);
 
-			expect(result).toBeUndefined();
-			// Theme stays the same.
-			expect(view.theme.value).toEqual("default");
-		});
+      expect(result).toBeUndefined();
+      // Theme stays the same.
+      expect(view.theme.value).toEqual('default');
+    });
 
-		it("Taking {}, returns undefined", () => {
-			var result = view.setTheme({});
+    it('Taking {}, returns undefined', () => {
+      const result = view.setTheme({});
 
-			expect(result).toBeUndefined();
-			// Theme stays the same.
-			expect(view.theme.value).toEqual("default");
-		});
+      expect(result).toBeUndefined();
+      // Theme stays the same.
+      expect(view.theme.value).toEqual('default');
+    });
 
-		it("Taking undefined, returns undefined", () => {
-			var result = view.setTheme(undefined);
+    it('Taking undefined, returns undefined', () => {
+      const result = view.setTheme(undefined);
 
-			expect(result).toBeUndefined();
-			// Theme stays the same.
-			expect(view.theme.value).toEqual("default");
-		});
+      expect(result).toBeUndefined();
+      // Theme stays the same.
+      expect(view.theme.value).toEqual('default');
+    });
 
-		it("Taking null, returns undefined", () => {
-			var result = view.setTheme(null);
+    it('Taking null, returns undefined', () => {
+      const result = view.setTheme(null);
 
-			expect(result).toBeUndefined();
-			// Theme stays the same.
-			expect(view.theme.value).toEqual("default");
-		});
-	});
+      expect(result).toBeUndefined();
+      // Theme stays the same.
+      expect(view.theme.value).toEqual('default');
+    });
+  });
 });
 
-describe("getTheme method.", () => {
-	beforeAll(() => {
-		view.setTheme("default");
-	});
+describe('getTheme method.', () => {
+  beforeAll(() => {
+    view.setTheme('default');
+  });
 
-	it("Returns theme.", () => {
-		var result = view.getTheme();
+  it('Returns theme.', () => {
+    const result = view.getTheme();
 
-		expect(result).toEqual("default");
-		expect(result).toEqual(view.theme.value);
-	});
+    expect(result).toEqual('default');
+    expect(result).toEqual(view.theme.value);
+  });
 });
 
-describe("setDirection method.", () => {
-	describe("Normal values - reserved in direction constants (watch getDirection method). Changes slider's direction, returns {value: *direction*, constants: *list of reserved values*}.", () => {
-		for (var constant in view.directionConstants) {
-			it("Taking " + view.directionConstants[constant] + ", changes direction to " + constant, () => {
-				var result = view.setDirection(view.directionConstants[constant]);
+describe('setDirection method.', () => {
+  describe('Normal values - reserved in direction constants (watch getDirection method). Changes sliders direction, returns {value: *direction*, constants: *list of reserved values*}.', () => {
+    Object.keys(view.directionConstants).forEach((constant) => {
+      it(`Taking ${view.directionConstants[constant]}, changes direction to ${constant}`, () => {
+        const result = view.setDirection(view.directionConstants[constant]);
 
-				expect(result.value).toEqual(view.directionConstants[constant]);
-				expect(result.value).toEqual(view.direction.value);
-				expect(result.constants).toEqual(view.directionConstants);
-			});
-		}
-	});
+        expect(result.value).toEqual(view.directionConstants[constant]);
+        expect(result.value).toEqual(view.direction.value);
+        expect(result.constants).toEqual(view.directionConstants);
+      });
+    });
+  });
 
-	describe("If you try to set direction as a not string, returns undefined.", () => {
-		beforeEach(() => {
-			view.setDirection("horizontal");
-		});
+  describe('If you try to set direction as a not string, returns undefined.', () => {
+    beforeEach(() => {
+      view.setDirection('horizontal');
+    });
 
-		it("Taking 'SomeNotListed', returns undefined", () => {
-			var result = view.setDirection("SomeNotListed");
+    it('Taking "SomeNotListed", returns undefined', () => {
+      const result = view.setDirection('SomeNotListed');
 
-			expect(result).toBeUndefined();
-			// Direction stays the same.
-			expect(view.direction.value).toEqual("horizontal");
-		});
+      expect(result).toBeUndefined();
+      // Direction stays the same.
+      expect(view.direction.value).toEqual('horizontal');
+    });
 
-		it("Taking NaN, returns undefined", () => {
-			var result = view.setDirection(NaN);
+    it('Taking NaN, returns undefined', () => {
+      const result = view.setDirection(NaN);
 
-			expect(result).toBeUndefined();
-			// Direction stays the same.
-			expect(view.direction.value).toEqual("horizontal");
-		});
+      expect(result).toBeUndefined();
+      // Direction stays the same.
+      expect(view.direction.value).toEqual('horizontal');
+    });
 
-		it("Taking true, returns undefined", () => {
-			var result = view.setDirection(true);
+    it('Taking true, returns undefined', () => {
+      const result = view.setDirection(true);
 
-			expect(result).toBeUndefined();
-			// Direction stays the same.
-			expect(view.direction.value).toEqual("horizontal");
-		});
+      expect(result).toBeUndefined();
+      // Direction stays the same.
+      expect(view.direction.value).toEqual('horizontal');
+    });
 
-		it("Taking false, returns undefined", () => {
-			var result = view.setDirection(false);
+    it('Taking false, returns undefined', () => {
+      const result = view.setDirection(false);
 
-			expect(result).toBeUndefined();
-			// Direction stays the same.
-			expect(view.direction.value).toEqual("horizontal");
-		});
+      expect(result).toBeUndefined();
+      // Direction stays the same.
+      expect(view.direction.value).toEqual('horizontal');
+    });
 
-		it("Taking 123, returns undefined", () => {
-			var result = view.setDirection(123);
+    it('Taking 123, returns undefined', () => {
+      const result = view.setDirection(123);
 
-			expect(result).toBeUndefined();
-			// Direction stays the same.
-			expect(view.direction.value).toEqual("horizontal");
-		});
+      expect(result).toBeUndefined();
+      // Direction stays the same.
+      expect(view.direction.value).toEqual('horizontal');
+    });
 
-		it("Taking {}, returns undefined", () => {
-			var result = view.setDirection({});
+    it('Taking {}, returns undefined', () => {
+      const result = view.setDirection({});
 
-			expect(result).toBeUndefined();
-			// Direction stays the same.
-			expect(view.direction.value).toEqual("horizontal");
-		});
+      expect(result).toBeUndefined();
+      // Direction stays the same.
+      expect(view.direction.value).toEqual('horizontal');
+    });
 
-		it("Taking undefined, returns undefined", () => {
-			var result = view.setDirection(undefined);
+    it('Taking undefined, returns undefined', () => {
+      const result = view.setDirection(undefined);
 
-			expect(result).toBeUndefined();
-			// Direction stays the same.
-			expect(view.direction.value).toEqual("horizontal");
-		});
+      expect(result).toBeUndefined();
+      // Direction stays the same.
+      expect(view.direction.value).toEqual('horizontal');
+    });
 
-		it("Taking null, returns undefined", () => {
-			var result = view.setDirection(null);
+    it('Taking null, returns undefined', () => {
+      const result = view.setDirection(null);
 
-			expect(result).toBeUndefined();
-			// Direction stays the same.
-			expect(view.direction.value).toEqual("horizontal");
-		});
-	});
+      expect(result).toBeUndefined();
+      // Direction stays the same.
+      expect(view.direction.value).toEqual('horizontal');
+    });
+  });
 });
 
-describe("getDirection method.", () => {
-	beforeAll(() => {
-		view.setDirection("horizontal");
-	});
+describe('getDirection method.', () => {
+  beforeAll(() => {
+    view.setDirection('horizontal');
+  });
 
-	it("Returns {value: *direction*, constants: *list of reserved values*}", () => {
-		var result = view.getDirection();
+  it('Returns {value: *direction*, constants: *list of reserved values*}', () => {
+    const result = view.getDirection();
 
-		expect(result.value).toEqual("horizontal");
-		expect(result.constants).toEqual(view.directionConstants);
-	});
+    expect(result.value).toEqual('horizontal');
+    expect(result.constants).toEqual(view.directionConstants);
+  });
 });
 
-describe("applyStyles method.", () => {
-	beforeEach(() => {
-		view.setDirection("horizontal");
-		view.setTheme("default");
-	});
+describe('applyStyles method.', () => {
 
-	it("Applying theme and direction to slider's elements.", () => {
-		view.applyStyles();
+  describe('Applying theme and direction to sliders elements.', function() {
+    beforeEach(() => {
+      view.setDirection('horizontal');
+      view.setTheme('default');
 
-		var els = [
-			view.base, view.outer,
-			view.path, view.pathPassed,
-			view.divisions,	view.handle,
-			view.handleMin, view.handleMax,
-			view.valueNote, view.valueNoteMin,
-			view.valueNoteMax
-		].concat(view.divisionsList);
+      view.applyStyles();
+    });
+    
+    it('Set theme to "default", direction to "horizontal".', () => {
+      const els = [
+        view.mainNode, view.outer,
+        view.path, view.pathPassed,
+        view.divisionsBlock, view.handle,
+        view.handleMin, view.handleMax,
+        view.valueNote, view.valueNoteMin,
+        view.valueNoteMax,
+      ].concat(view.divisionsBlockList);
 
-		for (var i = 0; i < els.length; i++) {
-			var el = els[i];
+      for (let i = 0; i < els.length; i += 1) {
+        const el = els[i];
 
-			expect(el).toHaveClass(el.classList[0] + "_theme_default");
-			expect(el).toHaveClass(el.classList[0] + "_direction_horizontal");
-		}
-	});
+        expect(el).toHaveClass(`${el.classList[0]}_theme_default`);
+        expect(el).toHaveClass(`${el.classList[0]}_direction_horizontal`);
+      }
+    });
+  });
 
-	it("Removes old themes.", () => {
-		view.applyStyles();
+  describe('Removes old themes.', function() {
+    beforeEach(() => {
+      view.setDirection('vertical');
+      view.setTheme('some');
 
-		view.setDirection("vertical");
-		view.setTheme("some");
+      view.applyStyles();
+    });
 
-		view.applyStyles();
+    it('Removes old themes.', () => {
+      const els = [
+        view.mainNode, view.outer,
+        view.path, view.pathPassed,
+        view.divisionsBlock, view.handle,
+        view.handleMin, view.handleMax,
+        view.valueNote, view.valueNoteMin,
+        view.valueNoteMax,
+      ].concat(view.divisionsBlockList);
 
-		var els = [
-			view.base, view.outer,
-			view.path, view.pathPassed,
-			view.divisions,	view.handle,
-			view.handleMin, view.handleMax,
-			view.valueNote, view.valueNoteMin,
-			view.valueNoteMax
-		].concat(view.divisionsList);
-
-		for (var i = 0; i < els.length; i++) {
-			var el = els[i];
-			expect(el).not.toHaveClass(el.classList[0] + "_theme_default");
-			expect(el).not.toHaveClass(el.classList[0] + "_direction_horizontal");
-		}
-	});
+      for (let i = 0; i < els.length; i += 1) {
+        const el = els[i];
+        expect(el).not.toHaveClass(`${el.classList[0]}_theme_default`);
+        expect(el).not.toHaveClass(`${el.classList[0]}_direction_horizontal`);
+      }
+    });
+  });
 });
 
-describe("setValueNoteDisplay method.", () => {
-	describe("Changing display of value note, returns value of display.", () => {
-		it("Taking true, returns true.", () => {
-			var result = view.setValueNoteDisplay(true);
+describe('setValueNoteDisplay method.', () => {
+  describe('Changing display of value note, returns value of display.', () => {
+    it('Taking true, returns true.', () => {
+      view.setValueNoteDisplay(true);
 
-			expect(result).toBeTruthy();
-		});
+      expect(view.valueNoteDisplay).toBeTruthy();
+    });
 
-		it("Taking false, returns false.", () => {
-			var result = view.setValueNoteDisplay(false);
+    it('Taking false, returns false.', () => {
+      view.setValueNoteDisplay(false);
 
-			expect(result).toBeFalsy();
-		});
-	});
+      expect(view.valueNoteDisplay).toBeFalsy();
+    });
+  });
 
-	describe("If you try to set display as a not boolean value, it returns undefined.", () => {
-		beforeAll(() => {
-			view.setValueNoteDisplay(true);
-		});
+  describe('If you try to set display as a not boolean value, it returns undefined.', () => {
+    beforeAll(() => {
+      view.setValueNoteDisplay(true);
+    });
 
-		it("Taking '123', returns undefined.", () => {
-			var result = view.setValueNoteDisplay("123");
+    it('Taking "123", returns undefined.', () => {
+      view.setValueNoteDisplay('123');
 
-			expect(result).toBeUndefined();
-			expect(view.valueNoteDisplay).toEqual(true);
-		});
+      expect(view.valueNoteDisplay).toEqual(true);
+    });
 
-		it("Taking 123, returns undefined.", () => {
-			var result = view.setValueNoteDisplay(123);
+    it('Taking 123, returns undefined.', () => {
+      view.setValueNoteDisplay(123);
 
-			expect(result).toBeUndefined();
-			expect(view.valueNoteDisplay).toEqual(true);
-		});
+      expect(view.valueNoteDisplay).toEqual(true);
+    });
 
-		it("Taking {}, returns undefined.", () => {
-			var result = view.setValueNoteDisplay({});
+    it('Taking {}, returns undefined.', () => {
+      view.setValueNoteDisplay({});
 
-			expect(result).toBeUndefined();
-			expect(view.valueNoteDisplay).toEqual(true);
-		});
+      expect(view.valueNoteDisplay).toEqual(true);
+    });
 
-		it("Taking [], returns undefined.", () => {
-			var result = view.setValueNoteDisplay([]);
+    it('Taking [], returns undefined.', () => {
+      view.setValueNoteDisplay([]);
 
-			expect(result).toBeUndefined();
-			expect(view.valueNoteDisplay).toEqual(true);
-		});
+      expect(view.valueNoteDisplay).toEqual(true);
+    });
 
-		it("Taking undefined, returns undefined.", () => {
-			var result = view.setValueNoteDisplay(undefined);
+    it('Taking undefined, returns undefined.', () => {
+      view.setValueNoteDisplay(undefined);
 
-			expect(result).toBeUndefined();
-			expect(view.valueNoteDisplay).toEqual(true);
-		});
+      expect(view.valueNoteDisplay).toEqual(true);
+    });
 
-		it("Taking null, returns undefined.", () => {
-			var result = view.setValueNoteDisplay(null);
+    it('Taking null, returns undefined.', () => {
+      view.setValueNoteDisplay(null);
 
-			expect(result).toBeUndefined();
-			expect(view.valueNoteDisplay).toEqual(true);
-		});
+      expect(view.valueNoteDisplay).toEqual(true);
+    });
 
-		it("Taking NaN, returns undefined.", () => {
-			var result = view.setValueNoteDisplay(NaN);
+    it('Taking NaN, returns undefined.', () => {
+      view.setValueNoteDisplay(NaN);
 
-			expect(result).toBeUndefined();
-			expect(view.valueNoteDisplay).toEqual(true);
-		});
-	});
+      expect(view.valueNoteDisplay).toEqual(true);
+    });
+  });
 });
 
-describe("applyValueNoteDisplay method.", () => {
-	describe("When display is true.", () => {
-		beforeAll(() => {
-			view.setValueNoteDisplay(true);
-		});
+describe('applyValueNoteDisplay method.', () => {
+  describe('When display is true.', () => {
+    beforeEach(() => {
+      view.setValueNoteDisplay(true);
+      view.applyValueNoteDisplay();
+    });
 
-		it("Applying display of value note, returns display.", () => {
-			view.applyValueNoteDisplay();
+    it('Applying display of value note, returns display.', () => {
+      expect(view.valueNote).toHaveClass(`${view.valueNote.classList[0]}_display_visible`);
+      expect(view.valueNoteMin).toHaveClass(`${view.valueNoteMin.classList[0]}_display_visible`);
+      expect(view.valueNoteMax).toHaveClass(`${view.valueNoteMax.classList[0]}_display_visible`);
+    });
+  });
 
-			expect(view.valueNote).toHaveClass(view.valueNote.classList[0] + "_display_visible");
-			expect(view.valueNoteMin).toHaveClass(view.valueNoteMin.classList[0] + "_display_visible");
-			expect(view.valueNoteMax).toHaveClass(view.valueNoteMax.classList[0] + "_display_visible");
-		});
-	});
+  describe('When display is false.', () => {
+    beforeEach(() => {
+      view.setValueNoteDisplay(false);
+      view.applyValueNoteDisplay();
+    });
 
-	describe("When display is false.", () => {
-		beforeAll(() => {
-			view.setValueNoteDisplay(false);
-		});
-
-		it("Applying display of value note, returns display.", () => {
-			view.applyValueNoteDisplay();
-
-			expect(view.valueNote).toHaveClass(view.valueNote.classList[0] + "_display_hidden");
-			expect(view.valueNoteMin).toHaveClass(view.valueNoteMin.classList[0] + "_display_hidden");
-			expect(view.valueNoteMax).toHaveClass(view.valueNoteMax.classList[0] + "_display_hidden");
-		});
-	});
+    it('Applying display of value note, returns display.', () => {
+      expect(view.valueNote).toHaveClass(`${view.valueNote.classList[0]}_display_hidden`);
+      expect(view.valueNoteMin).toHaveClass(`${view.valueNoteMin.classList[0]}_display_hidden`);
+      expect(view.valueNoteMax).toHaveClass(`${view.valueNoteMax.classList[0]}_display_hidden`);
+    });
+  });
 });
 
-describe("getValueNoteDisplay method.", () => {
-	it("Returns display of value note.", () => {
-		var result = view.getValueNoteDisplay();
+describe('getValueNoteDisplay method.', () => {
+  it('Returns display of value note.', () => {
+    const result = view.getValueNoteDisplay();
 
-		expect(result).toEqual(view.valueNoteDisplay);
-	});
+    expect(result).toEqual(view.valueNoteDisplay);
+  });
 });

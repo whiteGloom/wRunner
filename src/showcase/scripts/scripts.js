@@ -1,275 +1,177 @@
-document.addEventListener("DOMContentLoaded", test);
-
 function test() {
-	makeSlider(0, {
-		roots: document.getElementsByClassName("js-sample__instance")[0]
-	}, "native");
+  const sliders = [];
+  function makeSlider(index, specOptions, sliderType) {
+    const $controllersHolders = $($('.js-sample')[index]).find('.js-sample__parameter-value');
+    const $stepController = $controllersHolders.eq(0).find('input');
+    const $minLimitController = $controllersHolders.eq(1).find('input');
+    const $maxLimitController = $controllersHolders.eq(2).find('input');
+    const $typeControllers = [$controllersHolders.eq(3).find('input').eq(0), $controllersHolders.eq(3).find('input').eq(1)];
+    const $valueController = $controllersHolders.eq(4).find('input');
+    const $minValueController = $controllersHolders.eq(5).find('input');
+    const $maxValueController = $controllersHolders.eq(6).find('input');
+    const $rootsController = $controllersHolders.eq(7).find('input');
+    const $directionControllers = [$controllersHolders.eq(8).find('input').eq(0), $controllersHolders.eq(8).find('input').eq(1)];
+    const $valueNoteDisplayController = $controllersHolders.eq(9).find('input');
+    const $divisionsCountController = $controllersHolders.eq(10).find('input');
 
-	makeSlider(1, {
-		roots: document.getElementsByClassName("js-sample__instance")[1],
-		direction: "vertical",
-		step: 5,
-		type: "range"
-	}, "native");
+    const options = {
+      ...specOptions,
+      ...{
+        onStepUpdate(step) {
+          $stepController.val(step);
+        },
 
-	makeSlider(2, {
-		divisionsCount: 16,
-		direction: "vertical",
-		step: 5,
-		type: "range"
-	});
+        onLimitsUpdate(limits) {
+          $minLimitController.val(limits.minLimit);
+          $maxLimitController.val(limits.maxLimit);
+        },
 
-	makeSlider(3, {
-		valueNoteDisplay: false,
-		divisionsCount: 0
-	});
+        onTypeUpdate(type) {
+          if (type.value === $typeControllers[0].val()) {
+            $typeControllers[0][0].checked = true;
 
-	// Для проверок.
-	setTimeout(() => {
-	}, 3000);
+            $minValueController.parent().parent().css('visibility', 'hidden');
+            $maxValueController.parent().parent().css('visibility', 'hidden');
+            $valueController.parent().parent().css('visibility', 'visible');
+          }
+          if (type.value === $typeControllers[1].val()) {
+            $typeControllers[1][0].checked = true;
 
+            $valueController.parent().parent().css('visibility', 'hidden');
+            $minValueController.parent().parent().css('visibility', 'visible');
+            $maxValueController.parent().parent().css('visibility', 'visible');
+          }
+        },
 
-	function makeSlider(index, options, type) {
-		var sliders = [];
+        onValueUpdate(value) {
+          if (value.value !== undefined) {
+            $valueController.val(value.value);
+          }
+          if ((value.minValue && value.minValue !== undefined)
+            || (value.maxValue && value.maxValue !== undefined)) {
+            $minValueController.val(value.minValue);
+            $maxValueController.val(value.maxValue);
+          }
+        },
 
-		var $controllersHolders = $($(".js-sample")[index]).find(".js-sample__parameter-value");
-		var $stepController = $controllersHolders.eq(0).find("input"),
-			$minLimitController = $controllersHolders.eq(1).find("input"),
-			$maxLimitController = $controllersHolders.eq(2).find("input"),
-			$typeControllers = [$controllersHolders.eq(3).find("input").eq(0), $controllersHolders.eq(3).find("input").eq(1)],
-			$valueController = $controllersHolders.eq(4).find("input"),
-			$minValueController = $controllersHolders.eq(5).find("input"),
-			$maxValueController = $controllersHolders.eq(6).find("input"),
-			$rootsController = $controllersHolders.eq(7).find("input"),
-			$directionControllers = [$controllersHolders.eq(8).find("input").eq(0), $controllersHolders.eq(8).find("input").eq(1)],
-			$valueNoteDisplayController = $controllersHolders.eq(9).find("input"),
-			$divisionsCountController = $controllersHolders.eq(10).find("input");
+        onRootsUpdate(roots) {
+          const $roots = $(roots);
+          let str = '';
+          for (let i = 0; i < $roots[0].classList.length; i += 1) {
+            str += `.${$roots[0].classList[i]}`;
+          }
+          $rootsController.val(str);
+        },
 
-		options = Object.assign(options, {
-			onStepUpdate: function(step) {
-				$stepController.val(step);
-			},
+        onDirectionUpdate(direction) {
+          if (direction.value === $directionControllers[0].val()) {
+            $directionControllers[0][0].checked = true;
+          }
+          if (direction.value === $directionControllers[1].val()) {
+            $directionControllers[1][0].checked = true;
+          }
+        },
 
-			onLimitsUpdate: function(limits) {
-				$minLimitController.val(limits.minLimit);
-				$maxLimitController.val(limits.maxLimit);
-			},
+        onValueNoteDisplayUpdate(value) {
+          $valueNoteDisplayController[0].checked = value;
+        },
 
-			onTypeUpdate: function(type) {
-				if (type.value === $typeControllers[0].val()) {
-					$typeControllers[0][0].checked = true;
-
-					$minValueController.parent().parent().css("visibility", "hidden");
-					$maxValueController.parent().parent().css("visibility", "hidden");
-					$valueController.parent().parent().css("visibility", "visible");
-				}
-				if (type.value === $typeControllers[1].val()) {
-					$typeControllers[1][0].checked = true;
-
-					$valueController.parent().parent().css("visibility", "hidden");
-					$minValueController.parent().parent().css("visibility", "visible");
-					$maxValueController.parent().parent().css("visibility", "visible");
-				}
-			},
-
-			onValueUpdate: function(value) {
-				if (value.value !== undefined) {
-					$valueController.val(value.value);
-				}
-				if (value.minValue && value.minValue !== undefined || value.maxValue && value.maxValue !== undefined) {
-					$minValueController.val(value.minValue);
-					$maxValueController.val(value.maxValue);
-				}
-			},
-
-			onRootsUpdate: function(roots) {
-				var $roots = $(roots);
-				var str = "";
-				for (var i = 0; i < $roots[0].classList.length; i++) {
-					str+= "." + $roots[0].classList[i];
-				}
-				$rootsController.val(str);
-			},
-
-			onDirectionUpdate: function(direction) {
-				if (direction.value === $directionControllers[0].val()) {
-					$directionControllers[0][0].checked = true;
-				}
-				if (direction.value === $directionControllers[1].val()) {
-					$directionControllers[1][0].checked = true;
-				}
-			},
-
-			onValueNoteDisplayUpdate: function(value) {
-				$valueNoteDisplayController[0].checked = value;
-			},
-
-			onDivisionsCountUpdate: function(count) {
-				$divisionsCountController.val(count);
-			}
-		});
+        onDivisionsCountUpdate(count) {
+          $divisionsCountController.val(count);
+        },
+      },
+    };
 
 
-		// Creating sliders
-		if (type == "native") {
-			sliders[index] = window.wRunner(options);
-		} else {
-			sliders[index] = $($(".js-sample__instance")[index]).wRunner(options);
-		}
+    // Creating sliders
+    if (sliderType === 'native') {
+      sliders[index] = window.wRunner(options);
+    } else {
+      sliders[index] = $('.js-sample__instance').eq(index).wRunner(options);
+    }
 
 
-		// Change slider parameters using conrtollers
-		$stepController.on("focus", (e) => {
-			var snapshot = $stepController.val();
-			$stepController.on("keydown", keyPressHandler);
-			$stepController.on("blur", () => {
-				$stepController.off("keydown", keyPressHandler);
-			});
+    function keyPressHandler(e) {
+      const $el = $(this);
+      if (e.key === 'Enter') {
+        sliders[index][e.data.method](e.data.action ? e.data.action($el.val()) : $el.val());
+        $el.blur();
+      }
+      if (e.key === 'Escape') {
+        $el.val(e.data.snapshot);
+        $el.blur();
+      }
+    }
 
-			function keyPressHandler(e) {
-				if (e.key === "Enter") {
-					sliders[index].setStep($stepController.val());
-					$stepController.blur();
-				}
-				if (e.key === "Escape") {
-					$stepController.val(snapshot);
-					$stepController.blur();
-				}
-			}
-		});
+    function makeTextInput(controller, eventaData) {
+      controller.on('focus', () => {
+        const snapshot = controller.val();
+        controller.on('keydown', { ...eventaData, snapshot }, keyPressHandler);
+        controller.on('blur', () => {
+          controller.off('keydown', { ...eventaData, snapshot }, keyPressHandler);
+        });
+      });
+    }
 
-		$minLimitController.on("focus", (e) => {
-			var snapshot = $minLimitController.val();
-			$minLimitController.on("keydown", keyPressHandler);
-			$minLimitController.on("blur", () => {
-				$minLimitController.off("keydown", keyPressHandler);
-			});
+    // Change slider parameters using conrtollers
+    $typeControllers[0].on('input', () => {
+      sliders[index].setType($typeControllers[0].val());
+    });
 
-			function keyPressHandler(e) {
-				if (e.key === "Enter") {
-					sliders[index].setLimits({minLimit: $minLimitController.val()});
-					$minLimitController.blur();
-				}
-				if (e.key === "Escape") {
-					$minLimitController.val(snapshot);
-					$minLimitController.blur();
-				}
-			}
-		});
+    $typeControllers[1].on('input', () => {
+      sliders[index].setType($typeControllers[1].val());
+    });
 
-		$maxLimitController.on("focus", (e) => {
-			var snapshot = $maxLimitController.val();
-			$maxLimitController.on("keydown", keyPressHandler);
-			$maxLimitController.on("blur", () => {
-				$maxLimitController.off("keydown", keyPressHandler);
-			});
+    $directionControllers[0].on('input', () => {
+      sliders[index].setDirection($directionControllers[0].val());
+    });
 
-			function keyPressHandler(e) {
-				if (e.key === "Enter") {
-					sliders[index].setLimits({maxLimit: $maxLimitController.val()});
-					$maxLimitController.blur();
-				}
-				if (e.key === "Escape") {
-					$maxLimitController.val(snapshot);
-					$maxLimitController.blur();
-				}
-			}
-		});
+    $directionControllers[1].on('input', () => {
+      sliders[index].setDirection($directionControllers[1].val());
+    });
 
-		$typeControllers[0].on("input", (e) => {
-			sliders[index].setType($typeControllers[0].val());
-		});
+    $valueNoteDisplayController.on('input', () => {
+      sliders[index].setValueNoteDisplay($valueNoteDisplayController[0].checked);
+    });
 
-		$typeControllers[1].on("input", (e) => {
-			sliders[index].setType($typeControllers[1].val());
-		});
+    makeTextInput($stepController, { method: 'setStep' });
 
-		$valueController.on("focus", (e) => {
-			var snapshot = $valueController.val();
-			$valueController.on("keydown", keyPressHandler);
-			$valueController.on("blur", () => {
-				$valueController.off("keydown", keyPressHandler);
-			});
+    makeTextInput($minLimitController, { method: 'setLimits', action(val) { return { minLimit: val }; } });
 
-			function keyPressHandler(e) {
-				if (e.key === "Enter") {
-					sliders[index].setSingleValue($valueController.val());
-					$valueController.blur();
-				}
-				if (e.key === "Escape") {
-					$valueController.val(snapshot);
-					$valueController.blur();
-				}
-			}
-		});
+    makeTextInput($maxLimitController, { method: 'setLimits', action(val) { return { maxLimit: val }; } });
 
-		$minValueController.on("focus", (e) => {
-			var snapshot = $minValueController.val();
-			$minValueController.on("keydown", keyPressHandler);
-			$minValueController.on("blur", () => {
-				$minValueController.off("keydown", keyPressHandler);
-			});
+    makeTextInput($valueController, { method: 'setSingleValue' });
 
-			function keyPressHandler(e) {
-				if (e.key === "Enter") {
-					sliders[index].setRangeValue({minValue: $minValueController.val()});
-					$minValueController.blur();
-				}
-				if (e.key === "Escape") {
-					$minValueController.val(snapshot);
-					$minValueController.blur();
-				}
-			}
-		});
+    makeTextInput($minValueController, { method: 'setRangeValue', action(val) { return { minValue: val }; } });
 
-		$maxValueController.on("focus", (e) => {
-			var snapshot = $maxValueController.val();
-			$maxValueController.on("keydown", keyPressHandler);
-			$maxValueController.on("blur", () => {
-				$maxValueController.off("keydown", keyPressHandler);
-			});
+    makeTextInput($maxValueController, { method: 'setRangeValue', action(val) { return { maxValue: val }; } });
 
-			function keyPressHandler(e) {
-				if (e.key === "Enter") {
-					sliders[index].setRangeValue({maxValue: $maxValueController.val()});
-					$maxValueController.blur();
-				}
-				if (e.key === "Escape") {
-					$maxValueController.val(snapshot);
-					$maxValueController.blur();
-				}
-			}
-		});
+    makeTextInput($divisionsCountController, { method: 'setDivisionsCount' });
+  }
 
-		$directionControllers[0].on("input", (e) => {
-			sliders[index].setDirection($directionControllers[0].val());
-		});
 
-		$directionControllers[1].on("input", (e) => {
-			sliders[index].setDirection($directionControllers[1].val());
-		});
+  makeSlider(0, {
+    roots: document.getElementsByClassName('js-sample__instance')[0],
+  }, 'native');
 
-		$valueNoteDisplayController.on("input", (e) => {
-			sliders[index].setValueNoteDisplay($valueNoteDisplayController[0].checked);
-		});
+  makeSlider(1, {
+    roots: document.getElementsByClassName('js-sample__instance')[1],
+    direction: 'vertical',
+    step: 5,
+    type: 'range',
+  }, 'native');
 
-		$divisionsCountController.on("focus", (e) => {
-			var snapshot = $divisionsCountController.val();
-			$divisionsCountController.on("keydown", keyPressHandler);
-			$divisionsCountController.on("blur", () => {
-				$divisionsCountController.off("keydown", keyPressHandler);
-			});
+  makeSlider(2, {
+    divisionsCount: 16,
+    direction: 'vertical',
+    step: 5,
+    type: 'range',
+  });
 
-			function keyPressHandler(e) {
-				if (e.key === "Enter") {
-					sliders[index].setDivisionsCount($divisionsCountController.val());
-					$divisionsCountController.blur();
-				}
-				if (e.key === "Escape") {
-					$divisionsCountController.val(snapshot);
-					$divisionsCountController.blur();
-				}
-			}
-		});
-	}
+  makeSlider(3, {
+    valueNoteDisplay: false,
+    divisionsCount: 0,
+  });
 }
+
+document.addEventListener('DOMContentLoaded', test);

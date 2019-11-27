@@ -1,50 +1,44 @@
 function makeEvent() {
-	// List of a handlers that will process a event.
-	var handlers = [];
+  // List of a handlers that will process a event.
+  const handlers = [];
 
-	// Add a new handler.
-	var addHandler = function(handler) {
-		if (typeof handler !== "function") {
-			console.log("The handler must be a function");
-			return;
-		}
-	
-		for (var i = 0; i < handlers.length; i++) {
-			if (handlers[i] === handler) {
-				console.log("The handler already in the list");
-				return;
-			}
-		}
+  // Add a new handler.
+  function addHandler(handler) {
+    if (typeof handler !== 'function') return;
 
-		handlers.push(handler);
-	};
+    for (let i = 0; i < handlers.length; i += 1) {
+      if (handlers[i] === handler) {
+        return;
+      }
+    }
 
-	// Remove a handler.
-	var removeHandler = function(handler) {
-		for (var i = 0; i < handlers.length; i++) {
-			if (handlers[i] === handler) {
-				handlers.splice(i, 1);
-				return;
-			}
-		}
-		console.log("could not find observer in list of observers");
-	};
+    handlers.push(handler);
+  }
 
+  // Remove a handler.
+  function removeHandler(handler) {
+    for (let i = 0; i < handlers.length; i += 1) {
+      if (handlers[i] === handler) {
+        handlers.splice(i, 1);
+        return;
+      }
+    }
+  }
 
-	// Trigger a event and notify handlers.
-	var trigger = function(data) {
-		var handlersClone = handlers.slice(0);
-		for (var i = 0; i < handlersClone.length; i++) {
-			handlersClone[i](data);
-		}
-	};
+  // Trigger a event and notify handlers.
+  function trigger(data) {
+    const handlersClone = handlers.slice(0);
+    for (let i = 0; i < handlersClone.length; i += 1) {
+      handlersClone[i](data);
+    }
+  }
 
-	// Methods of new event.
-	return {
-		addHandler: addHandler,
-		removeHandler: removeHandler,
-		trigger: trigger
-	};
+  // Methods of new event.
+  return {
+    addHandler,
+    removeHandler,
+    trigger,
+  };
 }
 
 export default makeEvent;

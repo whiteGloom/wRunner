@@ -1,164 +1,205 @@
 class Presenter {
-	constructor(options) {
-		options = options || {};
+  constructor(options = {}) {
+    const { userOptions, model, view } = options;
 
-		this.model = options.model;
-		this.view = options.view;
+    this.model = model;
+    this.view = view;
 
-		// Plugin load
-		this._applyDefaultEvents();
-		this._applyUserEvents(options.userOptions);
-		this._applyUserOptions(options.userOptions);
-		this._initInstance();
-		this._triggerEvents();
-	}
-
-	onValueUpdate(handler) {
-		this.model.valueUpdateEvent.addHandler(handler);
-	}
-
-	onStepUpdate(handler) {
-		this.model.stepUpdateEvent.addHandler(handler);
-	}
-
-	onLimitsUpdate(handler) {
-		this.model.limitsUpdateEvent.addHandler(handler);
-	}
-
-	onTypeUpdate(handler) {
-		this.model.typeUpdateEvent.addHandler(handler);
-	}
-
-	onThemeUpdate(handler) {
-		this.view.themeUpdateEvent.addHandler(handler);
-	}
-
-	onDirectionUpdate(handler) {
-		this.view.directionUpdateEvent.addHandler(handler);
-	}
-
-	onValueNoteDisplayUpdate(handler) {
-		this.view.valueNoteDisplayUpdateEvent.addHandler(handler);
-	}
-
-	onRootsUpdate(handler) {
-		this.view.rootsUpdateEvent.addHandler(handler);
-	}
-
-	onDivisionsCountUpdate(handler) {
-		this.view.divisionsCountUpdateEvent.addHandler(handler);
-	}
-
-	_applyDefaultEvents() {
-		// Model events
-		this.model.typeUpdateEvent.addHandler(function(data) {
-			this.view.updateDOM(this.model.getType());
-			this.model.recalculateValue();
-			this.view.applyValueNoteDisplay();
-		}.bind(this));
-
-		this.model.limitsUpdateEvent.addHandler(function(data) {
-			this.model.recalculateValue();
-		}.bind(this));
-
-		this.model.stepUpdateEvent.addHandler(function(data) {
-			this.model.recalculateValue();
-		}.bind(this));
-
-		this.model.valueUpdateEvent.addHandler(function(data) {
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-		}.bind(this));
+    // Plugin load
+    this.applyDefaultEvents();
+    this.applyUserEvents(userOptions);
+    this.applyUserOptions(userOptions);
+  }
 
 
-		// View events
-		this.view.rootsUpdateEvent.addHandler(function(data) {
-			this.view.append();
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-		}.bind(this));
+  getPublicMethods() {
+    return {
+      setType: this.model.setType.bind(this.model),
+      setLimits: this.model.setLimits.bind(this.model),
+      setStep: this.model.setStep.bind(this.model),
+      setSingleValue: this.model.setSingleValue.bind(this.model),
+      setRangeValue: this.model.setRangeValue.bind(this.model),
+      setNearestValue: this.model.setNearestValue.bind(this.model),
+      getType: this.model.getType.bind(this.model),
+      getLimits: this.model.getLimits.bind(this.model),
+      getStep: this.model.getStep.bind(this.model),
+      getValue: this.model.getValue.bind(this.model),
+      onValueUpdate: this.model.valueUpdateEvent.addHandler,
+      onStepUpdate: this.model.stepUpdateEvent.addHandler,
+      onLimitsUpdate: this.model.limitsUpdateEvent.addHandler,
+      onTypeUpdate: this.model.typeUpdateEvent.addHandler,
 
-		this.view.UIMouseActionEvent.addHandler(function(data) {
-			this.model.setNearestValue(data, true, true);
-		}.bind(this));
+      setRoots: this.view.setRoots.bind(this.view),
+      setTheme: this.view.setTheme.bind(this.view),
+      setDirection: this.view.setDirection.bind(this.view),
+      setValueNoteDisplay: this.view.setValueNoteDisplay.bind(this.view),
+      setDivisionsCount: this.view.setDivisionsCount.bind(this.view),
+      getRoots: this.view.getRoots.bind(this.view),
+      getTheme: this.view.getTheme.bind(this.view),
+      getDirection: this.view.getDirection.bind(this.view),
+      getValueNoteDisplay: this.view.getValueNoteDisplay.bind(this.view),
+      getDivisionsCount: this.view.getDivisionsCount.bind(this.view),
+      onThemeUpdate: this.view.themeUpdateEvent.addHandler,
+      onDirectionUpdate: this.view.directionUpdateEvent.addHandler,
+      onValueNoteDisplayUpdate: this.view.valueNoteDisplayUpdateEvent.addHandler,
+      onRootsUpdate: this.view.rootsUpdateEvent.addHandler,
+      onDivisionsCountUpdate: this.view.divisionsCountUpdateEvent.addHandler,
+    };
+  }
 
-		this.view.themeUpdateEvent.addHandler(function(data) {
-			this.view.applyStyles();
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-		}.bind(this));
+  typeUpdateEventHandler() {
+    this.view.updateDOM(this.model.getType());
+    this.model.recalculateValue();
+    this.view.applyValueNoteDisplay();
+  }
 
-		this.view.directionUpdateEvent.addHandler(function(data) {
-			this.view.applyStyles();
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-		}.bind(this));
+  limitsUpdateEventHandler() {
+    this.model.recalculateValue();
+  }
 
-		this.view.valueNoteDisplayUpdateEvent.addHandler(function(data) {
-			this.view.applyValueNoteDisplay();
-		}.bind(this));
+  stepUpdateEventHandler() {
+    this.model.recalculateValue();
+  }
 
-		this.view.divisionsCountUpdateEvent.addHandler(function(data) {
-			this.view.generateDivisions();
-			this.view.applyStyles();
-		}.bind(this));
+  valueUpdateEventHandler() {
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+  }
 
-		this.view.valueNoteRangeModeUpdateEvent.addHandler(function(data) {
-			this.view.applyValueNoteDisplay();
-		}.bind(this));
+  rootsUpdateEventHandler() {
+    this.view.append();
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+  }
 
-		this.view.windowResizeEvent.addHandler(function() {
-			this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
-		}.bind(this));
-	}
+  UIMouseActionEventHandler(data) {
+    this.model.setNearestValue(data, true);
+  }
 
-	_initInstance() {
-		this.view.updateDOM(this.model.getType());
-		this.view.generateDivisions();
-		this.view.applyValueNoteDisplay();
-		this.view.applyStyles();
-		this.view.append();
-	}
+  themeUpdateEventHandler() {
+    this.view.applyStyles();
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+  }
 
-	_applyUserEvents(options) {
-		options = options || {};
+  directionUpdateEventHandler() {
+    this.view.applyStyles();
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+  }
 
-		if (options.onTypeUpdate !== undefined) this.onTypeUpdate(options.onTypeUpdate);
-		if (options.onLimitsUpdate !== undefined) this.onLimitsUpdate(options.onLimitsUpdate);
-		if (options.onStepUpdate !== undefined) this.onStepUpdate(options.onStepUpdate);
-		if (options.onValueUpdate !== undefined) this.onValueUpdate(options.onValueUpdate);
+  valueNoteDisplayUpdateEventHandler() {
+    this.view.applyValueNoteDisplay();
+  }
 
-		if (options.onRootsUpdate !== undefined) this.onRootsUpdate(options.onRootsUpdate);
-		if (options.onThemeUpdate !== undefined) this.onThemeUpdate(options.onThemeUpdate);
-		if (options.onDirectionUpdate !== undefined) this.onDirectionUpdate(options.onDirectionUpdate);
-		if (options.onDivisionsCountUpdate !== undefined) this.onDivisionsCountUpdate(options.onDivisionsCountUpdate);
-		if (options.onValueNoteDisplayUpdate !== undefined) this.onValueNoteDisplayUpdate(options.onValueNoteDisplayUpdate);
-	}
+  divisionsCountUpdateEventHandler() {
+    this.view.generateDivisions();
+    this.view.applyStyles();
+  }
 
-	_applyUserOptions(options) {
-		options = options || {};
+  valueNoteRangeModeUpdateEventHandler() {
+    this.view.applyValueNoteDisplay();
+  }
 
-		if (options.type !== undefined) this.model.setType(options.type);
-		if (options.limits !== undefined) this.model.setLimits(options.limits);
-		if (options.step !== undefined) this.model.setStep(options.step);
-		if (options.singleValue !== undefined) this.model.setSingleValue(options.singleValue);
-		if (options.rangeValue !== undefined) this.model.setRangeValue(options.rangeValue);
+  windowResizeEventHandler() {
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+  }
 
-		if (options.roots !== undefined) this.view.setRoots(options.roots);
-		if (options.theme !== undefined) this.view.setTheme(options.theme);
-		if (options.direction !== undefined) this.view.setDirection(options.direction);
-		if (options.divisionsCount !== undefined) this.view.setDivisionsCount(options.divisionsCount);
-		if (options.valueNoteDisplay !== undefined) this.view.setValueNoteDisplay(options.valueNoteDisplay);
-	}
+  applyDefaultEvents() {
+    // Model events
+    this.model.typeUpdateEvent
+      .addHandler(this.typeUpdateEventHandler.bind(this));
+    this.model.limitsUpdateEvent
+      .addHandler(this.limitsUpdateEventHandler.bind(this));
+    this.model.stepUpdateEvent
+      .addHandler(this.stepUpdateEventHandler.bind(this));
+    this.model.valueUpdateEvent
+      .addHandler(this.valueUpdateEventHandler.bind(this));
 
-	_triggerEvents() {
-		this.model.valueUpdateEvent.trigger(this.model.getValue());
-		this.model.typeUpdateEvent.trigger(this.model.getType());
-		this.model.stepUpdateEvent.trigger(this.model.step);
-		this.model.limitsUpdateEvent.trigger(this.model.getLimits());
+    // View events
+    this.view.rootsUpdateEvent
+      .addHandler(this.rootsUpdateEventHandler.bind(this));
+    this.view.UIMouseActionEvent
+      .addHandler(this.UIMouseActionEventHandler.bind(this));
+    this.view.themeUpdateEvent
+      .addHandler(this.themeUpdateEventHandler.bind(this));
+    this.view.directionUpdateEvent
+      .addHandler(this.directionUpdateEventHandler.bind(this));
+    this.view.valueNoteDisplayUpdateEvent
+      .addHandler(this.valueNoteDisplayUpdateEventHandler.bind(this));
+    this.view.divisionsCountUpdateEvent
+      .addHandler(this.divisionsCountUpdateEventHandler.bind(this));
+    this.view.valueNoteRangeModeUpdateEvent
+      .addHandler(this.valueNoteRangeModeUpdateEventHandler.bind(this));
+    this.view.windowResizeEvent
+      .addHandler(this.windowResizeEventHandler.bind(this));
+  }
 
-		this.view.themeUpdateEvent.trigger(this.view.getTheme());
-		this.view.directionUpdateEvent.trigger(this.view.getDirection());
-		this.view.valueNoteDisplayUpdateEvent.trigger(this.view.getValueNoteDisplay());
-		this.view.rootsUpdateEvent.trigger(this.view.getRoots());
-		this.view.divisionsCountUpdateEvent.trigger(this.view.getDivisionsCount());
-	}
+  applyUserEvents(options = {}) {
+    const {
+      onTypeUpdate,
+      onLimitsUpdate,
+      onStepUpdate,
+      onValueUpdate,
+      onRootsUpdate,
+      onThemeUpdate,
+      onDirectionUpdate,
+      onDivisionsCountUpdate,
+      onValueNoteDisplayUpdate,
+    } = options;
+
+    if (onTypeUpdate) {
+      this.model.typeUpdateEvent.addHandler(onTypeUpdate);
+    }
+    if (onLimitsUpdate) {
+      this.model.limitsUpdateEvent.addHandler(onLimitsUpdate);
+    }
+    if (onStepUpdate) {
+      this.model.stepUpdateEvent.addHandler(onStepUpdate);
+    }
+    if (onValueUpdate) {
+      this.model.valueUpdateEvent.addHandler(onValueUpdate);
+    }
+
+    if (onRootsUpdate) {
+      this.view.rootsUpdateEvent.addHandler(onRootsUpdate);
+    }
+    if (onThemeUpdate) {
+      this.view.themeUpdateEvent.addHandler(onThemeUpdate);
+    }
+    if (onDirectionUpdate) {
+      this.view.directionUpdateEvent.addHandler(onDirectionUpdate);
+    }
+    if (onDivisionsCountUpdate) {
+      this.view.divisionsCountUpdateEvent.addHandler(onDivisionsCountUpdate);
+    }
+    if (onValueNoteDisplayUpdate) {
+      this.view.valueNoteDisplayUpdateEvent.addHandler(onValueNoteDisplayUpdate);
+    }
+  }
+
+  applyUserOptions(options = {}) {
+    const {
+      type,
+      limits,
+      step,
+      singleValue,
+      rangeValue,
+      roots,
+      theme,
+      direction,
+      divisionsCount,
+      valueNoteDisplay,
+    } = options;
+
+    this.model.setType(type);
+    this.model.setLimits(limits);
+    this.model.setStep(step);
+    this.model.setSingleValue(singleValue);
+    this.model.setRangeValue(rangeValue);
+
+    this.view.setRoots(roots);
+    this.view.setTheme(theme);
+    this.view.setDirection(direction);
+    this.view.setDivisionsCount(divisionsCount);
+    this.view.setValueNoteDisplay(valueNoteDisplay);
+  }
 }
 
 export default Presenter;

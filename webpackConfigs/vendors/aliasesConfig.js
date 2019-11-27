@@ -1,16 +1,16 @@
-const packageAliases = require("../../package.json")._moduleAliases;
+const packageAliases = require('../../package.json')._moduleAliases;
 
-export default function(options) {
-	options = options ? options : {};
-	
-	var aliases = {};
-	for(var key in packageAliases) {
-		aliases[key] = options.workFolder + packageAliases[key].slice(1);
-	}
+function config(options = {}) {
+  const aliases = {};
+  Object.keys(packageAliases).forEach((key) => {
+    aliases[key] = options.workFolder + packageAliases[key].slice(1);
+  });
 
-	return {
-		resolve: {
-			alias: aliases
-		}
-	};
+  return {
+    resolve: {
+      alias: aliases,
+    },
+  };
 }
+
+export default config;

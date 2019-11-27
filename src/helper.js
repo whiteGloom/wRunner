@@ -1,29 +1,30 @@
 class Helper {
-	constructor() {}
+  isNumber(value) {
+    if ((typeof value === 'number' || typeof value === 'string') && Number.isFinite(+value)) return true;
 
-	isNumber(value) {
-		if ((typeof value === "number" || typeof value === "string") & isFinite(value)) return true;
+    return false;
+  }
 
-		return false;
-	}
+  isObject(el) {
+    if (typeof el === 'object' && el !== null) return true;
 
-	toNumber(value) {
-		if (this.isNumber(value)) return +value;
+    return false;
+  }
 
-		return false;
-	}
+  toNumber(value) {
+    if (this.isNumber(value)) return +value;
 
-	isDOMEl(el) {
-		if (this.isObject(el) && el.constructor !== Object && this.isNumber(el.nodeType) && +el.nodeType === 1) return true;
+    return false;
+  }
 
-		return false;
-	}
+  isDOMEl(el) {
+    if (this.isObject(el)
+      && el.constructor !== Object
+      && this.isNumber(el.nodeType)
+      && +el.nodeType === 1) return true;
 
-	isObject(el) {
-		if (typeof el === "object" && el !== null) return true;
-
-		return false;
-	}
+    return false;
+  }
 }
 
 export default new Helper();
