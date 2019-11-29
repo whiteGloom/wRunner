@@ -16,7 +16,7 @@ function config(options = {}) {
     },
     plugins: [
       new HTMLWebpackPlugin({
-        template: `${workFolder}/src/showcase/views/index.pug`,
+        template: `${workFolder}/src/showcase/views/showcase/showcase.pug`,
         filename: 'index.html',
         inject: false,
         minify: false,

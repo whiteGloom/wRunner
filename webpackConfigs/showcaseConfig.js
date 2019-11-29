@@ -9,7 +9,7 @@ function config(options = {}) {
       styles: `${workFolder}/src/showcase/static.js`,
       'wrunner-native': `${workFolder}/src/wRunner/wrunner-native.js`,
       'wrunner-jquery': `${workFolder}/src/wRunner/wrunner-jquery.js`,
-      'wrunner-default-theme': `${workFolder}/src/themes/wrunnerDefaultTheme/wrunner-default-theme.js`,
+      'wrunner-default-theme': `${workFolder}/src/themes/wrunner-default-theme/wrunner-default-theme.js`,
     },
     output: {
       path: `${workFolder}/docs/`,

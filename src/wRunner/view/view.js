@@ -44,14 +44,14 @@ class View {
       this.mainNode.classList.add('wrunner');
       this.outer.classList.add('wrunner__outer');
       this.path.classList.add('wrunner__path');
-      this.pathPassed.classList.add('wrunner__pathPassed');
+      this.pathPassed.classList.add('wrunner__path-passed');
       this.handle.classList.add('wrunner__handle');
-      this.handleMin.classList.add('wrunner__handleMin');
-      this.handleMax.classList.add('wrunner__handleMax');
-      this.valueNote.classList.add('wrunner__valueNote');
-      this.valueNoteMin.classList.add('wrunner__valueNoteMin');
-      this.valueNoteMax.classList.add('wrunner__valueNoteMax');
-      this.valueNoteCommon.classList.add('wrunner__valueNoteCommon');
+      this.handleMin.classList.add('wrunner__handle-min');
+      this.handleMax.classList.add('wrunner__handle-max');
+      this.valueNote.classList.add('wrunner__value-note');
+      this.valueNoteMin.classList.add('wrunner__value-note-min');
+      this.valueNoteMax.classList.add('wrunner__value-note-max');
+      this.valueNoteCommon.classList.add('wrunner__value-note-common');
       this.divisionsBlock.classList.add('wrunner__divisions');
     });
 

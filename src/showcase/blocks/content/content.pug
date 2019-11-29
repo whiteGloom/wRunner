@@ -1,10 +1,9 @@
-include ../slider-sample-block/slider-sample-block
+include ../sample/sample
 
-mixin content(options)
+mixin content(options = {})
     -
-        options = options || {};
         const {data = []} = options;
-    .page
-        for title in data
-            .page__el
-                +slider-sample-block({title})
+    .content
+        for title, index in data
+            .content__el
+                +sample({title, id: "sample" + index})

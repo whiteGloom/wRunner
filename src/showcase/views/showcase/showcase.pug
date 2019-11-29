@@ -1,0 +1,25 @@
+include ../../blocks/content/content
+
+doctype html
+html
+    head
+        meta(charset="utf8")
+        title wRunner. Slider example
+        link(rel="apple-touch-icon", sizes="180x180", href="static/favicons/apple-touch-icon.png")
+        link(rel="icon", type="image/png", sizes="32x32", href="static/favicons/favicon-32x32.png")
+        link(rel="icon", type="image/png", sizes="16x16", href="static/favicons/favicon-16x16.png")
+        link(rel="manifest", href="static/favicons/site.webmanifest")
+        link(rel="mask-icon", href="static/favicons/safari-pinned-tab.svg", color="#3f5b5e")
+        meta(name="msapplication-TileColor", content="#da532c")
+        meta(name="theme-color", content="#ffffff")
+        meta(name="description" content="wRunner - a js slider plugin.")
+        meta(name="Keywords" content="Js, jQuery, plugin, slider, runner")
+        meta(name="viewport" content="initial-scale=1.0, width=device-width")
+        link(rel="stylesheet" type="text/css" href="static/styles/styles.css")
+        link(rel="stylesheet" type="text/css" href="static/styles/wrunner-default-theme.css")
+    body
+        +content({ data: ["Js native", "Js native", "jQuery", "jQuery"] })
+        script(src="./scripts/vendors.js")
+        script(src="./scripts/scripts.js")
+        script(src="./scripts/wrunner-native.js")
+        script(src="./scripts/wrunner-jquery.js")

@@ -52,8 +52,8 @@
   flex-direction: column;
 }
 .wrunner__handle_theme_default.wrunner__handle,
-.wrunner__handleMin_theme_default.wrunner__handleMin,
-.wrunner__handleMax_theme_default.wrunner__handleMax {
+.wrunner__handle-min_theme_default.wrunner__handle-min,
+.wrunner__handle-max_theme_default.wrunner__handle-max {
   position: absolute;
   height: 1.25rem;
   width: 1.25rem;
@@ -65,28 +65,28 @@
   z-index: 1;
 }
 .wrunner__handle_theme_default.wrunner__handle:hover,
-.wrunner__handleMin_theme_default.wrunner__handleMin:hover,
-.wrunner__handleMax_theme_default.wrunner__handleMax:hover {
+.wrunner__handle-min_theme_default.wrunner__handle-min:hover,
+.wrunner__handle-max_theme_default.wrunner__handle-max:hover {
   transform: scale(1.1);
   border-radius: 50%;
   background-color: #c54a8e;
 }
 .wrunner__handle_theme_default.wrunner__handle:active,
-.wrunner__handleMin_theme_default.wrunner__handleMin:active,
-.wrunner__handleMax_theme_default.wrunner__handleMax:active {
+.wrunner__handle-min_theme_default.wrunner__handle-min:active,
+.wrunner__handle-max_theme_default.wrunner__handle-max:active {
   transform: scale(0.9);
   border-radius: 50%;
   background-color: #aa3d9c;
 }
 .wrunner__handle_theme_default.wrunner__handle_direction_vertical,
-.wrunner__handleMin_theme_default.wrunner__handleMin_direction_vertical,
-.wrunner__handleMax_theme_default.wrunner__handleMax_direction_vertical {
+.wrunner__handle-min_theme_default.wrunner__handle-min_direction_vertical,
+.wrunner__handle-max_theme_default.wrunner__handle-max_direction_vertical {
   margin-top: -0.6rem;
   margin-left: -0.4rem;
 }
 .wrunner__handle_theme_default.wrunner__handle_direction_horizontal,
-.wrunner__handleMin_theme_default.wrunner__handleMin_direction_horizontal,
-.wrunner__handleMax_theme_default.wrunner__handleMax_direction_horizontal {
+.wrunner__handle-min_theme_default.wrunner__handle-min_direction_horizontal,
+.wrunner__handle-max_theme_default.wrunner__handle-max_direction_horizontal {
   margin-top: -0.35rem;
   margin-left: -0.6rem;
 }
@@ -106,22 +106,22 @@
   width: 0.5rem;
   left: 1.2rem;
 }
-.wrunner__pathPassed_theme_default.wrunner__pathPassed {
+.wrunner__path-passed_theme_default.wrunner__path-passed {
   position: absolute;
   background-color: #cb73a4;
   border-radius: 0.25rem;
 }
-.wrunner__pathPassed_theme_default.wrunner__pathPassed_direction_horizontal {
+.wrunner__path-passed_theme_default.wrunner__path-passed_direction_horizontal {
   height: 100%;
 }
-.wrunner__pathPassed_theme_default.wrunner__pathPassed_direction_vertical {
+.wrunner__path-passed_theme_default.wrunner__path-passed_direction_vertical {
   width: 100%;
   bottom: 0;
 }
-.wrunner__valueNote_theme_default.wrunner__valueNote,
-.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin,
-.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax,
-.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon {
+.wrunner__value-note_theme_default.wrunner__value-note,
+.wrunner__value-note-min_theme_default.wrunner__value-note-min,
+.wrunner__value-note-max_theme_default.wrunner__value-note-max,
+.wrunner__value-note-common_theme_default.wrunner__value-note-common {
   position: absolute;
   padding: 0.35rem;
   background-color: #c54a8e;
@@ -133,62 +133,62 @@
   cursor: default;
   transition: 0.2s opacity;
 }
-.wrunner__valueNote_theme_default.wrunner__valueNote::after,
-.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin::after,
-.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax::after,
-.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon::after {
+.wrunner__value-note_theme_default.wrunner__value-note::after,
+.wrunner__value-note-min_theme_default.wrunner__value-note-min::after,
+.wrunner__value-note-max_theme_default.wrunner__value-note-max::after,
+.wrunner__value-note-common_theme_default.wrunner__value-note-common::after {
   content: '';
   position: absolute;
   display: block;
   height: 0;
   width: 0;
 }
-.wrunner__valueNote_theme_default.wrunner__valueNote_direction_horizontal,
-.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_horizontal,
-.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_horizontal,
-.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_direction_horizontal {
+.wrunner__value-note_theme_default.wrunner__value-note_direction_horizontal,
+.wrunner__value-note-min_theme_default.wrunner__value-note-min_direction_horizontal,
+.wrunner__value-note-max_theme_default.wrunner__value-note-max_direction_horizontal,
+.wrunner__value-note-common_theme_default.wrunner__value-note-common_direction_horizontal {
   top: 0;
   min-width: 1.5rem;
   border-radius: 0.8rem 0.3rem 0.8rem 0.3rem;
 }
-.wrunner__valueNote_theme_default.wrunner__valueNote_direction_horizontal::after,
-.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_horizontal::after,
-.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_horizontal::after,
-.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_direction_horizontal::after {
+.wrunner__value-note_theme_default.wrunner__value-note_direction_horizontal::after,
+.wrunner__value-note-min_theme_default.wrunner__value-note-min_direction_horizontal::after,
+.wrunner__value-note-max_theme_default.wrunner__value-note-max_direction_horizontal::after,
+.wrunner__value-note-common_theme_default.wrunner__value-note-common_direction_horizontal::after {
   left: 50%;
   margin-left: -0.25rem;
   bottom: -0.5rem;
   border: 0.25rem solid transparent;
   border-top-color: #c54a8e;
 }
-.wrunner__valueNote_theme_default.wrunner__valueNote_direction_vertical,
-.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_vertical,
-.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_vertical,
-.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_direction_vertical {
+.wrunner__value-note_theme_default.wrunner__value-note_direction_vertical,
+.wrunner__value-note-min_theme_default.wrunner__value-note-min_direction_vertical,
+.wrunner__value-note-max_theme_default.wrunner__value-note-max_direction_vertical,
+.wrunner__value-note-common_theme_default.wrunner__value-note-common_direction_vertical {
   left: 2.4rem;
   min-width: 1.5rem;
   border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
 }
-.wrunner__valueNote_theme_default.wrunner__valueNote_direction_vertical::after,
-.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_direction_vertical::after,
-.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_direction_vertical::after,
-.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_direction_vertical::after {
+.wrunner__value-note_theme_default.wrunner__value-note_direction_vertical::after,
+.wrunner__value-note-min_theme_default.wrunner__value-note-min_direction_vertical::after,
+.wrunner__value-note-max_theme_default.wrunner__value-note-max_direction_vertical::after,
+.wrunner__value-note-common_theme_default.wrunner__value-note-common_direction_vertical::after {
   top: 50%;
   margin-top: -0.25rem;
   left: -0.5rem;
   border: 0.25rem solid transparent;
   border-right-color: #c54a8e;
 }
-.wrunner__valueNote_theme_default.wrunner__valueNote_display_hidden,
-.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_display_hidden,
-.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_display_hidden,
-.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_display_hidden {
+.wrunner__value-note_theme_default.wrunner__value-note_display_hidden,
+.wrunner__value-note-min_theme_default.wrunner__value-note-min_display_hidden,
+.wrunner__value-note-max_theme_default.wrunner__value-note-max_display_hidden,
+.wrunner__value-note-common_theme_default.wrunner__value-note-common_display_hidden {
   opacity: 0;
 }
-.wrunner__valueNote_theme_default.wrunner__valueNote_display_visible,
-.wrunner__valueNoteMin_theme_default.wrunner__valueNoteMin_display_visible,
-.wrunner__valueNoteMax_theme_default.wrunner__valueNoteMax_display_visible,
-.wrunner__valueNoteCommon_theme_default.wrunner__valueNoteCommon_display_visible {
+.wrunner__value-note_theme_default.wrunner__value-note_display_visible,
+.wrunner__value-note-min_theme_default.wrunner__value-note-min_display_visible,
+.wrunner__value-note-max_theme_default.wrunner__value-note-max_display_visible,
+.wrunner__value-note-common_theme_default.wrunner__value-note-common_display_visible {
   opacity: 1;
 }
 

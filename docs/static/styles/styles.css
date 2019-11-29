@@ -1,11 +1,25 @@
-.page__el {
+body {
+  background-color: #2d2d2d;
+  font-family: sans-serif;
+}
+label {
+  color: #fff;
+  text-shadow: 3px 5px 4px rgba(0,0,0,0.6);
+}
+label,
+input[type="radio"],
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.content__el {
   padding: 0.5rem;
   margin-top: 1rem;
   background-color: #1c1c1c;
   overflow: hidden;
   border-radius: 0.2rem;
 }
-.page__el:first-child {
+.content__el:first-child {
   margin-top: 0;
 }
 
@@ -50,19 +64,5 @@
   margin: 0.2rem;
   color: #fff;
   text-shadow: 3px 5px 4px rgba(0,0,0,0.6);
-}
-
-body {
-  background-color: #2d2d2d;
-  font-family: sans-serif;
-}
-label {
-  color: #fff;
-  text-shadow: 3px 5px 4px rgba(0,0,0,0.6);
-}
-label,
-input[type="radio"],
-input[type="checkbox"] {
-  cursor: pointer;
 }
 

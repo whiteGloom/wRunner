@@ -1,11 +1,22 @@
-mixin sample(options)
+mixin sample(options = {})
     -
-        options = options || {};
-        const {title = "", data = []} = options;
+        const {title = "", id="", data = [
+            {title: "step"},
+            {title: "minLimit"},
+            {title: "maxLimit"},
+            {title: "sliderType", type: "radio", data: [{label: "Single", value: "single", name: "type"}, {label: "Range", value: "range", name: "type"}]},
+            {title: "value"},
+            {title: "minValue"},
+            {title: "maxValue"},
+            {title: "sliderRoots"},
+            {title: "sliderDirection", type: "radio", data: [{label: "Horizontal", value: "horizontal", name: "direction"}, {label: "Vertical", value: "vertical", name: "direction"}]},
+            {title: "sliderValueNoteDisplay", type: "checkbox"},
+            {title: "sliderDivisionsCount"}
+        ]} = options;
     .sample.js-sample
         h1.sample__title= title
         .sample__body
-            .sample__instance.js-sample__instance
+            .sample__instance.js-sample__instance(id=id)
             form.sample__data
                 for item in data
                     .sample__parameter
