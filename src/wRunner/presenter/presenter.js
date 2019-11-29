@@ -1,14 +1,21 @@
+import { ModelPublicks } from '../model/model.defaults';
+import { ViewPublicks } from '../view/view.defaults';
+
 class Presenter {
   constructor(options = {}) {
     const { userOptions, model, view } = options;
+
+    const modelPublicks = new ModelPublicks();
+    const viewPublicks = new ViewPublicks();
+    const combinedOptions = { ...modelPublicks, ...viewPublicks, ...userOptions };
 
     this.model = model;
     this.view = view;
 
     // Plugin load
     this.applyDefaultEvents();
-    this.applyUserEvents(userOptions);
-    this.applyUserOptions(userOptions);
+    this.applyUserEvents(combinedOptions);
+    this.applyUserOptions(combinedOptions);
   }
 
 
@@ -71,7 +78,7 @@ class Presenter {
   }
 
   UIMouseActionEventHandler(data) {
-    this.model.setNearestValue(data, true);
+    this.model.setNearestValue(data);
   }
 
   themeUpdateEventHandler() {
@@ -144,34 +151,15 @@ class Presenter {
       onValueNoteDisplayUpdate,
     } = options;
 
-    if (onTypeUpdate) {
-      this.model.typeUpdateEvent.addHandler(onTypeUpdate);
-    }
-    if (onLimitsUpdate) {
-      this.model.limitsUpdateEvent.addHandler(onLimitsUpdate);
-    }
-    if (onStepUpdate) {
-      this.model.stepUpdateEvent.addHandler(onStepUpdate);
-    }
-    if (onValueUpdate) {
-      this.model.valueUpdateEvent.addHandler(onValueUpdate);
-    }
-
-    if (onRootsUpdate) {
-      this.view.rootsUpdateEvent.addHandler(onRootsUpdate);
-    }
-    if (onThemeUpdate) {
-      this.view.themeUpdateEvent.addHandler(onThemeUpdate);
-    }
-    if (onDirectionUpdate) {
-      this.view.directionUpdateEvent.addHandler(onDirectionUpdate);
-    }
-    if (onDivisionsCountUpdate) {
-      this.view.divisionsCountUpdateEvent.addHandler(onDivisionsCountUpdate);
-    }
-    if (onValueNoteDisplayUpdate) {
-      this.view.valueNoteDisplayUpdateEvent.addHandler(onValueNoteDisplayUpdate);
-    }
+    this.model.typeUpdateEvent.addHandler(onTypeUpdate);
+    this.model.limitsUpdateEvent.addHandler(onLimitsUpdate);
+    this.model.stepUpdateEvent.addHandler(onStepUpdate);
+    this.model.valueUpdateEvent.addHandler(onValueUpdate);
+    this.view.rootsUpdateEvent.addHandler(onRootsUpdate);
+    this.view.themeUpdateEvent.addHandler(onThemeUpdate);
+    this.view.directionUpdateEvent.addHandler(onDirectionUpdate);
+    this.view.divisionsCountUpdateEvent.addHandler(onDivisionsCountUpdate);
+    this.view.valueNoteDisplayUpdateEvent.addHandler(onValueNoteDisplayUpdate);
   }
 
   applyUserOptions(options = {}) {
