@@ -1,4 +1,4 @@
-import { ModelDefaults } from './model.defaults';
+import ModelDefaults from './model.defaults';
 import makeEventModule from '@event';
 import helperModule from '@helper';
 

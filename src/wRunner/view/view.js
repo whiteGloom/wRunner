@@ -1,4 +1,4 @@
-import { ViewDefaults } from './view.defaults';
+import ViewDefaults from './view.defaults';
 import makeEventModule from '@event';
 import helperModule from '@helper';
 

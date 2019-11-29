@@ -23,16 +23,16 @@ class ViewDefaults {
       verticalValue: 'vertical',
     };
   }
-}
 
-class ViewPublicks {
-  constructor() {
-    this.roots = document.body;
-    this.theme = 'default';
-    this.direction = 'horizontal';
-    this.divisionsCount = 5;
-    this.valueNoteDisplay = true;
+  getOptionsPresets() {
+    return {
+      roots: this.roots,
+      theme: this.theme.value,
+      direction: this.direction.value,
+      divisionsCount: this.divisionsCount,
+      valueNoteDisplay: this.valueNoteDisplay,
+    };
   }
 }
 
-export { ViewDefaults, ViewPublicks };
+export default ViewDefaults;

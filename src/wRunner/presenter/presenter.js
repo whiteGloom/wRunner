@@ -1,13 +1,13 @@
-import { ModelPublicks } from '../model/model.defaults';
-import { ViewPublicks } from '../view/view.defaults';
+import ModelDefaults from '../model/model.defaults';
+import ViewDefaults from '../view/view.defaults';
 
 class Presenter {
   constructor(options = {}) {
     const { userOptions, model, view } = options;
 
-    const modelPublicks = new ModelPublicks();
-    const viewPublicks = new ViewPublicks();
-    const combinedOptions = { ...modelPublicks, ...viewPublicks, ...userOptions };
+    const modelDefaults = new ModelDefaults();
+    const viewDefaults = new ViewDefaults();
+    const combinedOptions = { ...modelDefaults.getOptionsPresets(), ...viewDefaults.getOptionsPresets(), ...userOptions };
 
     this.model = model;
     this.view = view;
