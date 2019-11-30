@@ -1,6 +1,6 @@
 class Helper {
   isNumber(value) {
-    if ((typeof value === 'number' || typeof value === 'string') && Number.isFinite(+value)) return true;
+    if ((typeof value === 'number' || typeof value === 'string') && isFinite(+value)) return true;
 
     return false;
   }

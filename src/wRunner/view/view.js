@@ -23,15 +23,10 @@ class View {
     this.outer = document.createElement('div');
     this.path = document.createElement('div');
     this.pathPassed = document.createElement('div');
-    this.handle = document.createElement('div');
-    this.handleMin = document.createElement('div');
-    this.handleMax = document.createElement('div');
-    this.valueNote = document.createElement('div');
-    this.valueNoteMin = document.createElement('div');
-    this.valueNoteMax = document.createElement('div');
-    this.valueNoteCommon = document.createElement('div');
     this.divisionsBlock = document.createElement('div');
     this.divisionsList = [];
+    this.valueNotes = [];
+    this.handlers = [];
 
     // Init
     this.init();
@@ -40,25 +35,19 @@ class View {
   }
 
   init() {
-    window.requestAnimationFrame(() => {
-      this.mainNode.classList.add('wrunner');
-      this.outer.classList.add('wrunner__outer');
-      this.path.classList.add('wrunner__path');
-      this.pathPassed.classList.add('wrunner__path-passed');
-      this.handle.classList.add('wrunner__handle');
-      this.handleMin.classList.add('wrunner__handle-min');
-      this.handleMax.classList.add('wrunner__handle-max');
-      this.valueNote.classList.add('wrunner__value-note');
-      this.valueNoteMin.classList.add('wrunner__value-note-min');
-      this.valueNoteMax.classList.add('wrunner__value-note-max');
-      this.valueNoteCommon.classList.add('wrunner__value-note-common');
-      this.divisionsBlock.classList.add('wrunner__divisions');
-    });
+    this.mainNode.classList.add('wrunner');
+    this.outer.classList.add('wrunner__outer');
+    this.path.classList.add('wrunner__path');
+    this.pathPassed.classList.add('wrunner__path-passed');
+    this.divisionsBlock.classList.add('wrunner__divisions');
 
     this.path.appendChild(this.pathPassed);
     this.outer.appendChild(this.path);
     this.outer.appendChild(this.divisionsBlock);
-    this.mainNode.appendChild(this.outer);
+
+    window.requestAnimationFrame(() => {
+      this.mainNode.appendChild(this.outer);
+    });
   }
 
   addEvents() {
@@ -83,32 +72,17 @@ class View {
 
     // Handlers
     function handlerFunction(event) {
-      let scale;
-      let min;
-      let pos;
-      const direction = this.direction.value;
-      const { directionConstants } = this;
-
-      if (direction === directionConstants.horizontalValue) {
-        scale = this.path.offsetWidth;
-        min = this.path.getBoundingClientRect().left;
-        pos = event.clientX;
-      }
-      if (direction === directionConstants.verticalValue) {
-        scale = this.path.offsetHeight;
-        min = this.path.getBoundingClientRect().top;
-        pos = event.clientY;
-      }
-
-      const max = min + scale;
+      const isHorizontal = this.direction.value === this.directionConstants.horizontalValue;
+      const scale = this.path[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
+      const min = this.path.getBoundingClientRect()[isHorizontal ? 'left' : 'top'];
+      const pos = event[isHorizontal ? 'clientX' : 'clientY'];
 
       // If the dragging is out of slider's range, the function stops.
-      if (pos < min - 10 || pos > max + 10) return;
+      if (pos < min - 10 || pos > min + scale + 10) return;
 
-      if (direction === directionConstants.horizontalValue) {
+      if (isHorizontal) {
         this.UIMouseActionEvent.trigger(((pos - min) / scale) * 100);
-      }
-      if (direction === directionConstants.verticalValue) {
+      } else {
         this.UIMouseActionEvent.trigger(100 - ((pos - min) / scale) * 100);
       }
     }
@@ -116,60 +90,59 @@ class View {
 
     function mouseUpFunction(eventUp) {
       const { target } = eventUp;
-
-      // Removing move bind.
       document.body.removeEventListener('mousemove', handler);
 
-      // If handle was dragged, stop the function.
       if (wasDragged) return;
       if (target === this.handle || target === this.handleMin || target === this.handleMax) return;
 
-      // Else trigger a click.
       handler(eventUp);
     }
     const mouseUp = mouseUpFunction.bind(this);
 
-    // The handler that indicates that the handle has been dragged.
     document.body.addEventListener('mousemove', () => { wasDragged = true; }, { once: true });
-
-    // The handler that called when mouse button released.
     document.body.addEventListener('mousemove', handler);
-
-    // The handler that called when mouse moved, while button pressed.
     document.body.addEventListener('mouseup', mouseUp, { once: true });
   }
 
   updateDOM(type) {
-    if (type.value === type.typeConstants.singleValue) {
-      window.requestAnimationFrame(() => {
-        this.handleMin.remove();
-        this.handleMax.remove();
-        this.valueNoteMin.remove();
-        this.valueNoteMax.remove();
-        this.valueNoteCommon.remove();
-
-        this.path.appendChild(this.handle);
-        this.outer.appendChild(this.valueNote);
+    function makeEl(classes) {
+      const el = document.createElement('div');
+      classes.forEach((nodeClass) => {
+        el.classList.add(nodeClass);
       });
+      return el;
     }
-    if (type.value === type.typeConstants.rangeValue) {
-      window.requestAnimationFrame(() => {
-        this.handle.remove();
-        this.valueNote.remove();
 
-        this.path.appendChild(this.handleMin);
-        this.path.appendChild(this.handleMax);
-        this.outer.appendChild(this.valueNoteMin);
-        this.outer.appendChild(this.valueNoteMax);
-        this.outer.appendChild(this.valueNoteCommon);
-      });
+    this.handlers.concat(this.valueNotes).forEach((el) => {
+      el.remove();
+    });
+    this.handlers.length = 0;
+    this.valueNotes.length = 0;
+
+    if (type.value === type.constants.singleValue) {
+      this.handlers.push(makeEl(['wrunner__handle']));
+      this.valueNotes.push(makeEl(['wrunner__value-note']));
     }
+    if (type.value === type.constants.rangeValue) {
+      this.handlers.push(makeEl(['wrunner__handle', 'wrunner__handle_type_min']));
+      this.handlers.push(makeEl(['wrunner__handle', 'wrunner__handle_type_max']));
+      this.valueNotes.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_min']));
+      this.valueNotes.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_common']));
+      this.valueNotes.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_max']));
+    }
+
+    window.requestAnimationFrame(() => {
+      this.handlers.forEach((el) => {
+        this.path.appendChild(el);
+      });
+      this.valueNotes.forEach((el) => {
+        this.outer.appendChild(el);
+      });
+    });
   }
 
   append() {
-    window.requestAnimationFrame(() => {
-      this.roots.appendChild(this.mainNode);
-    });
+    this.roots.appendChild(this.mainNode);
     return this.roots;
   }
 
@@ -178,11 +151,8 @@ class View {
     const els = [
       this.mainNode, this.outer,
       this.path, this.pathPassed,
-      this.divisionsBlock, this.handle,
-      this.handleMin, this.handleMax,
-      this.valueNote, this.valueNoteMin,
-      this.valueNoteMax, this.valueNoteCommon,
-    ].concat(this.divisionsList);
+      this.divisionsBlock,
+    ].concat(this.divisionsList, this.handlers, this.valueNotes);
 
     window.requestAnimationFrame(() => {
       els.forEach((el) => {
@@ -197,208 +167,151 @@ class View {
     });
   }
 
-  drawValue(value, limits, type) {
-    let pathScale;
-    const { selected } = value;
-    const direction = this.direction.value;
-    const { directionConstants } = this;
+  drawValue(values, limits, direction, type) {
+    this.setPathPosition(limits, values, direction, type);
+    this.setHandlersPosition(limits, values, direction);
+    this.setValueNotesPosition(limits, values, direction);
+  }
 
-    function drawSingleValue() {
-      let valueNoteScale;
-      const clearList = [
-        this.pathPassed, this.handle, this.valueNote,
-      ];
+  setPathPosition({ minLimit, maxLimit, valuesCount }, values, direction, type) {
+    const isHorizontal = direction.value === direction.constants.horizontalValue;
+    const isSingle = type.value === type.constants.singleValue;
+    const posProp = isHorizontal ? 'left' : 'top';
+    const sizeProp = isHorizontal ? 'width' : 'height';
+    window.requestAnimationFrame(() => {
+      this.pathPassed.style.cssText = '';
 
-      this.valueNote.innerHTML = value.value;
-
-
-      if (direction === directionConstants.horizontalValue) {
-        clearList.forEach((elem) => {
-          const el = elem;
-          if (el.style.top !== '') el.style.top = '';
-          if (el.style.left !== '') el.style.left = '';
-          if (el.style.height !== '') el.style.height = '';
-        });
-
-        // Passed path
-        this.pathPassed.style.width = `${selected}%`;
-
-        // Handle
-        this.handle.style.left = `${selected}%`;
-
-        pathScale = this.path.offsetWidth; valueNoteScale = this.valueNote.offsetWidth;
-
-        this.valueNote.style.left = `${((pathScale * (selected / 100) - (valueNoteScale / 2)) / pathScale) * 100}%`;
+      let position;
+      if (isSingle) {
+        position = isHorizontal
+          ? 0 : 100 - ((values.value - minLimit) / valuesCount) * 100;
       }
-
-      if (direction === directionConstants.verticalValue) {
-        clearList.forEach((elem) => {
-          const el = elem;
-          if (el.style.top !== '') el.style.top = '';
-          if (el.style.left !== '') el.style.left = '';
-          if (el.style.width !== '') el.style.width = '';
-        });
-
-        // Passed path
-        this.pathPassed.style.height = `${selected}%`;
-
-        // Handle
-        this.handle.style.top = `${100 - selected}%`;
-
-        pathScale = this.path.offsetHeight; valueNoteScale = this.valueNote.offsetHeight;
-
-        this.valueNote.style.top = `${100 - ((pathScale * (selected / 100) + valueNoteScale / 2) / pathScale) * 100}%`;
+      if (!isSingle) {
+        position = isHorizontal
+          ? ((values.minValue - minLimit) / valuesCount) * 100
+          : ((maxLimit - values.maxValue) / valuesCount) * 100;
       }
+      const size = isSingle
+        ? ((values.value - minLimit) / valuesCount) * 100
+        : ((values.maxValue - values.minValue) / valuesCount) * 100;
+
+      this.pathPassed.style[sizeProp] = `${size}%`;
+      this.pathPassed.style[posProp] = `${position}%`;
+    });
+  }
+
+  setHandlersPosition({ minLimit, valuesCount }, values, direction) {
+    const isHorizontal = direction.value === direction.constants.horizontalValue;
+    const posProp = isHorizontal ? 'left' : 'top';
+
+    function setPosition(element, value) {
+      const el = element;
+      el.style.cssText = '';
+      const position = isHorizontal
+        ? ((value - minLimit) / valuesCount) * 100
+        : 100 - ((value - minLimit) / valuesCount) * 100;
+
+      el.style[posProp] = `${position}%`;
     }
 
-    function drawRangeValue() {
-      let valueNoteMinScale;
-      let valueNoteMaxScale;
-      let valueNoteCommonScale;
-      let maxPos;
-      let minPos;
-      let commonPos;
+    window.requestAnimationFrame(() => {
+      if (this.handlers.length === 1) {
+        setPosition(this.handlers[0], values.value);
+      }
+      if (this.handlers.length === 2) {
+        setPosition(this.handlers[0], values.minValue);
+        setPosition(this.handlers[1], values.maxValue);
+      }
+    });
+  }
 
-      const start = ((value.minValue - limits.minLimit) / limits.valuesCount) * 100;
-      const clearList = [
-        this.pathPassed,
-        this.handleMin, this.handleMax,
-        this.valueNoteMin, this.valueNoteMax, this.valueNoteCommon,
-      ];
+  setValueNotesPosition({ minLimit, valuesCount }, values, direction) {
+    const isHorizontal = direction.value === direction.constants.horizontalValue;
+    const getSizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
+    const posProp = isHorizontal ? 'left' : 'top';
 
-      this.valueNoteMin.innerHTML = value.minValue;
-      this.valueNoteMax.innerHTML = value.maxValue;
-
-      function checkValueNoteRangeMode() {
-        if (maxPos - minPos >= (valueNoteMinScale + valueNoteMaxScale) / 2) {
-          if (this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.separateValue) {
-            this.valueNoteRangeMode = this.valueNoteRangeModeConstants.separateValue;
-            this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
-          }
-        } else if (this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.commonValue) {
-          this.valueNoteRangeMode = this.valueNoteRangeModeConstants.commonValue;
-          this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
-        }
+    function draw(element, value, title = '') {
+      const pathScale = this.path[getSizeProp];
+      const el = element;
+      el.style.cssText = '';
+      if (typeof title === 'string' || typeof title === 'number') {
+        el.innerHTML = title;
+      } else {
+        el.innerHTML = `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`;
       }
 
-      if (direction === directionConstants.horizontalValue) {
-        clearList.forEach((elem) => {
-          const el = elem;
-          if (el.style.top !== '') el.style.top = '';
-          if (el.style.height !== '') el.style.height = '';
-        });
+      const percent = (value - minLimit) / valuesCount;
+      const position = isHorizontal
+        ? ((percent * pathScale - el[getSizeProp] / 2) / pathScale) * 100
+        : 100 - ((percent * pathScale + el[getSizeProp] / 2) / pathScale) * 100;
 
-        this.valueNoteCommon.innerHTML = `${value.minValue} - ${value.maxValue}`;
-
-        // Passed path
-        this.pathPassed.style.width = `${selected}%`;
-        this.pathPassed.style.left = `${start}%`;
-
-        // Handle
-        this.handleMin.style.left = `${start}%`;
-        this.handleMax.style.left = `${start + selected}%`;
-
-        pathScale = this.path.offsetWidth;
-        valueNoteMinScale = this.valueNoteMin.offsetWidth;
-        valueNoteMaxScale = this.valueNoteMax.offsetWidth;
-        valueNoteCommonScale = this.valueNoteCommon.offsetWidth;
-
-        minPos = (pathScale * (start / 100) - valueNoteMinScale / 2);
-        maxPos = (pathScale * ((start + selected) / 100) - valueNoteMaxScale / 2);
-        commonPos = (pathScale * ((start + selected / 2) / 100) - valueNoteCommonScale / 2);
-
-        this.valueNoteMin.style.left = `${(minPos / pathScale) * 100}%`;
-        this.valueNoteMax.style.left = `${(maxPos / pathScale) * 100}%`;
-        this.valueNoteCommon.style.left = `${(commonPos / pathScale) * 100}%`;
-
-        // valueNoteRangeMode
-        checkValueNoteRangeMode.call(this, minPos, maxPos, valueNoteMinScale, valueNoteMaxScale);
-      }
-
-      if (direction === directionConstants.verticalValue) {
-        clearList.forEach((elem) => {
-          const el = elem;
-          if (el.style.left !== '') el.style.left = '';
-          if (el.style.width !== '') el.style.width = '';
-        });
-
-        this.valueNoteCommon.innerHTML = `${value.maxValue}<br>|<br>${value.minValue}`;
-
-        // Passed path
-        this.pathPassed.style.height = `${selected}%`;
-        this.pathPassed.style.top = `${100 - selected - start}%`;
-
-        // Handle
-        this.handleMax.style.top = `${100 - start - selected}%`;
-        this.handleMin.style.top = `${100 - start}%`;
-
-        pathScale = this.path.offsetHeight;
-        valueNoteMinScale = this.valueNoteMin.offsetHeight;
-        valueNoteMaxScale = this.valueNoteMax.offsetHeight;
-        valueNoteCommonScale = this.valueNoteCommon.offsetHeight;
-
-        minPos = (pathScale * (start / 100) + valueNoteMinScale / 2);
-        maxPos = (pathScale * ((start + selected) / 100) + valueNoteMaxScale / 2);
-        commonPos = (pathScale * ((start + selected / 2) / 100) + valueNoteCommonScale / 2);
-
-        this.valueNoteMin.style.top = `${100 - (minPos / pathScale) * 100}%`;
-        this.valueNoteMax.style.top = `${100 - (maxPos / pathScale) * 100}%`;
-        this.valueNoteCommon.style.top = `${100 - (commonPos / pathScale) * 100}%`;
-
-        // valueNoteRangeMode
-        checkValueNoteRangeMode.call(this);
-      }
+      el.style[posProp] = `${position}%`;
     }
 
-    if (type.value === type.typeConstants.singleValue) {
-      window.requestAnimationFrame(drawSingleValue.bind(this));
-    }
+    window.requestAnimationFrame(() => {
+      if (this.valueNotes.length === 1) {
+        draw.call(this, this.valueNotes[0], values.value, values.value);
+      }
+      if (this.valueNotes.length === 3) {
+        draw.call(this, this.valueNotes[0], values.minValue, values.minValue);
+        draw.call(this, this.valueNotes[1], (values.minValue + values.maxValue) / 2,
+          [values.minValue, values.maxValue]);
+        draw.call(this, this.valueNotes[2], values.maxValue, values.maxValue);
+        this.checkValueNotesMode({ minLimit, valuesCount }, values, direction);
+      }
+    });
+  }
 
-    if (type.value === type.typeConstants.rangeValue) {
-      window.requestAnimationFrame(drawRangeValue.bind(this));
+  checkValueNotesMode({ minLimit, valuesCount }, { minValue, maxValue }, direction) {
+    if (this.valueNotes.length < 3) return;
+    const getSizeProp = direction.value === direction.constants.horizontalValue ? 'offsetWidth' : 'offsetHeight';
+    const [elFirst,, elSec] = this.valueNotes;
+    function calcPos(el, value) {
+      return ((value - minLimit) / valuesCount) * this.path[getSizeProp] + el[getSizeProp] / 2;
+    }
+    const distance = calcPos.call(this, elSec, maxValue) - calcPos.call(this, elFirst, minValue);
+    const sizes = (elFirst[getSizeProp] + elSec[getSizeProp]) / 2;
+
+    if (distance >= sizes) {
+      if (this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.separateValue) {
+        this.valueNoteRangeMode = this.valueNoteRangeModeConstants.separateValue;
+        this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
+      }
+    } else if (this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.commonValue) {
+      this.valueNoteRangeMode = this.valueNoteRangeModeConstants.commonValue;
+      this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
     }
   }
 
-  applyValueNoteDisplay() {
-    const notes = [this.valueNote, this.valueNoteMin, this.valueNoteMax, this.valueNoteCommon];
-
-    function handle(els, action) {
-      els.forEach((el) => {
-        const mark = el.classList[0];
-
-        el.classList[action === 'show' ? 'add' : 'remove'](`${mark}_display_visible`);
-        el.classList[action === 'show' ? 'remove' : 'add'](`${mark}_display_hidden`);
+  applyValueNotesDisplay(display) {
+    function set(el, value) {
+      const mark = el.classList[0];
+      window.requestAnimationFrame(() => {
+        el.classList[value ? 'add' : 'remove'](`${mark}_display_visible`);
+        el.classList[value ? 'remove' : 'add'](`${mark}_display_hidden`);
       });
     }
 
-    function showSingleDisplay() {
-      const notesSingle = [this.valueNote];
-      handle(notesSingle, 'show');
+    if (this.valueNotes.length === 1) {
+      set(this.valueNotes[0], display);
     }
-
-    function showRangeDisplay() {
-      const notesSeparate = [this.valueNoteMin, this.valueNoteMax];
-      const notesCommon = [this.valueNoteCommon];
-
-      // Separate
-      if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.separateValue) {
-        handle(notesSeparate, 'show');
-        handle(notesCommon, 'hide');
+    if (this.valueNotes.length === 3) {
+      if (!display) {
+        this.valueNotes.forEach((el) => {
+          set(el, false);
+        });
+      } else {
+        if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.separateValue) {
+          set(this.valueNotes[0], true);
+          set(this.valueNotes[1], false);
+          set(this.valueNotes[2], true);
+        }
+        if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.commonValue) {
+          set(this.valueNotes[0], false);
+          set(this.valueNotes[1], true);
+          set(this.valueNotes[2], false);
+        }
       }
-      // Common
-      if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.commonValue) {
-        handle(notesCommon, 'show');
-        handle(notesSeparate, 'hide');
-      }
-    }
-
-    if (this.valueNoteDisplay === false) {
-      window.requestAnimationFrame(handle.bind(this, notes, 'hide'));
-    }
-
-    if (this.valueNoteDisplay === true) {
-      window.requestAnimationFrame(showSingleDisplay.bind(this));
-      window.requestAnimationFrame(showRangeDisplay.bind(this));
     }
   }
 
@@ -406,7 +319,7 @@ class View {
     this.divisionsBlock.innerHTML = '';
     this.divisionsList.length = 0;
 
-    for (let i = this.divisionsCount; i > 0; i -= 1) {
+    while (this.divisionsList.length < this.divisionsCount) {
       const instance = document.createElement('div');
       instance.classList.add('wrunner__division');
 

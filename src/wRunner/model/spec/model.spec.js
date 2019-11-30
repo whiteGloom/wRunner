@@ -117,8 +117,8 @@ describe('getType method.', () => {
     expect(result.value).toEqual(model.type);
 
     // The 'typeConstants' property is an object.
-    expect(helper.isObject(result.typeConstants)).toBeTruthy();
-    expect(result.typeConstants).toEqual(model.typeConstants);
+    expect(helper.isObject(result.constants)).toBeTruthy();
+    expect(result.constants).toEqual(model.typeConstants);
   });
 });
 
@@ -593,9 +593,9 @@ describe('setStep method.', () => {
 });
 
 describe('setType method.', () => {
-  describe('Normal values - if value is listed in typeConstants. Changes sliders type, returns {type: **type**, typeConstants: **list of reserved types**}.', () => {
-    Object.keys(model.getType().typeConstants).forEach((constant) => {
-      it(`Taking ${model.getType().typeConstants[constant]}, changes type to ${model.getType().typeConstants[constant]}`, () => {
+  describe('Normal values - if value is listed in typeConstants. Changes sliders type, returns {type: **type**, constants: **list of reserved types**}.', () => {
+    Object.keys(model.getType().constants).forEach((constant) => {
+      it(`Taking ${model.getType().constants[constant]}, changes type to ${model.getType().constants[constant]}`, () => {
         model.setType(model.typeConstants[constant]);
 
         expect(model.type).toEqual(model.typeConstants[constant]);

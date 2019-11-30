@@ -2,7 +2,6 @@ import ModelDefaults from './model.defaults';
 import makeEventModule from '@event';
 import helperModule from '@helper';
 
-
 const helper = helperModule;
 const makeEvent = makeEventModule;
 
@@ -26,14 +25,10 @@ class Model {
   }
 
   recalculateValue() {
-    if (this.type === this.typeConstants.singleValue) {
-      return this.setSingleValue(null, true);
-    }
-
-    if (this.type === this.typeConstants.rangeValue) {
-      return this.setRangeValue(null, true);
-    }
-    return false;
+    const isSingle = this.type === this.typeConstants.singleValue;
+    return isSingle
+      ? this.setSingleValue(null)
+      : this.setRangeValue(null);
   }
 
   setAValueTo(newValue, mutable) {
@@ -90,7 +85,6 @@ class Model {
       maxLimit: this.maxLimit,
       valuesCount: this.valuesCount,
     });
-
     return {
       minLimit: this.minLimit,
       maxLimit: this.maxLimit,
@@ -161,19 +155,18 @@ class Model {
   setNearestValue(newValue, viaPercents) {
     if (!helper.isNumber(newValue)) return;
 
+    const isSingle = this.type === this.typeConstants.singleValue;
     const value = viaPercents === false
       ? Math.round(+newValue)
       : Math.round(this.valuesCount * (+newValue / 100) + this.minLimit);
 
-    if (this.type === this.typeConstants.singleValue) {
-      this.setSingleValue(value);
-    }
+    if (isSingle) this.setSingleValue(value);
 
-    if (this.type === this.typeConstants.rangeValue) {
+    if (!isSingle) {
       if (value < (this.rangeValueMin + this.rangeValueMax) / 2) {
-        this.setRangeValue({ minValue: +value }, true);
+        this.setRangeValue({ minValue: +value });
       } else {
-        this.setRangeValue({ maxValue: +value }, true);
+        this.setRangeValue({ maxValue: +value });
       }
     }
   }
@@ -181,7 +174,7 @@ class Model {
   getType() {
     return {
       value: this.type,
-      typeConstants: { ...this.typeConstants },
+      constants: { ...this.typeConstants },
     };
   }
 
@@ -198,21 +191,17 @@ class Model {
   }
 
   getValue() {
-    if (this.type === this.typeConstants.singleValue) {
-      return {
+    const isSingle = this.type === this.typeConstants.singleValue;
+    return isSingle
+      ? {
         value: this.singleValue,
         selected: this.singleSelected,
-      };
-    }
-
-    if (this.type === this.typeConstants.rangeValue) {
-      return {
+      }
+      : {
         minValue: this.rangeValueMin,
         maxValue: this.rangeValueMax,
         selected: this.rangeSelected,
       };
-    }
-    return false;
   }
 
   addEvents() {

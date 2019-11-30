@@ -9,7 +9,7 @@ const { window } = (new JSDOM('<body><div id="root"></div></body>', { runScripts
 global.window = window;
 global.document = window.document;
 window.requestAnimationFrame = function gag(callback) {
-  setTimeout(callback, 0);
+  callback()
 };
 
 
@@ -18,34 +18,31 @@ const view = new ViewModule();
 describe('updateDOM method.', () => {
   describe('When type is "single".', () => {
     it('Rebuild plugin structure.', () => {
-      view.updateDOM({ value: 'single', typeConstants: { singleValue: 'single', rangeValue: 'range' } });
+      view.updateDOM({ value: 'single', constants: { singleValue: 'single', rangeValue: 'range' } });
 
-      setTimeout(() => {
-        expect(view.path.parentNode === view.outer).toBeTruthy();
-        expect(view.pathPassed.parentNode === view.path).toBeTruthy();
-        expect(view.divisionsBlock.parentNode === view.outer).toBeTruthy();
-
-        expect(view.handle.parentNode === view.path);
-        expect(view.valueNote.parentNode === view.outer);
-      }, 1);
+      view.handlers.length = 1;
+      view.valueNotes.length = 1;
+      view.handlers.forEach((el) => {
+        expect(el.parentNode === view.path).toBeTruthy();
+      });
+      view.valueNotes.forEach((el) => {
+        expect(el.parentNode === view.outer).toBeTruthy();
+      });
     });
   });
 
   describe('When type is "range".', () => {
     it('Rebuild plugin structure.', () => {
-      view.updateDOM({ value: 'range', typeConstants: { singleValue: 'single', rangeValue: 'range' } });
+      view.updateDOM({ value: 'range', constants: { singleValue: 'single', rangeValue: 'range' } });
 
-      setTimeout(() => {
-        expect(view.path.parentNode === view.outer).toBeTruthy();
-        expect(view.pathPassed.parentNode === view.path).toBeTruthy();
-        expect(view.divisionsBlock.parentNode === view.outer).toBeTruthy();
-
-        expect(view.handleMin.parentNode === view.path).toBeTruthy();
-        expect(view.handleMax.parentNode === view.path).toBeTruthy();
-        expect(view.valueNoteMin.parentNode === view.outer).toBeTruthy();
-        expect(view.valueNoteMax.parentNode === view.outer).toBeTruthy();
-        expect(view.valueNoteCommon.parentNode === view.outer).toBeTruthy();
-      }, 1);
+      view.handlers.length = 2;
+      view.valueNotes.length = 3;
+      view.handlers.forEach((el) => {
+        expect(el.parentNode === view.path).toBeTruthy();
+      });
+      view.valueNotes.forEach((el) => {
+        expect(el.parentNode === view.outer).toBeTruthy();
+      });
     });
   });
 });
@@ -54,9 +51,7 @@ describe('append method.', () => {
   it('Applying sliders roots.', () => {
     view.append();
 
-    setTimeout(() => {
-      expect(view.mainNode.parentNode === view.roots).toBeTruthy();
-    }, 1);
+    expect(view.mainNode.parentNode === view.roots).toBeTruthy();
   });
 });
 
@@ -440,20 +435,15 @@ describe('applyStyles method.', () => {
       const els = [
         view.mainNode, view.outer,
         view.path, view.pathPassed,
-        view.divisionsBlock, view.handle,
-        view.handleMin, view.handleMax,
-        view.valueNote, view.valueNoteMin,
-        view.valueNoteMax,
-      ].concat(view.divisionsList);
+        view.divisionsBlock
+      ].concat(view.divisionsList, view.valueNotes, view.handlers);
 
-      setTimeout(() => {
-        for (let i = 0; i < els.length; i += 1) {
-          const el = els[i];
+      for (let i = 0; i < els.length; i += 1) {
+        const el = els[i];
 
-          expect(el).toHaveClass(`${el.classList[0]}_theme_default`);
-          expect(el).toHaveClass(`${el.classList[0]}_direction_horizontal`);
-        }
-      }, 1);
+        expect(el).toHaveClass(`${el.classList[0]}_theme_default`);
+        expect(el).toHaveClass(`${el.classList[0]}_direction_horizontal`);
+      }
     });
   });
 
@@ -466,19 +456,14 @@ describe('applyStyles method.', () => {
       const els = [
         view.mainNode, view.outer,
         view.path, view.pathPassed,
-        view.divisionsBlock, view.handle,
-        view.handleMin, view.handleMax,
-        view.valueNote, view.valueNoteMin,
-        view.valueNoteMax,
-      ].concat(view.divisionsList);
+        view.divisionsBlock
+      ].concat(view.divisionsList, view.valueNotes, view.handlers);
 
-      setTimeout(() => {
-        for (let i = 0; i < els.length; i += 1) {
-          const el = els[i];
-          expect(el).not.toHaveClass(`${el.classList[0]}_theme_default`);
-          expect(el).not.toHaveClass(`${el.classList[0]}_direction_horizontal`);
-        }
-      }, 1);
+      for (let i = 0; i < els.length; i += 1) {
+        const el = els[i];
+        expect(el).not.toHaveClass(`${el.classList[0]}_theme_default`);
+        expect(el).not.toHaveClass(`${el.classList[0]}_direction_horizontal`);
+      }
     });
   });
 });
@@ -547,28 +532,47 @@ describe('setValueNoteDisplay method.', () => {
   });
 });
 
-describe('applyValueNoteDisplay method.', () => {
-  describe('When display is true.', () => {
+describe('applyValueNotesDisplay method.', () => {
+  describe('When display is true, type is single.', () => {
     it('Applying display of value note.', () => {
-      view.setValueNoteDisplay(true);
-      view.applyValueNoteDisplay();
-      setTimeout(() => {
-        expect(view.valueNote).toHaveClass(`${view.valueNote.classList[0]}_display_visible`);
-        expect(view.valueNoteMin).toHaveClass(`${view.valueNoteMin.classList[0]}_display_visible`);
-        expect(view.valueNoteMax).toHaveClass(`${view.valueNoteMax.classList[0]}_display_visible`);
-      }, 25);
+      view.updateDOM({value: 'single', constants: {singleValue: 'single', rangeValue: 'range'}})
+      view.applyValueNotesDisplay(true);
+
+      view.valueNotes.forEach((el) => {
+        expect(el).toHaveClass(`${el.classList[0]}_display_visible`);
+      });
+    });
+  });
+
+  describe('When display is true, type is range.', () => {
+    it('If valueNoteMode is "separate", chows first and last note.', () => {
+      view.updateDOM({value: 'range', constants: {singleValue: 'single', rangeValue: 'range'}})
+      view.valueNoteRangeMode = view.valueNoteRangeModeConstants.separateValue;
+      view.applyValueNotesDisplay(true);
+
+      expect(view.valueNotes[0]).toHaveClass(`${view.valueNotes[0].classList[0]}_display_visible`);
+      expect(view.valueNotes[1]).toHaveClass(`${view.valueNotes[1].classList[0]}_display_hidden`);
+      expect(view.valueNotes[2]).toHaveClass(`${view.valueNotes[2].classList[0]}_display_visible`);
+    });
+
+    it('If valueNoteMode is "common", chows second note.', () => {
+      view.updateDOM({value: 'range', constants: {singleValue: 'single', rangeValue: 'range'}})
+      view.valueNoteRangeMode = view.valueNoteRangeModeConstants.commonValue;
+      view.applyValueNotesDisplay(true);
+
+      expect(view.valueNotes[0]).toHaveClass(`${view.valueNotes[0].classList[0]}_display_hidden`);
+      expect(view.valueNotes[1]).toHaveClass(`${view.valueNotes[1].classList[0]}_display_visible`);
+      expect(view.valueNotes[2]).toHaveClass(`${view.valueNotes[2].classList[0]}_display_hidden`);
     });
   });
 
   describe('When display is false.', () => {
     it('Applying display of value note.', () => {
-      view.setValueNoteDisplay(false);
-      view.applyValueNoteDisplay();
-      setTimeout(() => {
-        expect(view.valueNote).toHaveClass(`${view.valueNote.classList[0]}_display_hidden`);
-        expect(view.valueNoteMin).toHaveClass(`${view.valueNoteMin.classList[0]}_display_hidden`);
-        expect(view.valueNoteMax).toHaveClass(`${view.valueNoteMax.classList[0]}_display_hidden`);
-      }, 25);
+      view.applyValueNotesDisplay(false);
+
+      view.valueNotes.forEach((el) => {
+        expect(el).toHaveClass(`${el.classList[0]}_display_hidden`);
+      });
     });
   });
 });

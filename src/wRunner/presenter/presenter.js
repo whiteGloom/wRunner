@@ -56,8 +56,9 @@ class Presenter {
 
   typeUpdateEventHandler() {
     this.view.updateDOM(this.model.getType());
+    this.view.applyStyles();
+    this.view.applyValueNotesDisplay(this.view.valueNoteDisplay);
     this.model.recalculateValue();
-    this.view.applyValueNoteDisplay();
   }
 
   limitsUpdateEventHandler() {
@@ -69,12 +70,12 @@ class Presenter {
   }
 
   valueUpdateEventHandler() {
-    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
   }
 
   rootsUpdateEventHandler() {
     this.view.append();
-    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
   }
 
   UIMouseActionEventHandler(data) {
@@ -83,16 +84,16 @@ class Presenter {
 
   themeUpdateEventHandler() {
     this.view.applyStyles();
-    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
   }
 
   directionUpdateEventHandler() {
     this.view.applyStyles();
-    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
   }
 
   valueNoteDisplayUpdateEventHandler() {
-    this.view.applyValueNoteDisplay();
+    this.view.applyValueNotesDisplay(this.view.valueNoteDisplay);
   }
 
   divisionsCountUpdateEventHandler() {
@@ -101,11 +102,11 @@ class Presenter {
   }
 
   valueNoteRangeModeUpdateEventHandler() {
-    this.view.applyValueNoteDisplay();
+    this.view.applyValueNotesDisplay(this.view.valueNoteDisplay);
   }
 
   windowResizeEventHandler() {
-    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.model.getType());
+    this.view.drawValue(this.model.getValue(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
   }
 
   applyDefaultEvents() {
@@ -176,13 +177,13 @@ class Presenter {
       valueNoteDisplay,
     } = options;
 
-    this.model.setType(type);
+    this.view.setRoots(roots);
     this.model.setLimits(limits);
     this.model.setStep(step);
+    this.model.setType(type);
     this.model.setSingleValue(singleValue);
     this.model.setRangeValue(rangeValue);
 
-    this.view.setRoots(roots);
     this.view.setTheme(theme);
     this.view.setDirection(direction);
     this.view.setDivisionsCount(divisionsCount);
