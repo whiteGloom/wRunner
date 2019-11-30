@@ -1,5 +1,6 @@
 // External modules
 import WebpackLoader from 'webpack-loader';
+import ghpages from 'gh-pages';
 
 // Local modules
 import getAliasesConfig from './webpackConfigs/vendors/aliasesConfig';
@@ -48,10 +49,14 @@ webpackLoader.addToDevServerConfig({
   open: false,
 });
 
+function ghPagesInit() {
+  ghpages.publish('docs', () => {});
+  console.log('GitHub Pages branch updated.');
+}
 
 // Init
 // If mode is build
-if (npmArguments.indexOf('build') > -1) webpackLoader.run();
+if (npmArguments.indexOf('build') > -1) webpackLoader.run(ghPagesInit);
 
 // If mode is build-watch
 if (npmArguments.indexOf('build-watch') > -1) webpackLoader.runWatch();
