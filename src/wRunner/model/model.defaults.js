@@ -1,28 +1,32 @@
 class ModelDefaults {
   constructor() {
-    this.minLimit = 0;
-    this.maxLimit = 100;
-    this.valuesCount = this.maxLimit - this.minLimit;
-    this.singleValue = 50;
-    this.rangeValueMin = 20;
-    this.rangeValueMax = 80;
-    this.singleSelected = ((this.singleValue - this.minLimit) / this.valuesCount) * 100;
-    this.rangeSelected = ((this.rangeValueMax - this.rangeValueMin) / this.valuesCount) * 100;
-    this.step = 1;
-    this.type = 'single';
-    this.typeConstants = {
-      singleValue: 'single',
-      rangeValue: 'range',
+    this.limits = {
+      minLimit: 0,
+      maxLimit: 100,
+      valuesCount: 100,
+    }
+    this.values = {
+      singleValue: 50,
+      rangeValueMin: 20,
+      rangeValueMax: 80,
     };
+    this.type = {
+      value: 'single',
+      constants: {
+        singleValue: 'single',
+        rangeValue: 'range',
+      },
+    };
+    this.step = 1;
   }
 
   getOptionsPresets() {
     const presets = {
-      type: this.type,
-      limits: this.limits = { minLimit: this.minLimit, maxLimit: this.maxLimit },
+      type: this.type.value,
+      limits: { minLimit: this.limits.minLimit, maxLimit: this.limits.maxLimit },
       step: this.step,
       singleValue: this.singleValue,
-      rangeValue: { minValue: this.rangeValueMin, maxValue: this.rangeValueMax },
+      rangeValue: { minValue: this.values.rangeValueMin, maxValue: this.values.rangeValueMax },
     };
 
     return presets;

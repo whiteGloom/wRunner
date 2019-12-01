@@ -20,12 +20,12 @@ describe('updateDOM method.', () => {
     it('Rebuild plugin structure.', () => {
       view.updateDOM({ value: 'single', constants: { singleValue: 'single', rangeValue: 'range' } });
 
-      view.handlers.length = 1;
-      view.valueNotes.length = 1;
-      view.handlers.forEach((el) => {
+      view.handlersList.length = 1;
+      view.valueNotesList.length = 1;
+      view.handlersList.forEach((el) => {
         expect(el.parentNode === view.path).toBeTruthy();
       });
-      view.valueNotes.forEach((el) => {
+      view.valueNotesList.forEach((el) => {
         expect(el.parentNode === view.outer).toBeTruthy();
       });
     });
@@ -35,12 +35,12 @@ describe('updateDOM method.', () => {
     it('Rebuild plugin structure.', () => {
       view.updateDOM({ value: 'range', constants: { singleValue: 'single', rangeValue: 'range' } });
 
-      view.handlers.length = 2;
-      view.valueNotes.length = 3;
-      view.handlers.forEach((el) => {
+      view.handlersList.length = 2;
+      view.valueNotesList.length = 3;
+      view.handlersList.forEach((el) => {
         expect(el.parentNode === view.path).toBeTruthy();
       });
-      view.valueNotes.forEach((el) => {
+      view.valueNotesList.forEach((el) => {
         expect(el.parentNode === view.outer).toBeTruthy();
       });
     });
@@ -340,11 +340,11 @@ describe('getTheme method.', () => {
 
 describe('setDirection method.', () => {
   describe('Normal values - reserved in direction constants (watch getDirection method). Changes sliders direction.', () => {
-    Object.keys(view.directionConstants).forEach((constant) => {
-      it(`Taking ${view.directionConstants[constant]}, changes direction to ${constant}`, () => {
-        view.setDirection(view.directionConstants[constant]);
+    Object.keys(view.direction.constants).forEach((constant) => {
+      it(`Taking ${view.direction.constants[constant]}, changes direction to ${constant}`, () => {
+        view.setDirection(view.direction.constants[constant]);
 
-        expect(view.direction.value).toEqual(view.directionConstants[constant]);
+        expect(view.direction.value).toEqual(view.direction.constants[constant]);
       });
     });
   });
@@ -421,7 +421,7 @@ describe('getDirection method.', () => {
     const result = view.getDirection();
 
     expect(result.value).toEqual('horizontal');
-    expect(result.constants).toEqual(view.directionConstants);
+    expect(result.constants).toEqual(view.direction.constants);
   });
 });
 
@@ -436,7 +436,7 @@ describe('applyStyles method.', () => {
         view.mainNode, view.outer,
         view.path, view.pathPassed,
         view.divisionsBlock
-      ].concat(view.divisionsList, view.valueNotes, view.handlers);
+      ].concat(view.divisionsList, view.valueNotesList, view.handlersList);
 
       for (let i = 0; i < els.length; i += 1) {
         const el = els[i];
@@ -457,7 +457,7 @@ describe('applyStyles method.', () => {
         view.mainNode, view.outer,
         view.path, view.pathPassed,
         view.divisionsBlock
-      ].concat(view.divisionsList, view.valueNotes, view.handlers);
+      ].concat(view.divisionsList, view.valueNotesList, view.handlersList);
 
       for (let i = 0; i < els.length; i += 1) {
         const el = els[i];
@@ -468,66 +468,66 @@ describe('applyStyles method.', () => {
   });
 });
 
-describe('setValueNoteDisplay method.', () => {
+describe('setValueNotesDisplay method.', () => {
   describe('Changing display of value note.', () => {
     it('Taking true.', () => {
-      view.setValueNoteDisplay(true);
+      view.setValueNotesDisplay(true);
 
-      expect(view.valueNoteDisplay).toBeTruthy();
+      expect(view.valueNotesDisplay).toBeTruthy();
     });
 
     it('Taking false.', () => {
-      view.setValueNoteDisplay(false);
+      view.setValueNotesDisplay(false);
 
-      expect(view.valueNoteDisplay).toBeFalsy();
+      expect(view.valueNotesDisplay).toBeFalsy();
     });
   });
 
   describe('If you try to set display as a not boolean value, returns.', () => {
     beforeAll(() => {
-      view.setValueNoteDisplay(true);
+      view.setValueNotesDisplay(true);
     });
 
     it('Taking "123".', () => {
-      view.setValueNoteDisplay('123');
+      view.setValueNotesDisplay('123');
 
-      expect(view.valueNoteDisplay).toEqual(true);
+      expect(view.valueNotesDisplay).toEqual(true);
     });
 
     it('Taking 123.', () => {
-      view.setValueNoteDisplay(123);
+      view.setValueNotesDisplay(123);
 
-      expect(view.valueNoteDisplay).toEqual(true);
+      expect(view.valueNotesDisplay).toEqual(true);
     });
 
     it('Taking {}.', () => {
-      view.setValueNoteDisplay({});
+      view.setValueNotesDisplay({});
 
-      expect(view.valueNoteDisplay).toEqual(true);
+      expect(view.valueNotesDisplay).toEqual(true);
     });
 
     it('Taking [].', () => {
-      view.setValueNoteDisplay([]);
+      view.setValueNotesDisplay([]);
 
-      expect(view.valueNoteDisplay).toEqual(true);
+      expect(view.valueNotesDisplay).toEqual(true);
     });
 
     it('Taking undefined.', () => {
-      view.setValueNoteDisplay(undefined);
+      view.setValueNotesDisplay(undefined);
 
-      expect(view.valueNoteDisplay).toEqual(true);
+      expect(view.valueNotesDisplay).toEqual(true);
     });
 
     it('Taking null.', () => {
-      view.setValueNoteDisplay(null);
+      view.setValueNotesDisplay(null);
 
-      expect(view.valueNoteDisplay).toEqual(true);
+      expect(view.valueNotesDisplay).toEqual(true);
     });
 
     it('Taking NaN.', () => {
-      view.setValueNoteDisplay(NaN);
+      view.setValueNotesDisplay(NaN);
 
-      expect(view.valueNoteDisplay).toEqual(true);
+      expect(view.valueNotesDisplay).toEqual(true);
     });
   });
 });
@@ -538,7 +538,7 @@ describe('applyValueNotesDisplay method.', () => {
       view.updateDOM({value: 'single', constants: {singleValue: 'single', rangeValue: 'range'}})
       view.applyValueNotesDisplay(true);
 
-      view.valueNotes.forEach((el) => {
+      view.valueNotesList.forEach((el) => {
         expect(el).toHaveClass(`${el.classList[0]}_display_visible`);
       });
     });
@@ -547,22 +547,22 @@ describe('applyValueNotesDisplay method.', () => {
   describe('When display is true, type is range.', () => {
     it('If valueNoteMode is "separate", chows first and last note.', () => {
       view.updateDOM({value: 'range', constants: {singleValue: 'single', rangeValue: 'range'}})
-      view.valueNoteRangeMode = view.valueNoteRangeModeConstants.separateValue;
+      view.valueNotesMode = view.valueNotesModeConstants.separateValue;
       view.applyValueNotesDisplay(true);
 
-      expect(view.valueNotes[0]).toHaveClass(`${view.valueNotes[0].classList[0]}_display_visible`);
-      expect(view.valueNotes[1]).toHaveClass(`${view.valueNotes[1].classList[0]}_display_hidden`);
-      expect(view.valueNotes[2]).toHaveClass(`${view.valueNotes[2].classList[0]}_display_visible`);
+      expect(view.valueNotesList[0]).toHaveClass(`${view.valueNotesList[0].classList[0]}_display_visible`);
+      expect(view.valueNotesList[1]).toHaveClass(`${view.valueNotesList[1].classList[0]}_display_hidden`);
+      expect(view.valueNotesList[2]).toHaveClass(`${view.valueNotesList[2].classList[0]}_display_visible`);
     });
 
     it('If valueNoteMode is "common", chows second note.', () => {
       view.updateDOM({value: 'range', constants: {singleValue: 'single', rangeValue: 'range'}})
-      view.valueNoteRangeMode = view.valueNoteRangeModeConstants.commonValue;
+      view.valueNotesMode = view.valueNotesModeConstants.commonValue;
       view.applyValueNotesDisplay(true);
 
-      expect(view.valueNotes[0]).toHaveClass(`${view.valueNotes[0].classList[0]}_display_hidden`);
-      expect(view.valueNotes[1]).toHaveClass(`${view.valueNotes[1].classList[0]}_display_visible`);
-      expect(view.valueNotes[2]).toHaveClass(`${view.valueNotes[2].classList[0]}_display_hidden`);
+      expect(view.valueNotesList[0]).toHaveClass(`${view.valueNotesList[0].classList[0]}_display_hidden`);
+      expect(view.valueNotesList[1]).toHaveClass(`${view.valueNotesList[1].classList[0]}_display_visible`);
+      expect(view.valueNotesList[2]).toHaveClass(`${view.valueNotesList[2].classList[0]}_display_hidden`);
     });
   });
 
@@ -570,17 +570,17 @@ describe('applyValueNotesDisplay method.', () => {
     it('Applying display of value note.', () => {
       view.applyValueNotesDisplay(false);
 
-      view.valueNotes.forEach((el) => {
+      view.valueNotesList.forEach((el) => {
         expect(el).toHaveClass(`${el.classList[0]}_display_hidden`);
       });
     });
   });
 });
 
-describe('getValueNoteDisplay method.', () => {
+describe('getValueNotesDisplay method.', () => {
   it('Returns display of value note.', () => {
-    const result = view.getValueNoteDisplay();
+    const result = view.getValueNotesDisplay();
 
-    expect(result).toEqual(view.valueNoteDisplay);
+    expect(result).toEqual(view.valueNotesDisplay);
   });
 });

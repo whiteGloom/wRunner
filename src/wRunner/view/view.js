@@ -11,12 +11,11 @@ class View {
     const defaults = new ViewDefaults();
     this.roots = defaults.roots;
     this.divisionsCount = defaults.divisionsCount;
-    this.valueNoteDisplay = defaults.valueNoteDisplay;
-    this.valueNoteRangeMode = defaults.valueNoteRangeMode;
-    this.valueNoteRangeModeConstants = defaults.valueNoteRangeModeConstants;
+    this.valueNotesDisplay = defaults.valueNotesDisplay;
+    this.valueNotesMode = defaults.valueNotesMode;
+    this.valueNotesModeConstants = defaults.valueNotesModeConstants;
     this.theme = defaults.theme;
     this.direction = defaults.direction;
-    this.directionConstants = defaults.directionConstants;
 
     // Stable elements
     this.mainNode = document.createElement('div');
@@ -24,9 +23,9 @@ class View {
     this.path = document.createElement('div');
     this.pathPassed = document.createElement('div');
     this.divisionsBlock = document.createElement('div');
+    this.handlersList = [];
+    this.valueNotesList = [];
     this.divisionsList = [];
-    this.valueNotes = [];
-    this.handlers = [];
 
     // Init
     this.init();
@@ -55,7 +54,7 @@ class View {
     this.rootsUpdateEvent = makeEvent();
     this.themeUpdateEvent = makeEvent();
     this.directionUpdateEvent = makeEvent();
-    this.valueNoteDisplayUpdateEvent = makeEvent();
+    this.valueNotesDisplayUpdateEvent = makeEvent();
     this.valueNoteRangeModeUpdateEvent = makeEvent();
     this.divisionsCountUpdateEvent = makeEvent();
     this.windowResizeEvent = makeEvent();
@@ -72,7 +71,7 @@ class View {
 
     // Handlers
     function handlerFunction(event) {
-      const isHorizontal = this.direction.value === this.directionConstants.horizontalValue;
+      const isHorizontal = this.direction.value === this.direction.constants.horizontalValue;
       const scale = this.path[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
       const min = this.path.getBoundingClientRect()[isHorizontal ? 'left' : 'top'];
       const pos = event[isHorizontal ? 'clientX' : 'clientY'];
@@ -113,29 +112,29 @@ class View {
       return el;
     }
 
-    this.handlers.concat(this.valueNotes).forEach((el) => {
+    this.handlersList.concat(this.valueNotesList).forEach((el) => {
       el.remove();
     });
-    this.handlers.length = 0;
-    this.valueNotes.length = 0;
+    this.handlersList.length = 0;
+    this.valueNotesList.length = 0;
 
     if (type.value === type.constants.singleValue) {
-      this.handlers.push(makeEl(['wrunner__handle']));
-      this.valueNotes.push(makeEl(['wrunner__value-note']));
+      this.handlersList.push(makeEl(['wrunner__handle']));
+      this.valueNotesList.push(makeEl(['wrunner__value-note']));
     }
     if (type.value === type.constants.rangeValue) {
-      this.handlers.push(makeEl(['wrunner__handle', 'wrunner__handle_type_min']));
-      this.handlers.push(makeEl(['wrunner__handle', 'wrunner__handle_type_max']));
-      this.valueNotes.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_min']));
-      this.valueNotes.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_common']));
-      this.valueNotes.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_max']));
+      this.handlersList.push(makeEl(['wrunner__handle', 'wrunner__handle_type_min']));
+      this.handlersList.push(makeEl(['wrunner__handle', 'wrunner__handle_type_max']));
+      this.valueNotesList.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_min']));
+      this.valueNotesList.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_common']));
+      this.valueNotesList.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_max']));
     }
 
     window.requestAnimationFrame(() => {
-      this.handlers.forEach((el) => {
+      this.handlersList.forEach((el) => {
         this.path.appendChild(el);
       });
-      this.valueNotes.forEach((el) => {
+      this.valueNotesList.forEach((el) => {
         this.outer.appendChild(el);
       });
     });
@@ -152,7 +151,7 @@ class View {
       this.mainNode, this.outer,
       this.path, this.pathPassed,
       this.divisionsBlock,
-    ].concat(this.divisionsList, this.handlers, this.valueNotes);
+    ].concat(this.divisionsList, this.handlersList, this.valueNotesList);
 
     window.requestAnimationFrame(() => {
       els.forEach((el) => {
@@ -173,7 +172,12 @@ class View {
     this.setValueNotesPosition(limits, values, direction);
   }
 
-  setPathPosition({ minLimit, maxLimit, valuesCount }, values, direction, type) {
+  setPathPosition(
+    { minLimit, maxLimit, valuesCount },
+    { singleValue, rangeValueMin, rangeValueMax },
+    direction,
+    type,
+  ) {
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const isSingle = type.value === type.constants.singleValue;
     const posProp = isHorizontal ? 'left' : 'top';
@@ -184,23 +188,27 @@ class View {
       let position;
       if (isSingle) {
         position = isHorizontal
-          ? 0 : 100 - ((values.value - minLimit) / valuesCount) * 100;
+          ? 0 : 100 - ((singleValue - minLimit) / valuesCount) * 100;
       }
       if (!isSingle) {
         position = isHorizontal
-          ? ((values.minValue - minLimit) / valuesCount) * 100
-          : ((maxLimit - values.maxValue) / valuesCount) * 100;
+          ? ((rangeValueMin - minLimit) / valuesCount) * 100
+          : ((maxLimit - rangeValueMax) / valuesCount) * 100;
       }
       const size = isSingle
-        ? ((values.value - minLimit) / valuesCount) * 100
-        : ((values.maxValue - values.minValue) / valuesCount) * 100;
+        ? ((singleValue - minLimit) / valuesCount) * 100
+        : ((rangeValueMax - rangeValueMin) / valuesCount) * 100;
 
       this.pathPassed.style[sizeProp] = `${size}%`;
       this.pathPassed.style[posProp] = `${position}%`;
     });
   }
 
-  setHandlersPosition({ minLimit, valuesCount }, values, direction) {
+  setHandlersPosition(
+    { minLimit, valuesCount },
+    { singleValue, rangeValueMin, rangeValueMax },
+    direction,
+  ) {
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const posProp = isHorizontal ? 'left' : 'top';
 
@@ -215,17 +223,21 @@ class View {
     }
 
     window.requestAnimationFrame(() => {
-      if (this.handlers.length === 1) {
-        setPosition(this.handlers[0], values.value);
+      if (this.handlersList.length === 1) {
+        setPosition(this.handlersList[0], singleValue);
       }
-      if (this.handlers.length === 2) {
-        setPosition(this.handlers[0], values.minValue);
-        setPosition(this.handlers[1], values.maxValue);
+      if (this.handlersList.length === 2) {
+        setPosition(this.handlersList[0], rangeValueMin);
+        setPosition(this.handlersList[1], rangeValueMax);
       }
     });
   }
 
-  setValueNotesPosition({ minLimit, valuesCount }, values, direction) {
+  setValueNotesPosition(
+    { minLimit, valuesCount },
+    { singleValue, rangeValueMin, rangeValueMax },
+    direction,
+  ) {
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const getSizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const posProp = isHorizontal ? 'left' : 'top';
@@ -249,37 +261,42 @@ class View {
     }
 
     window.requestAnimationFrame(() => {
-      if (this.valueNotes.length === 1) {
-        draw.call(this, this.valueNotes[0], values.value, values.value);
+      if (this.valueNotesList.length === 1) {
+        draw.call(this, this.valueNotesList[0], singleValue, singleValue);
       }
-      if (this.valueNotes.length === 3) {
-        draw.call(this, this.valueNotes[0], values.minValue, values.minValue);
-        draw.call(this, this.valueNotes[1], (values.minValue + values.maxValue) / 2,
-          [values.minValue, values.maxValue]);
-        draw.call(this, this.valueNotes[2], values.maxValue, values.maxValue);
-        this.checkValueNotesMode({ minLimit, valuesCount }, values, direction);
+      if (this.valueNotesList.length === 3) {
+        draw.call(this, this.valueNotesList[0], rangeValueMin, rangeValueMin);
+        draw.call(this, this.valueNotesList[1], (rangeValueMin + rangeValueMax) / 2,
+          [rangeValueMin, rangeValueMax]);
+        draw.call(this, this.valueNotesList[2], rangeValueMax, rangeValueMax);
+        this.checkValueNotesMode(
+          { minLimit, valuesCount },
+          { rangeValueMin, rangeValueMax },
+          direction,
+        );
       }
     });
   }
 
-  checkValueNotesMode({ minLimit, valuesCount }, { minValue, maxValue }, direction) {
-    if (this.valueNotes.length < 3) return;
+  checkValueNotesMode({ minLimit, valuesCount }, { rangeValueMin, rangeValueMax }, direction) {
+    if (this.valueNotesList.length < 3) return;
     const getSizeProp = direction.value === direction.constants.horizontalValue ? 'offsetWidth' : 'offsetHeight';
-    const [elFirst,, elSec] = this.valueNotes;
+    const [elFirst,, elSec] = this.valueNotesList;
     function calcPos(el, value) {
       return ((value - minLimit) / valuesCount) * this.path[getSizeProp] + el[getSizeProp] / 2;
     }
-    const distance = calcPos.call(this, elSec, maxValue) - calcPos.call(this, elFirst, minValue);
+    const calc = calcPos.bind(this);
+    const distance = calc(elSec, rangeValueMax) - calc(elFirst, rangeValueMin);
     const sizes = (elFirst[getSizeProp] + elSec[getSizeProp]) / 2;
 
     if (distance >= sizes) {
-      if (this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.separateValue) {
-        this.valueNoteRangeMode = this.valueNoteRangeModeConstants.separateValue;
-        this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
+      if (this.valueNotesMode !== this.valueNotesModeConstants.separateValue) {
+        this.valueNotesMode = this.valueNotesModeConstants.separateValue;
+        this.valueNoteRangeModeUpdateEvent.trigger();
       }
-    } else if (this.valueNoteRangeMode !== this.valueNoteRangeModeConstants.commonValue) {
-      this.valueNoteRangeMode = this.valueNoteRangeModeConstants.commonValue;
-      this.valueNoteRangeModeUpdateEvent.trigger(this.valueNoteRangeMode);
+    } else if (this.valueNotesMode !== this.valueNotesModeConstants.commonValue) {
+      this.valueNotesMode = this.valueNotesModeConstants.commonValue;
+      this.valueNoteRangeModeUpdateEvent.trigger();
     }
   }
 
@@ -292,24 +309,24 @@ class View {
       });
     }
 
-    if (this.valueNotes.length === 1) {
-      set(this.valueNotes[0], display);
+    if (this.valueNotesList.length === 1) {
+      set(this.valueNotesList[0], display);
     }
-    if (this.valueNotes.length === 3) {
+    if (this.valueNotesList.length === 3) {
       if (!display) {
-        this.valueNotes.forEach((el) => {
+        this.valueNotesList.forEach((el) => {
           set(el, false);
         });
       } else {
-        if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.separateValue) {
-          set(this.valueNotes[0], true);
-          set(this.valueNotes[1], false);
-          set(this.valueNotes[2], true);
+        if (this.valueNotesMode === this.valueNotesModeConstants.separateValue) {
+          set(this.valueNotesList[0], true);
+          set(this.valueNotesList[1], false);
+          set(this.valueNotesList[2], true);
         }
-        if (this.valueNoteRangeMode === this.valueNoteRangeModeConstants.commonValue) {
-          set(this.valueNotes[0], false);
-          set(this.valueNotes[1], true);
-          set(this.valueNotes[2], false);
+        if (this.valueNotesMode === this.valueNotesModeConstants.commonValue) {
+          set(this.valueNotesList[0], false);
+          set(this.valueNotesList[1], true);
+          set(this.valueNotesList[2], false);
         }
       }
     }
@@ -338,13 +355,9 @@ class View {
   setDivisionsCount(newCount) {
     if (!helper.isNumber(newCount) || newCount < 0) return;
 
-    let count = Math.round(+newCount);
-
-    if (count === 1) {
-      count += 1;
-    }
-    this.divisionsCount = +count;
-
+    this.divisionsCount = Math.round(+newCount) !== 1
+      ? Math.round(+newCount)
+      : Math.round(+newCount) + 1;
     this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
   }
 
@@ -358,31 +371,21 @@ class View {
   }
 
   setDirection(newDirection) {
-    if (typeof newDirection !== 'string') return;
-
-    Object.keys(this.directionConstants).forEach((constant) => {
-      if (newDirection === this.directionConstants[constant]) {
-        this.direction.oldValue = this.direction.value;
-        this.direction.value = newDirection;
-
-        this.directionUpdateEvent.trigger({
-          value: this.direction.value,
-          constants: { ...this.directionConstants },
-        });
-        return {
-          value: this.direction.value,
-          constants: { ...this.directionConstants },
-        };
-      }
-      return false;
-    });
+    if (Object.values(this.direction.constants).includes(newDirection)) {
+      this.direction.oldValue = this.direction.value;
+      this.direction.value = newDirection;
+      this.directionUpdateEvent.trigger({
+        value: this.direction.value,
+        constants: { ...this.direction.constants },
+      });
+    }
   }
 
-  setValueNoteDisplay(newValue) {
+  setValueNotesDisplay(newValue) {
     if (typeof newValue !== 'boolean') return;
-    this.valueNoteDisplay = newValue;
+    this.valueNotesDisplay = newValue;
 
-    this.valueNoteDisplayUpdateEvent.trigger(this.valueNoteDisplay);
+    this.valueNotesDisplayUpdateEvent.trigger(this.valueNotesDisplay);
   }
 
   getRoots() {
@@ -396,12 +399,12 @@ class View {
   getDirection() {
     return {
       value: this.direction.value,
-      constants: { ...this.directionConstants },
+      constants: { ...this.direction.constants },
     };
   }
 
-  getValueNoteDisplay() {
-    return this.valueNoteDisplay;
+  getValueNotesDisplay() {
+    return this.valueNotesDisplay;
   }
 
   getDivisionsCount() {

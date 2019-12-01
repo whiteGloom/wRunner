@@ -9,7 +9,7 @@ function makeSlider(index, specOptions, sliderType, element) {
   const $maxValueController = $controllersHolders.eq(6).find('input');
   const $rootsController = $controllersHolders.eq(7).find('input');
   const $directionControllers = [$controllersHolders.eq(8).find('input').eq(0), $controllersHolders.eq(8).find('input').eq(1)];
-  const $valueNoteDisplayController = $controllersHolders.eq(9).find('input');
+  const $valueNotesDisplayController = $controllersHolders.eq(9).find('input');
   const $divisionsCountController = $controllersHolders.eq(10).find('input');
 
   const options = {
@@ -41,15 +41,10 @@ function makeSlider(index, specOptions, sliderType, element) {
         }
       },
 
-      onValueUpdate(value) {
-        if (value.value !== undefined) {
-          $valueController.val(value.value);
-        }
-        if ((value.minValue && value.minValue !== undefined)
-          || (value.maxValue && value.maxValue !== undefined)) {
-          $minValueController.val(value.minValue);
-          $maxValueController.val(value.maxValue);
-        }
+      onValueUpdate(values) {
+        $valueController.val(values.singleValue);
+        $minValueController.val(values.rangeMinValue);
+        $maxValueController.val(values.rangeMaxValue);
       },
 
       onRootsUpdate(roots) {
@@ -70,8 +65,8 @@ function makeSlider(index, specOptions, sliderType, element) {
         }
       },
 
-      onValueNoteDisplayUpdate(value) {
-        $valueNoteDisplayController[0].checked = value;
+      onValueNotesDisplayUpdate(value) {
+        $valueNotesDisplayController[0].checked = value;
       },
 
       onDivisionsCountUpdate(count) {
@@ -128,8 +123,8 @@ function makeSlider(index, specOptions, sliderType, element) {
     slider.setDirection($directionControllers[1].val());
   });
 
-  $valueNoteDisplayController.on('input', () => {
-    slider.setValueNoteDisplay($valueNoteDisplayController[0].checked);
+  $valueNotesDisplayController.on('input', () => {
+    slider.setValueNoteDisplay($valueNotesDisplayController[0].checked);
   });
 
   makeTextInput($stepController, { method: 'setStep' });

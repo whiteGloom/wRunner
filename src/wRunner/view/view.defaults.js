@@ -2,9 +2,9 @@ class ViewDefaults {
   constructor() {
     this.roots = document.body;
     this.divisionsCount = 5;
-    this.valueNoteDisplay = true;
-    this.valueNoteRangeMode = 'separate';
-    this.valueNoteRangeModeConstants = {
+    this.valueNotesDisplay = true;
+    this.valueNotesMode = 'separate';
+    this.valueNotesModeConstants = {
       separateValue: 'separate',
       commonValue: 'common',
     };
@@ -17,11 +17,11 @@ class ViewDefaults {
       value: 'horizontal',
       className: 'direction',
       oldValue: null,
-    };
-    this.directionConstants = {
-      horizontalValue: 'horizontal',
-      verticalValue: 'vertical',
-    };
+      constants: {
+        horizontalValue: 'horizontal',
+        verticalValue: 'vertical',
+      }
+    }
   }
 
   getOptionsPresets() {
