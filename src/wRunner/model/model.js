@@ -13,7 +13,7 @@ class Model {
     this.type = defaults.type;
     this.step = defaults.step;
     this.roots = defaults.roots;
-    this.divisionsCount = defaults.divisionsCount;
+    this.scaleDivisionsCount = defaults.divisionsCount;
     this.valueNotesDisplay = defaults.valueNotesDisplay;
     this.valueNotesMode = defaults.valueNotesMode;
     this.theme = defaults.theme;
@@ -32,7 +32,7 @@ class Model {
     this.themeUpdateEvent = makeEvent();
     this.directionUpdateEvent = makeEvent();
     this.valueNotesDisplayUpdateEvent = makeEvent();
-    this.divisionsCountUpdateEvent = makeEvent();
+    this.scaleDivisionsCountUpdateEvent = makeEvent();
   }
 
   recalculateValue() {
@@ -130,15 +130,6 @@ class Model {
     this.rootsUpdateEvent.trigger(this.roots);
   }
 
-  setDivisionsCount(newCount) {
-    if (!helper.isNumber(newCount) || newCount < 0) return;
-
-    this.divisionsCount = Math.round(+newCount) !== 1
-      ? Math.round(+newCount)
-      : Math.round(+newCount) + 1;
-    this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
-  }
-
   setTheme(newTheme) {
     if (typeof newTheme !== 'string') return;
 
@@ -170,6 +161,15 @@ class Model {
     if (Object.values(this.valueNotesMode.constants).includes(newMode)) {
       this.valueNotesMode.value = newMode;
     }
+  }
+
+  setScaleDivisionsCount(newCount) {
+    if (!helper.isNumber(newCount) || newCount < 0) return;
+
+    this.scaleDivisionsCount = Math.round(+newCount) !== 1
+      ? Math.round(+newCount)
+      : Math.round(+newCount) + 1;
+    this.scaleDivisionsCountUpdateEvent.trigger(this.scaleDivisionsCount);
   }
 
   getType() {
@@ -217,8 +217,8 @@ class Model {
     };
   }
 
-  getDivisionsCount() {
-    return this.divisionsCount;
+  getScaleDivisionsCount() {
+    return this.scaleDivisionsCount;
   }
 }
 

@@ -548,108 +548,108 @@ describe('getRoots method.', () => {
   });
 });
 
-describe('setDivisionsCount method.', () => {
+describe('setScaleDivisionsCount method.', () => {
   describe('Changing divisionsBlock count.', () => {
     it('Taking 3, returns 3.', () => {
-      model.setDivisionsCount(3);
+      model.setScaleDivisionsCount(3);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking 2, returns 2.', () => {
-      model.setDivisionsCount(2);
+      model.setScaleDivisionsCount(2);
 
-      expect(model.divisionsCount).toEqual(2);
+      expect(model.scaleDivisionsCount).toEqual(2);
     });
 
     it('Taking 0, returns 0.', () => {
-      model.setDivisionsCount(0);
+      model.setScaleDivisionsCount(0);
 
-      expect(model.divisionsCount).toEqual(0);
+      expect(model.scaleDivisionsCount).toEqual(0);
     });
   });
 
-  describe('If you try to set divisionsBlock count as 1, it will set divisionsBlock count to 2.', () => {
-    it('Taking 1, changing divisionsBlock count to 2.', () => {
-      model.setDivisionsCount(1);
+  describe('If you try to set divisions count as 1, it will set divisions count to 2.', () => {
+    it('Taking 1, changing divisions count to 2.', () => {
+      model.setScaleDivisionsCount(1);
 
-      expect(model.divisionsCount).toEqual(2);
+      expect(model.scaleDivisionsCount).toEqual(2);
     });
   });
 
-  describe('If you try to set divisionsBlock count as not a number or a number, that is less than 0, returns.', () => {
+  describe('If you try to set divisions count as not a number or a number, that is less than 0, returns.', () => {
     beforeEach(() => {
-      model.setDivisionsCount(3);
+      model.setScaleDivisionsCount(3);
     });
 
     it('Taking -1.', () => {
-      model.setDivisionsCount(-1);
+      model.setScaleDivisionsCount(-1);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking -100.', () => {
-      model.setDivisionsCount(-100);
+      model.setScaleDivisionsCount(-100);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking -100.', () => {
-      model.setDivisionsCount(-100);
+      model.setScaleDivisionsCount(-100);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking undefined.', () => {
-      model.setDivisionsCount(undefined);
+      model.setScaleDivisionsCount(undefined);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking NaN.', () => {
-      model.setDivisionsCount(NaN);
+      model.setScaleDivisionsCount(NaN);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking false.', () => {
-      model.setDivisionsCount(false);
+      model.setScaleDivisionsCount(false);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking null.', () => {
-      model.setDivisionsCount(null);
+      model.setScaleDivisionsCount(null);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking {}.', () => {
-      model.setDivisionsCount({});
+      model.setScaleDivisionsCount({});
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking [].', () => {
-      model.setDivisionsCount([]);
+      model.setScaleDivisionsCount([]);
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
 
     it('Taking "dadaya".', () => {
-      model.setDivisionsCount('dadaya');
+      model.setScaleDivisionsCount('dadaya');
 
-      expect(model.divisionsCount).toEqual(3);
+      expect(model.scaleDivisionsCount).toEqual(3);
     });
   });
 });
 
 
-describe('getDivisionsCount method.', () => {
-  it('Returns count of divisionsBlock.', () => {
-    const result = model.getDivisionsCount();
+describe('getScaleDivisionsCount method.', () => {
+  it('Returns count of divisions.', () => {
+    const result = model.getScaleDivisionsCount();
 
-    expect(result).toEqual(model.divisionsCount);
+    expect(result).toEqual(model.scaleDivisionsCount);
   });
 });
 

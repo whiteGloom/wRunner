@@ -10,7 +10,7 @@ function makeSlider(index, specOptions, sliderType, element) {
   const $rootsController = $controllersHolders.eq(7).find('input');
   const $directionControllers = [$controllersHolders.eq(8).find('input').eq(0), $controllersHolders.eq(8).find('input').eq(1)];
   const $valueNotesDisplayController = $controllersHolders.eq(9).find('input');
-  const $divisionsCountController = $controllersHolders.eq(10).find('input');
+  const $scaleDivisionsCountController = $controllersHolders.eq(10).find('input');
 
   const options = {
     ...{
@@ -68,8 +68,8 @@ function makeSlider(index, specOptions, sliderType, element) {
         $valueNotesDisplayController[0].checked = value;
       },
 
-      onDivisionsCountUpdate(count) {
-        $divisionsCountController.val(count);
+      onScaleDivisionsCountUpdate(count) {
+        $scaleDivisionsCountController.val(count);
       },
     },
     ...specOptions,
@@ -139,7 +139,7 @@ function makeSlider(index, specOptions, sliderType, element) {
 
   makeTextInput($maxValueController, { method: 'setRangeValues', action(val) { return { maxValue: val }; } });
 
-  makeTextInput($divisionsCountController, { method: 'setDivisionsCount' });
+  makeTextInput($scaleDivisionsCountController, { method: 'setScaleDivisionsCount' });
 }
 
 function test() {
@@ -152,7 +152,7 @@ function test() {
   }, 'native', document.getElementById('sample1'));
 
   makeSlider(2, {
-    divisionsCount: 16,
+    scaleDivisionsCount: 16,
     direction: 'vertical',
     step: 5,
     type: 'range',
@@ -160,7 +160,7 @@ function test() {
 
   makeSlider(3, {
     valueNotesDisplay: false,
-    divisionsCount: 0,
+    scaleDivisionsCount: 0,
   }, 'jquery', document.getElementById('sample3'));
 }
 

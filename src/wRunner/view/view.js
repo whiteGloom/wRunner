@@ -6,7 +6,7 @@ class View {
   constructor() {
     this.handlersList = [];
     this.valueNotesList = [];
-    this.divisionsList = [];
+    this.scaleDivisionsList = [];
 
     // Init
     this.init();
@@ -19,17 +19,17 @@ class View {
     this.outer = document.createElement('div');
     this.path = document.createElement('div');
     this.pathPassed = document.createElement('div');
-    this.divisionsBlock = document.createElement('div');
+    this.scaleDivisionsBlock = document.createElement('div');
 
     this.mainNode.classList.add('wrunner');
     this.outer.classList.add('wrunner__outer');
     this.path.classList.add('wrunner__path');
     this.pathPassed.classList.add('wrunner__path-passed');
-    this.divisionsBlock.classList.add('wrunner__divisions');
+    this.scaleDivisionsBlock.classList.add('wrunner__scaleDivisionsBlock');
 
     this.path.appendChild(this.pathPassed);
     this.outer.appendChild(this.path);
-    this.outer.appendChild(this.divisionsBlock);
+    this.outer.appendChild(this.scaleDivisionsBlock);
 
     window.requestAnimationFrame(() => {
       this.mainNode.appendChild(this.outer);
@@ -128,8 +128,8 @@ class View {
     const els = [
       this.mainNode, this.outer,
       this.path, this.pathPassed,
-      this.divisionsBlock,
-    ].concat(this.divisionsList, this.handlersList, this.valueNotesList);
+      this.scaleDivisionsBlock,
+    ].concat(this.scaleDivisionsList, this.handlersList, this.valueNotesList);
 
     window.requestAnimationFrame(() => {
       els.forEach((el) => {
@@ -309,16 +309,16 @@ class View {
     });
   }
 
-  generateDivisions(count) {
-    this.divisionsBlock.innerHTML = '';
-    this.divisionsList.length = 0;
+  generateScaleDivisions(count) {
+    this.scaleDivisionsBlock.innerHTML = '';
+    this.scaleDivisionsList.length = 0;
 
-    while (this.divisionsList.length < count) {
+    while (this.scaleDivisionsList.length < count) {
       const instance = document.createElement('div');
-      instance.classList.add('wrunner__division');
+      instance.classList.add('wrunner__scaleDivision');
 
-      this.divisionsList.push(instance);
-      this.divisionsBlock.appendChild(instance);
+      this.scaleDivisionsList.push(instance);
+      this.scaleDivisionsBlock.appendChild(instance);
     }
   }
 }

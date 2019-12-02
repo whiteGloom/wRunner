@@ -29,7 +29,7 @@ class Presenter {
       setTheme: this.model.setTheme.bind(this.model),
       setDirection: this.model.setDirection.bind(this.model),
       setValueNotesDisplay: this.model.setValueNotesDisplay.bind(this.model),
-      setDivisionsCount: this.model.setDivisionsCount.bind(this.model),
+      setScaleDivisionsCount: this.model.setScaleDivisionsCount.bind(this.model),
 
       getType: this.model.getType.bind(this.model),
       getLimits: this.model.getLimits.bind(this.model),
@@ -39,13 +39,13 @@ class Presenter {
       getTheme: this.model.getTheme.bind(this.model),
       getDirection: this.model.getDirection.bind(this.model),
       getValueNotesDisplay: this.model.getValueNotesDisplay.bind(this.model),
-      getDivisionsCount: this.model.getDivisionsCount.bind(this.model),
+      getScaleDivisionsCount: this.model.getScaleDivisionsCount.bind(this.model),
 
       onThemeUpdate: this.model.themeUpdateEvent.addHandler,
       onDirectionUpdate: this.model.directionUpdateEvent.addHandler,
       onValueNotesDisplayUpdate: this.model.valueNotesDisplayUpdateEvent.addHandler,
       onRootsUpdate: this.model.rootsUpdateEvent.addHandler,
-      onDivisionsCountUpdate: this.model.divisionsCountUpdateEvent.addHandler,
+      onScaleDivisionsCountUpdate: this.model.scaleDivisionsCountUpdateEvent.addHandler,
       onValueUpdate: this.model.valueUpdateEvent.addHandler,
       onStepUpdate: this.model.stepUpdateEvent.addHandler,
       onLimitsUpdate: this.model.limitsUpdateEvent.addHandler,
@@ -128,8 +128,8 @@ class Presenter {
     );
   }
 
-  divisionsCountUpdateEventHandler() {
-    this.view.generateDivisions(this.model.getDivisionsCount());
+  scaleDivisionsCountUpdateEventHandler() {
+    this.view.generateScaleDivisions(this.model.getScaleDivisionsCount());
     this.view.applyStyles([this.model.theme, this.model.direction]);
   }
 
@@ -177,8 +177,8 @@ class Presenter {
       .addHandler(this.directionUpdateEventHandler.bind(this));
     this.model.valueNotesDisplayUpdateEvent
       .addHandler(this.valueNotesDisplayUpdateEventHandler.bind(this));
-    this.model.divisionsCountUpdateEvent
-      .addHandler(this.divisionsCountUpdateEventHandler.bind(this));
+    this.model.scaleDivisionsCountUpdateEvent
+      .addHandler(this.scaleDivisionsCountUpdateEventHandler.bind(this));
 
     this.view.valueNoteModeUpdateEvent
       .addHandler(this.valueNoteModeUpdateEventHandler.bind(this));
@@ -199,7 +199,7 @@ class Presenter {
       onRootsUpdate,
       onThemeUpdate,
       onDirectionUpdate,
-      onDivisionsCountUpdate,
+      onScaleDivisionsCountUpdate,
       onValueNotesDisplayUpdate,
     } = options;
 
@@ -210,7 +210,7 @@ class Presenter {
     this.model.rootsUpdateEvent.addHandler(onRootsUpdate);
     this.model.themeUpdateEvent.addHandler(onThemeUpdate);
     this.model.directionUpdateEvent.addHandler(onDirectionUpdate);
-    this.model.divisionsCountUpdateEvent.addHandler(onDivisionsCountUpdate);
+    this.model.scaleDivisionsCountUpdateEvent.addHandler(onScaleDivisionsCountUpdate);
     this.model.valueNotesDisplayUpdateEvent.addHandler(onValueNotesDisplayUpdate);
   }
 
@@ -224,13 +224,13 @@ class Presenter {
       roots,
       theme,
       direction,
-      divisionsCount,
+      scaleDivisionsCount,
       valueNotesDisplay,
     } = options;
 
     this.model.setRoots(roots);
     this.model.setValueNotesDisplay(valueNotesDisplay);
-    this.model.setDivisionsCount(divisionsCount);
+    this.model.setScaleDivisionsCount(scaleDivisionsCount);
     this.model.setTheme(theme);
     this.model.setDirection(direction);
     this.model.setLimits(limits);

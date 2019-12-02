@@ -39,7 +39,7 @@ class ModelDefaults {
       },
     };
     this.roots = document.body;
-    this.divisionsCount = 5;
+    this.scaleDivisionsCount = 5;
     this.valueNotesDisplay = true;
     this.step = 1;
   }
@@ -54,7 +54,7 @@ class ModelDefaults {
       roots: this.roots,
       theme: this.theme.value,
       direction: this.direction.value,
-      divisionsCount: this.divisionsCount,
+      scaleDivisionsCount: this.scaleDivisionsCount,
       valueNotesDisplay: this.valueNotesDisplay,
     };
 

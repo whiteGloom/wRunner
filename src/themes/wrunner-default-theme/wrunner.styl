@@ -30,21 +30,8 @@ theme = "_theme_default"
           height: 100%
           width: 5.5rem
           min-height: 10rem
-    
-  &__division
-    &{theme}&
-      background-color: #cb73a4
 
-      &_direction
-        &_horizontal
-          height: .5rem
-          width: .1rem
-
-        &_vertical
-          height: .1rem
-          width: .5rem
-
-  &__divisions
+  &__scaleDivisionsBlock
     &{theme}&
       position: absolute
       display: flex
@@ -61,6 +48,19 @@ theme = "_theme_default"
           left: 0
           justify-content: space-between
           flex-direction: column
+    
+  &__scaleDivision
+    &{theme}&
+      background-color: #cb73a4
+
+      &_direction
+        &_horizontal
+          height: .5rem
+          width: .1rem
+
+        &_vertical
+          height: .1rem
+          width: .5rem
 
   &__handle
     &{theme}&

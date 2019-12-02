@@ -56,15 +56,15 @@ describe('append method.', () => {
   });
 });
 
-describe('generateDivisions method.', () => {
-  it('Generate divisionsBlock for sliders.', () => {
-    view.generateDivisions(3);
+describe('generateScaleDivisions method.', () => {
+  it('Generate divisions for sliders.', () => {
+    view.generateScaleDivisions(3);
 
-    expect(view.divisionsList.length).toEqual(3);
+    expect(view.scaleDivisionsList.length).toEqual(3);
 
-    for (let i = 0; i < view.divisionsList.length; i += 1) {
-      expect(helper.isDOMEl(view.divisionsList[i])).toBeTruthy();
-      expect(view.divisionsList[i].parentNode).toEqual(view.divisionsBlock);
+    for (let i = 0; i < view.scaleDivisionsList.length; i += 1) {
+      expect(helper.isDOMEl(view.scaleDivisionsList[i])).toBeTruthy();
+      expect(view.scaleDivisionsList[i].parentNode).toEqual(view.scaleDivisionsBlock);
     }
   });
 });
@@ -79,8 +79,8 @@ describe('applyStyles method.', () => {
       const els = [
         view.mainNode, view.outer,
         view.path, view.pathPassed,
-        view.divisionsBlock,
-      ].concat(view.divisionsList, view.valueNotesList, view.handlersList);
+        view.scaleDivisionsBlock,
+      ].concat(view.scaleDivisionsList, view.valueNotesList, view.handlersList);
 
       for (let i = 0; i < els.length; i += 1) {
         const el = els[i];
@@ -100,8 +100,8 @@ describe('applyStyles method.', () => {
       const els = [
         view.mainNode, view.outer,
         view.path, view.pathPassed,
-        view.divisionsBlock,
-      ].concat(view.divisionsList, view.valueNotesList, view.handlersList);
+        view.scaleDivisionsBlock,
+      ].concat(view.scaleDivisionsList, view.valueNotesList, view.handlersList);
 
       for (let i = 0; i < els.length; i += 1) {
         const el = els[i];
