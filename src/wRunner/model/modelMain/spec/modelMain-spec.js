@@ -1,6 +1,6 @@
 // Requirements
 import helper from '@helper';
-import ModelModule from '../model';
+import ModelModule from '../modelMain';
 
 const jsdom = require('jsdom');
 

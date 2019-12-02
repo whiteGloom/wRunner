@@ -1,4 +1,4 @@
-import ModelDefaults from '../model/model.defaults';
+import ModelDefaults from '../model/modelDefaults/modelDefaults';
 
 class Presenter {
   constructor(options = {}) {

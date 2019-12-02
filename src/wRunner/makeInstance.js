@@ -1,4 +1,4 @@
-import ModelModule from './model/model';
+import ModelModule from './model/modelMain/modelMain';
 import ViewModule from './view/view';
 import PresenterModule from './presenter/presenter';
 

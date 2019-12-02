@@ -1,11 +1,11 @@
-import ModelDefaults from './model.defaults';
+import ModelDefaults from '../modelDefaults/modelDefaults';
 import makeEventModule from '@event';
 import helperModule from '@helper';
 
 const helper = helperModule;
 const makeEvent = makeEventModule;
 
-class Model {
+class ModelMain {
   constructor() {
     const defaults = new ModelDefaults();
     this.limits = defaults.limits;
@@ -222,4 +222,4 @@ class Model {
   }
 }
 
-export default Model;
+export default ModelMain;
