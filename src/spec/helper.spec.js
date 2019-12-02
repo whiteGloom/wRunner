@@ -4,7 +4,7 @@ import helper from '@helper';
 const jsdom = require('jsdom');
 
 const { JSDOM } = jsdom;
-const window = (new JSDOM('<body><div id="root"><div class="cls">text node</div></div></body>', { runScripts: 'outside-only' })).window;
+const { window } = (new JSDOM('<body><div id="root"><div class="cls">text node</div></div></body>', { runScripts: 'outside-only' }));
 global.window = window;
 global.document = window.document;
 

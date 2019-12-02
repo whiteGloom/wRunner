@@ -50,8 +50,9 @@ webpackLoader.addToDevServerConfig({
 });
 
 function ghPagesInit() {
-  ghpages.publish('docs', () => {});
-  console.log('GitHub Pages branch updated.');
+  ghpages.publish('docs', () => {
+    console.log('GitHub Pages branch updated.');
+  });
 }
 
 // Init
