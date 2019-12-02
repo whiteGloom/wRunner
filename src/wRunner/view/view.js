@@ -4,11 +4,6 @@ const makeEvent = makeEventModule;
 
 class View {
   constructor() {
-    this.mainNode = document.createElement('div');
-    this.outer = document.createElement('div');
-    this.path = document.createElement('div');
-    this.pathPassed = document.createElement('div');
-    this.divisionsBlock = document.createElement('div');
     this.handlersList = [];
     this.valueNotesList = [];
     this.divisionsList = [];
@@ -20,6 +15,12 @@ class View {
   }
 
   init() {
+    this.mainNode = document.createElement('div');
+    this.outer = document.createElement('div');
+    this.path = document.createElement('div');
+    this.pathPassed = document.createElement('div');
+    this.divisionsBlock = document.createElement('div');
+
     this.mainNode.classList.add('wrunner');
     this.outer.classList.add('wrunner__outer');
     this.path.classList.add('wrunner__path');
@@ -284,8 +285,8 @@ class View {
   applyValueNotesDisplay(display, valueNotesMode) {
     function set(el, value) {
       const mark = el.classList[0];
-        el.classList[value ? 'add' : 'remove'](`${mark}_display_visible`);
-        el.classList[value ? 'remove' : 'add'](`${mark}_display_hidden`);
+      el.classList[value ? 'add' : 'remove'](`${mark}_display_visible`);
+      el.classList[value ? 'remove' : 'add'](`${mark}_display_hidden`);
     }
 
     window.requestAnimationFrame(() => {

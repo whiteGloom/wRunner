@@ -4,7 +4,7 @@ class ModelDefaults {
       minLimit: 0,
       maxLimit: 100,
       valuesCount: 100,
-    }
+    };
     this.values = {
       singleValue: 50,
       rangeValueMin: 20,
@@ -22,7 +22,7 @@ class ModelDefaults {
       constants: {
         separateValue: 'separate',
         commonValue: 'common',
-      }
+      },
     };
     this.theme = {
       value: 'default',
@@ -36,8 +36,8 @@ class ModelDefaults {
       constants: {
         horizontalValue: 'horizontal',
         verticalValue: 'vertical',
-      }
-    }
+      },
+    };
     this.roots = document.body;
     this.divisionsCount = 5;
     this.valueNotesDisplay = true;

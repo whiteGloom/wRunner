@@ -49,7 +49,7 @@ describe('updateDOM method.', () => {
 
 describe('append method.', () => {
   it('Applying sliders roots.', () => {
-    var roots = document.getElementById('root');
+    const roots = document.getElementById('root');
     view.append(roots);
 
     expect(view.mainNode.parentNode === roots).toBeTruthy();
@@ -73,13 +73,13 @@ describe('applyStyles method.', () => {
   describe('Applying theme and direction to sliders elements.', () => {
     it('Set theme to "default", direction to "horizontal".', () => {
       view.applyStyles([
-        {value: 'default', oldValue: null, className: 'theme'},
-        {value: 'horizontal', oldValue: null, className: 'direction'},
+        { value: 'default', oldValue: null, className: 'theme' },
+        { value: 'horizontal', oldValue: null, className: 'direction' },
       ]);
       const els = [
         view.mainNode, view.outer,
         view.path, view.pathPassed,
-        view.divisionsBlock
+        view.divisionsBlock,
       ].concat(view.divisionsList, view.valueNotesList, view.handlersList);
 
       for (let i = 0; i < els.length; i += 1) {
@@ -94,13 +94,13 @@ describe('applyStyles method.', () => {
   describe('Removes old themes.', () => {
     it('Removes old themes.', () => {
       view.applyStyles([
-        {value: 'someAnother', oldValue: 'default', className: 'theme'},
-        {value: 'someAnother', oldValue: 'horizontal', className: 'direction'},
+        { value: 'someAnother', oldValue: 'default', className: 'theme' },
+        { value: 'someAnother', oldValue: 'horizontal', className: 'direction' },
       ]);
       const els = [
         view.mainNode, view.outer,
         view.path, view.pathPassed,
-        view.divisionsBlock
+        view.divisionsBlock,
       ].concat(view.divisionsList, view.valueNotesList, view.handlersList);
 
       for (let i = 0; i < els.length; i += 1) {
@@ -115,7 +115,7 @@ describe('applyStyles method.', () => {
 describe('applyValueNotesDisplay method.', () => {
   describe('When display is true, type is single.', () => {
     it('Applying display of value note.', () => {
-      view.updateDOM({value: 'single', constants: {singleValue: 'single', rangeValue: 'range'}})
+      view.updateDOM({ value: 'single', constants: { singleValue: 'single', rangeValue: 'range' } });
       view.applyValueNotesDisplay(
         true,
         {
@@ -123,8 +123,8 @@ describe('applyValueNotesDisplay method.', () => {
           constants: {
             separateValue: 'separate',
             commonValue: 'common',
-          }
-        }
+          },
+        },
       );
 
       view.valueNotesList.forEach((el) => {
@@ -135,7 +135,7 @@ describe('applyValueNotesDisplay method.', () => {
 
   describe('When display is true, type is range.', () => {
     it('If valueNoteMode is "separate", shows first and last note.', () => {
-      view.updateDOM({value: 'range', constants: {singleValue: 'single', rangeValue: 'range'}})
+      view.updateDOM({ value: 'range', constants: { singleValue: 'single', rangeValue: 'range' } });
       view.applyValueNotesDisplay(
         true,
         {
@@ -143,8 +143,8 @@ describe('applyValueNotesDisplay method.', () => {
           constants: {
             separateValue: 'separate',
             commonValue: 'common',
-          }
-        }
+          },
+        },
       );
 
       expect(view.valueNotesList[0]).toHaveClass(`${view.valueNotesList[0].classList[0]}_display_visible`);
@@ -153,7 +153,7 @@ describe('applyValueNotesDisplay method.', () => {
     });
 
     it('If valueNoteMode is "common", shows second note.', () => {
-      view.updateDOM({value: 'range', constants: {singleValue: 'single', rangeValue: 'range'}})
+      view.updateDOM({ value: 'range', constants: { singleValue: 'single', rangeValue: 'range' } });
       view.applyValueNotesDisplay(
         true,
         {
@@ -161,8 +161,8 @@ describe('applyValueNotesDisplay method.', () => {
           constants: {
             separateValue: 'separate',
             commonValue: 'common',
-          }
-        }
+          },
+        },
       );
 
       expect(view.valueNotesList[0]).toHaveClass(`${view.valueNotesList[0].classList[0]}_display_hidden`);
@@ -180,8 +180,8 @@ describe('applyValueNotesDisplay method.', () => {
           constants: {
             separateValue: 'separate',
             commonValue: 'common',
-          }
-        }
+          },
+        },
       );
 
       view.valueNotesList.forEach((el) => {

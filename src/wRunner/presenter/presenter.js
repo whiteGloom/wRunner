@@ -30,7 +30,7 @@ class Presenter {
       setDirection: this.model.setDirection.bind(this.model),
       setValueNotesDisplay: this.model.setValueNotesDisplay.bind(this.model),
       setDivisionsCount: this.model.setDivisionsCount.bind(this.model),
-      
+
       getType: this.model.getType.bind(this.model),
       getLimits: this.model.getLimits.bind(this.model),
       getStep: this.model.getStep.bind(this.model),
@@ -56,7 +56,10 @@ class Presenter {
   typeUpdateEventHandler() {
     this.view.updateDOM(this.model.getType());
     this.view.applyStyles([this.model.theme, this.model.direction]);
-    this.view.applyValueNotesDisplay(this.model.getValueNotesDisplay(), this.model.getValueNotesMode());
+    this.view.applyValueNotesDisplay(
+      this.model.getValueNotesDisplay(),
+      this.model.getValueNotesMode(),
+    );
     this.model.recalculateValue();
   }
 
@@ -69,27 +72,60 @@ class Presenter {
   }
 
   valueUpdateEventHandler() {
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
+    this.view.drawValue(
+      this.model.getValues(),
+      this.model.getLimits(),
+      this.model.getDirection(),
+      this.model.getType(),
+      this.model.getValueNotesMode(),
+    );
   }
 
   rootsUpdateEventHandler() {
     this.view.append(this.model.roots);
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
+    this.view.drawValue(
+      this.model.getValues(),
+      this.model.getLimits(),
+      this.model.getDirection(),
+      this.model.getType(),
+      this.model.getValueNotesMode(),
+    );
   }
 
   themeUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
+    this.view.drawValue(
+      this.model.getValues(),
+      this.model.getLimits(),
+      this.model.getDirection(),
+      this.model.getType(),
+      this.model.getValueNotesMode(),
+    );
   }
 
   directionUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
+    this.view.drawValue(
+      this.model.getValues(),
+      this.model.getLimits(),
+      this.model.getDirection(),
+      this.model.getType(),
+      this.model.getValueNotesMode(),
+    );
   }
 
   valueNotesDisplayUpdateEventHandler() {
-    this.view.applyValueNotesDisplay(this.model.getValueNotesDisplay(), this.model.getValueNotesMode());
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
+    this.view.applyValueNotesDisplay(
+      this.model.getValueNotesDisplay(),
+      this.model.getValueNotesMode(),
+    );
+    this.view.drawValue(
+      this.model.getValues(),
+      this.model.getLimits(),
+      this.model.getDirection(),
+      this.model.getType(),
+      this.model.getValueNotesMode(),
+    );
   }
 
   divisionsCountUpdateEventHandler() {
@@ -98,7 +134,13 @@ class Presenter {
   }
 
   windowResizeEventHandler() {
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
+    this.view.drawValue(
+      this.model.getValues(),
+      this.model.getLimits(),
+      this.model.getDirection(),
+      this.model.getType(),
+      this.model.getValueNotesMode(),
+    );
   }
 
   UIActionMouseDownHandler(event) {
@@ -111,7 +153,10 @@ class Presenter {
 
   valueNoteModeUpdateEventHandler(value) {
     this.model.setValueNotesMode(value);
-    this.view.applyValueNotesDisplay(this.model.getValueNotesDisplay(), this.model.getValueNotesMode());
+    this.view.applyValueNotesDisplay(
+      this.model.getValueNotesDisplay(),
+      this.model.getValueNotesMode(),
+    );
   }
 
   applyDefaultEvents() {

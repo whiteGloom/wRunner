@@ -108,7 +108,7 @@ describe('setLimits method.', () => {
     });
 
     it('Taking { minLimit: 80, maxLimit: 20 }, swap it to { minLimit: 20, maxLimit: 80 }', () => {
-      const result = model.setLimits({ minLimit: 80, maxLimit: 20 });
+      model.setLimits({ minLimit: 80, maxLimit: 20 });
 
       expect(model.limits.minLimit).toEqual(20);
 
@@ -124,7 +124,7 @@ describe('setLimits method.', () => {
     });
 
     it('Taking { minLimit: 100, maxLimit: 100 }, changes limits to { minLimit: 100, maxLimit: 101 }', () => {
-      const result = model.setLimits({ minLimit: 100, maxLimit: 100 });
+      model.setLimits({ minLimit: 100, maxLimit: 100 });
 
       expect(model.limits.minLimit).toEqual(100);
 
@@ -140,7 +140,7 @@ describe('setLimits method.', () => {
     });
 
     it('Taking { minLimit: 20 }, changes only minimum limit. Maximum will stay the same.', () => {
-      const result = model.setLimits({ minLimit: 20 });
+      model.setLimits({ minLimit: 20 });
 
       expect(model.limits.minLimit).toEqual(20);
 
