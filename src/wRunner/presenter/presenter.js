@@ -1,13 +1,11 @@
 import ModelDefaults from '../model/model.defaults';
-import ViewDefaults from '../view/view.defaults';
 
 class Presenter {
   constructor(options = {}) {
     const { userOptions, model, view } = options;
 
     const modelDefaults = new ModelDefaults();
-    const viewDefaults = new ViewDefaults();
-    const combinedOptions = { ...modelDefaults.getOptionsPresets(), ...viewDefaults.getOptionsPresets(), ...userOptions };
+    const combinedOptions = { ...modelDefaults.getOptionsPresets(), ...userOptions };
 
     this.model = model;
     this.view = view;
@@ -27,37 +25,38 @@ class Presenter {
       setSingleValue: this.model.setSingleValue.bind(this.model),
       setRangeValues: this.model.setRangeValues.bind(this.model),
       setNearestValue: this.model.setNearestValue.bind(this.model),
+      setRoots: this.model.setRoots.bind(this.model),
+      setTheme: this.model.setTheme.bind(this.model),
+      setDirection: this.model.setDirection.bind(this.model),
+      setValueNotesDisplay: this.model.setValueNotesDisplay.bind(this.model),
+      setDivisionsCount: this.model.setDivisionsCount.bind(this.model),
+      
       getType: this.model.getType.bind(this.model),
       getLimits: this.model.getLimits.bind(this.model),
       getStep: this.model.getStep.bind(this.model),
       getValues: this.model.getValues.bind(this.model),
+      getRoots: this.model.getRoots.bind(this.model),
+      getTheme: this.model.getTheme.bind(this.model),
+      getDirection: this.model.getDirection.bind(this.model),
+      getValueNotesDisplay: this.model.getValueNotesDisplay.bind(this.model),
+      getDivisionsCount: this.model.getDivisionsCount.bind(this.model),
+
+      onThemeUpdate: this.model.themeUpdateEvent.addHandler,
+      onDirectionUpdate: this.model.directionUpdateEvent.addHandler,
+      onValueNotesDisplayUpdate: this.model.valueNotesDisplayUpdateEvent.addHandler,
+      onRootsUpdate: this.model.rootsUpdateEvent.addHandler,
+      onDivisionsCountUpdate: this.model.divisionsCountUpdateEvent.addHandler,
       onValueUpdate: this.model.valueUpdateEvent.addHandler,
       onStepUpdate: this.model.stepUpdateEvent.addHandler,
       onLimitsUpdate: this.model.limitsUpdateEvent.addHandler,
       onTypeUpdate: this.model.typeUpdateEvent.addHandler,
-
-      setRoots: this.view.setRoots.bind(this.view),
-      setTheme: this.view.setTheme.bind(this.view),
-      setDirection: this.view.setDirection.bind(this.view),
-      setValueNotesDisplay: this.view.setValueNotesDisplay.bind(this.view),
-      setDivisionsCount: this.view.setDivisionsCount.bind(this.view),
-      getRoots: this.view.getRoots.bind(this.view),
-      getTheme: this.view.getTheme.bind(this.view),
-      getDirection: this.view.getDirection.bind(this.view),
-      getValueNotesDisplay: this.view.getValueNotesDisplay.bind(this.view),
-      getDivisionsCount: this.view.getDivisionsCount.bind(this.view),
-      onThemeUpdate: this.view.themeUpdateEvent.addHandler,
-      onDirectionUpdate: this.view.directionUpdateEvent.addHandler,
-      onValueNotesDisplayUpdate: this.view.valueNotesDisplayUpdateEvent.addHandler,
-      onRootsUpdate: this.view.rootsUpdateEvent.addHandler,
-      onDivisionsCountUpdate: this.view.divisionsCountUpdateEvent.addHandler,
     };
   }
 
   typeUpdateEventHandler() {
     this.view.updateDOM(this.model.getType());
-    this.view.applyStyles();
-    this.view.applyValueNotesDisplay(this.view.valueNotesDisplay);
+    this.view.applyStyles([this.model.theme, this.model.direction]);
+    this.view.applyValueNotesDisplay(this.model.getValueNotesDisplay(), this.model.getValueNotesMode());
     this.model.recalculateValue();
   }
 
@@ -70,43 +69,49 @@ class Presenter {
   }
 
   valueUpdateEventHandler() {
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
+    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
   }
 
   rootsUpdateEventHandler() {
-    this.view.append();
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
-  }
-
-  UIMouseActionEventHandler(data) {
-    this.model.setNearestValue(data);
+    this.view.append(this.model.roots);
+    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
   }
 
   themeUpdateEventHandler() {
-    this.view.applyStyles();
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
+    this.view.applyStyles([this.model.theme, this.model.direction]);
+    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
   }
 
   directionUpdateEventHandler() {
-    this.view.applyStyles();
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
+    this.view.applyStyles([this.model.theme, this.model.direction]);
+    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
   }
 
   valueNotesDisplayUpdateEventHandler() {
-    this.view.applyValueNotesDisplay(this.view.valueNotesDisplay);
+    this.view.applyValueNotesDisplay(this.model.getValueNotesDisplay(), this.model.getValueNotesMode());
+    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
   }
 
   divisionsCountUpdateEventHandler() {
-    this.view.generateDivisions();
-    this.view.applyStyles();
-  }
-
-  valueNoteRangeModeUpdateEventHandler() {
-    this.view.applyValueNotesDisplay(this.view.valueNotesDisplay);
+    this.view.generateDivisions(this.model.getDivisionsCount());
+    this.view.applyStyles([this.model.theme, this.model.direction]);
   }
 
   windowResizeEventHandler() {
-    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.view.getDirection(), this.model.getType());
+    this.view.drawValue(this.model.getValues(), this.model.getLimits(), this.model.getDirection(), this.model.getType(), this.model.getValueNotesMode());
+  }
+
+  UIActionMouseDownHandler(event) {
+    this.view.handlerMouseDownAction(event, this.model.getDirection());
+  }
+
+  UIValueActionHandler(data) {
+    this.model.setNearestValue(data);
+  }
+
+  valueNoteModeUpdateEventHandler(value) {
+    this.model.setValueNotesMode(value);
+    this.view.applyValueNotesDisplay(this.model.getValueNotesDisplay(), this.model.getValueNotesMode());
   }
 
   applyDefaultEvents() {
@@ -119,24 +124,25 @@ class Presenter {
       .addHandler(this.stepUpdateEventHandler.bind(this));
     this.model.valueUpdateEvent
       .addHandler(this.valueUpdateEventHandler.bind(this));
-
-    // View events
-    this.view.rootsUpdateEvent
+    this.model.rootsUpdateEvent
       .addHandler(this.rootsUpdateEventHandler.bind(this));
-    this.view.UIMouseActionEvent
-      .addHandler(this.UIMouseActionEventHandler.bind(this));
-    this.view.themeUpdateEvent
+    this.model.themeUpdateEvent
       .addHandler(this.themeUpdateEventHandler.bind(this));
-    this.view.directionUpdateEvent
+    this.model.directionUpdateEvent
       .addHandler(this.directionUpdateEventHandler.bind(this));
-    this.view.valueNotesDisplayUpdateEvent
+    this.model.valueNotesDisplayUpdateEvent
       .addHandler(this.valueNotesDisplayUpdateEventHandler.bind(this));
-    this.view.divisionsCountUpdateEvent
+    this.model.divisionsCountUpdateEvent
       .addHandler(this.divisionsCountUpdateEventHandler.bind(this));
-    this.view.valueNoteRangeModeUpdateEvent
-      .addHandler(this.valueNoteRangeModeUpdateEventHandler.bind(this));
+
+    this.view.valueNoteModeUpdateEvent
+      .addHandler(this.valueNoteModeUpdateEventHandler.bind(this));
     this.view.windowResizeEvent
       .addHandler(this.windowResizeEventHandler.bind(this));
+    this.view.UIActionMouseDown
+      .addHandler(this.UIActionMouseDownHandler.bind(this));
+    this.view.UIValueAction
+      .addHandler(this.UIValueActionHandler.bind(this));
   }
 
   applyUserEvents(options = {}) {
@@ -156,11 +162,11 @@ class Presenter {
     this.model.limitsUpdateEvent.addHandler(onLimitsUpdate);
     this.model.stepUpdateEvent.addHandler(onStepUpdate);
     this.model.valueUpdateEvent.addHandler(onValueUpdate);
-    this.view.rootsUpdateEvent.addHandler(onRootsUpdate);
-    this.view.themeUpdateEvent.addHandler(onThemeUpdate);
-    this.view.directionUpdateEvent.addHandler(onDirectionUpdate);
-    this.view.divisionsCountUpdateEvent.addHandler(onDivisionsCountUpdate);
-    this.view.valueNotesDisplayUpdateEvent.addHandler(onValueNotesDisplayUpdate);
+    this.model.rootsUpdateEvent.addHandler(onRootsUpdate);
+    this.model.themeUpdateEvent.addHandler(onThemeUpdate);
+    this.model.directionUpdateEvent.addHandler(onDirectionUpdate);
+    this.model.divisionsCountUpdateEvent.addHandler(onDivisionsCountUpdate);
+    this.model.valueNotesDisplayUpdateEvent.addHandler(onValueNotesDisplayUpdate);
   }
 
   applyUserOptions(options = {}) {
@@ -177,17 +183,16 @@ class Presenter {
       valueNotesDisplay,
     } = options;
 
-    this.view.setRoots(roots);
+    this.model.setRoots(roots);
+    this.model.setValueNotesDisplay(valueNotesDisplay);
+    this.model.setDivisionsCount(divisionsCount);
+    this.model.setTheme(theme);
+    this.model.setDirection(direction);
     this.model.setLimits(limits);
     this.model.setStep(step);
     this.model.setType(type);
     this.model.setSingleValue(singleValue);
     this.model.setRangeValues(rangeValues);
-
-    this.view.setTheme(theme);
-    this.view.setDirection(direction);
-    this.view.setDivisionsCount(divisionsCount);
-    this.view.setValueNotesDisplay(valueNotesDisplay);
   }
 }
 

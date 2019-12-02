@@ -468,3 +468,432 @@ describe('setType method.', () => {
     });
   });
 });
+
+
+describe('setRoots method.', () => {
+  describe('Normal value - DOM el.', () => {
+    it('Chaning roots, returns roots.', () => {
+      model.setRoots(document.getElementById('root'));
+
+      expect(model.roots).toEqual(document.getElementById('root'));
+    });
+  });
+
+  describe('If you try to set roots as a not DOM el, returns.', () => {
+    beforeEach(() => {
+      model.setRoots(document.body);
+    });
+
+    it('Taking NaN.', () => {
+      model.setRoots(NaN);
+
+      expect(model.roots).toEqual(document.body);
+    });
+
+    it('Taking {}.', () => {
+      model.setRoots({});
+
+      expect(model.roots).toEqual(document.body);
+    });
+
+    it('Taking 123.', () => {
+      model.setRoots(123);
+
+      expect(model.roots).toEqual(document.body);
+    });
+
+    it('Taking null.', () => {
+      model.setRoots(null);
+
+      expect(model.roots).toEqual(document.body);
+    });
+
+    it('Taking undefined.', () => {
+      model.setRoots(undefined);
+
+      expect(model.roots).toEqual(document.body);
+    });
+
+    it('Taking false.', () => {
+      model.setRoots(false);
+
+      expect(model.roots).toEqual(document.body);
+    });
+
+    it('Taking true.', () => {
+      model.setRoots(true);
+
+      expect(model.roots).toEqual(document.body);
+    });
+
+    it('Taking [].', () => {
+      model.setRoots([]);
+
+      expect(model.roots).toEqual(document.body);
+    });
+
+    it('Taking "dadaya".', () => {
+      model.setRoots('dadaya');
+
+      expect(model.roots).toEqual(document.body);
+    });
+  });
+});
+
+describe('getRoots method.', () => {
+  it('Returns sliders roots.', () => {
+    const result = model.getRoots();
+
+    expect(helper.isDOMEl(result)).toBeTruthy();
+  });
+});
+
+describe('setDivisionsCount method.', () => {
+  describe('Changing divisionsBlock count.', () => {
+    it('Taking 3, returns 3.', () => {
+      model.setDivisionsCount(3);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking 2, returns 2.', () => {
+      model.setDivisionsCount(2);
+
+      expect(model.divisionsCount).toEqual(2);
+    });
+
+    it('Taking 0, returns 0.', () => {
+      model.setDivisionsCount(0);
+
+      expect(model.divisionsCount).toEqual(0);
+    });
+  });
+
+  describe('If you try to set divisionsBlock count as 1, it will set divisionsBlock count to 2.', () => {
+    it('Taking 1, changing divisionsBlock count to 2.', () => {
+      model.setDivisionsCount(1);
+
+      expect(model.divisionsCount).toEqual(2);
+    });
+  });
+
+  describe('If you try to set divisionsBlock count as not a number or a number, that is less than 0, returns.', () => {
+    beforeEach(() => {
+      model.setDivisionsCount(3);
+    });
+
+    it('Taking -1.', () => {
+      model.setDivisionsCount(-1);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking -100.', () => {
+      model.setDivisionsCount(-100);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking -100.', () => {
+      model.setDivisionsCount(-100);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking undefined.', () => {
+      model.setDivisionsCount(undefined);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking NaN.', () => {
+      model.setDivisionsCount(NaN);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking false.', () => {
+      model.setDivisionsCount(false);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking null.', () => {
+      model.setDivisionsCount(null);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking {}.', () => {
+      model.setDivisionsCount({});
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking [].', () => {
+      model.setDivisionsCount([]);
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+
+    it('Taking "dadaya".', () => {
+      model.setDivisionsCount('dadaya');
+
+      expect(model.divisionsCount).toEqual(3);
+    });
+  });
+});
+
+
+describe('getDivisionsCount method.', () => {
+  it('Returns count of divisionsBlock.', () => {
+    const result = model.getDivisionsCount();
+
+    expect(result).toEqual(model.divisionsCount);
+  });
+});
+
+describe('setTheme method.', () => {
+  describe('Changes sliders theme.', () => {
+    it('Taking "someTheme".', () => {
+      model.setTheme('someTheme');
+
+      expect(model.theme.value).toEqual('someTheme');
+    });
+
+    it('Taking "someAnotherTheme".', () => {
+      model.setTheme('someAnotherTheme');
+
+      expect(model.theme.value).toEqual('someAnotherTheme');
+    });
+  });
+
+  describe('If you try to set theme as a not string, returns.', () => {
+    beforeEach(() => {
+      model.setTheme('default');
+    });
+
+    it('Taking NaN.', () => {
+      model.setTheme(NaN);
+
+      // Theme stays the same.
+      expect(model.theme.value).toEqual('default');
+    });
+
+    it('Taking true.', () => {
+      model.setTheme(true);
+
+      // Theme stays the same.
+      expect(model.theme.value).toEqual('default');
+    });
+
+    it('Taking false.', () => {
+      model.setTheme(false);
+
+      // Theme stays the same.
+      expect(model.theme.value).toEqual('default');
+    });
+
+    it('Taking 123.', () => {
+      model.setTheme(123);
+
+      // Theme stays the same.
+      expect(model.theme.value).toEqual('default');
+    });
+
+    it('Taking {}.', () => {
+      model.setTheme({});
+
+      // Theme stays the same.
+      expect(model.theme.value).toEqual('default');
+    });
+
+    it('Taking undefined.', () => {
+      model.setTheme(undefined);
+
+      // Theme stays the same.
+      expect(model.theme.value).toEqual('default');
+    });
+
+    it('Taking null.', () => {
+      model.setTheme(null);
+
+      // Theme stays the same.
+      expect(model.theme.value).toEqual('default');
+    });
+  });
+});
+
+describe('getTheme method.', () => {
+  beforeAll(() => {
+    model.setTheme('default');
+  });
+
+  it('Returns theme.', () => {
+    const result = model.getTheme();
+
+    expect(result).toEqual('default');
+    expect(result).toEqual(model.theme.value);
+  });
+});
+
+describe('setDirection method.', () => {
+  describe('Normal values - reserved in direction constants (watch getDirection method). Changes sliders direction.', () => {
+    Object.keys(model.direction.constants).forEach((constant) => {
+      it(`Taking ${model.direction.constants[constant]}, changes direction to ${constant}`, () => {
+        model.setDirection(model.direction.constants[constant]);
+
+        expect(model.direction.value).toEqual(model.direction.constants[constant]);
+      });
+    });
+  });
+
+  describe('If you try to set direction as a not string, returns.', () => {
+    beforeEach(() => {
+      model.setDirection('horizontal');
+    });
+
+    it('Taking "SomeNotListed".', () => {
+      model.setDirection('SomeNotListed');
+
+      // Direction stays the same.
+      expect(model.direction.value).toEqual('horizontal');
+    });
+
+    it('Taking NaN.', () => {
+      model.setDirection(NaN);
+
+      // Direction stays the same.
+      expect(model.direction.value).toEqual('horizontal');
+    });
+
+    it('Taking true.', () => {
+      model.setDirection(true);
+
+      // Direction stays the same.
+      expect(model.direction.value).toEqual('horizontal');
+    });
+
+    it('Taking false.', () => {
+      model.setDirection(false);
+
+      // Direction stays the same.
+      expect(model.direction.value).toEqual('horizontal');
+    });
+
+    it('Taking 123.', () => {
+      model.setDirection(123);
+
+      // Direction stays the same.
+      expect(model.direction.value).toEqual('horizontal');
+    });
+
+    it('Taking {}.', () => {
+      model.setDirection({});
+
+      // Direction stays the same.
+      expect(model.direction.value).toEqual('horizontal');
+    });
+
+    it('Taking undefined.', () => {
+      model.setDirection(undefined);
+
+      // Direction stays the same.
+      expect(model.direction.value).toEqual('horizontal');
+    });
+
+    it('Taking null.', () => {
+      model.setDirection(null);
+
+      // Direction stays the same.
+      expect(model.direction.value).toEqual('horizontal');
+    });
+  });
+});
+
+describe('getDirection method.', () => {
+  beforeAll(() => {
+    model.setDirection('horizontal');
+  });
+
+  it('Returns {value: *direction*, constants: *list of reserved values*}', () => {
+    const result = model.getDirection();
+
+    expect(result.value).toEqual('horizontal');
+    expect(result.constants).toEqual(model.direction.constants);
+  });
+});
+
+
+describe('setValueNotesDisplay method.', () => {
+  describe('Changing display of value note.', () => {
+    it('Taking true.', () => {
+      model.setValueNotesDisplay(true);
+
+      expect(model.valueNotesDisplay).toBeTruthy();
+    });
+
+    it('Taking false.', () => {
+      model.setValueNotesDisplay(false);
+
+      expect(model.valueNotesDisplay).toBeFalsy();
+    });
+  });
+
+  describe('If you try to set display as a not boolean value, returns.', () => {
+    beforeAll(() => {
+      model.setValueNotesDisplay(true);
+    });
+
+    it('Taking "123".', () => {
+      model.setValueNotesDisplay('123');
+
+      expect(model.valueNotesDisplay).toEqual(true);
+    });
+
+    it('Taking 123.', () => {
+      model.setValueNotesDisplay(123);
+
+      expect(model.valueNotesDisplay).toEqual(true);
+    });
+
+    it('Taking {}.', () => {
+      model.setValueNotesDisplay({});
+
+      expect(model.valueNotesDisplay).toEqual(true);
+    });
+
+    it('Taking [].', () => {
+      model.setValueNotesDisplay([]);
+
+      expect(model.valueNotesDisplay).toEqual(true);
+    });
+
+    it('Taking undefined.', () => {
+      model.setValueNotesDisplay(undefined);
+
+      expect(model.valueNotesDisplay).toEqual(true);
+    });
+
+    it('Taking null.', () => {
+      model.setValueNotesDisplay(null);
+
+      expect(model.valueNotesDisplay).toEqual(true);
+    });
+
+    it('Taking NaN.', () => {
+      model.setValueNotesDisplay(NaN);
+
+      expect(model.valueNotesDisplay).toEqual(true);
+    });
+  });
+});
+
+
+describe('getValueNotesDisplay method.', () => {
+  it('Returns display of value note.', () => {
+    const result = model.getValueNotesDisplay();
+
+    expect(result).toEqual(model.valueNotesDisplay);
+  });
+});

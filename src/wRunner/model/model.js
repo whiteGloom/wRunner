@@ -12,8 +12,27 @@ class Model {
     this.values = defaults.values;
     this.type = defaults.type;
     this.step = defaults.step;
+    this.roots = defaults.roots;
+    this.divisionsCount = defaults.divisionsCount;
+    this.valueNotesDisplay = defaults.valueNotesDisplay;
+    this.valueNotesMode = defaults.valueNotesMode;
+    this.theme = defaults.theme;
+    this.direction = defaults.direction;
 
     this.addEvents();
+  }
+
+  addEvents() {
+    this.valueUpdateEvent = makeEvent();
+    this.limitsUpdateEvent = makeEvent();
+    this.stepUpdateEvent = makeEvent();
+    this.percentageUpdateEvent = makeEvent();
+    this.typeUpdateEvent = makeEvent();
+    this.rootsUpdateEvent = makeEvent();
+    this.themeUpdateEvent = makeEvent();
+    this.directionUpdateEvent = makeEvent();
+    this.valueNotesDisplayUpdateEvent = makeEvent();
+    this.divisionsCountUpdateEvent = makeEvent();
   }
 
   recalculateValue() {
@@ -35,7 +54,10 @@ class Model {
   setType(newType) {
     if (Object.values(this.type.constants).includes(newType)) {
       this.type.value = newType;
-      this.typeUpdateEvent.trigger({ ...this.type });
+      this.typeUpdateEvent.trigger({
+        value: this.type.value,
+        constants: { ...this.type.constants },
+      });
     }
   }
 
@@ -101,8 +123,60 @@ class Model {
     }
   }
 
+  setRoots(newRoots) {
+    if (!helper.isDOMEl(newRoots)) return;
+    this.roots = newRoots;
+
+    this.rootsUpdateEvent.trigger(this.roots);
+  }
+
+  setDivisionsCount(newCount) {
+    if (!helper.isNumber(newCount) || newCount < 0) return;
+
+    this.divisionsCount = Math.round(+newCount) !== 1
+      ? Math.round(+newCount)
+      : Math.round(+newCount) + 1;
+    this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
+  }
+
+  setTheme(newTheme) {
+    if (typeof newTheme !== 'string') return;
+
+    this.theme.oldValue = this.theme.value;
+    this.theme.value = newTheme;
+
+    this.themeUpdateEvent.trigger(this.theme.value);
+  }
+
+  setDirection(newDirection) {
+    if (Object.values(this.direction.constants).includes(newDirection)) {
+      this.direction.oldValue = this.direction.value;
+      this.direction.value = newDirection;
+      this.directionUpdateEvent.trigger({
+        value: this.direction.value,
+        constants: { ...this.direction.constants },
+      });
+    }
+  }
+
+  setValueNotesDisplay(newValue) {
+    if (typeof newValue !== 'boolean') return;
+    this.valueNotesDisplay = newValue;
+
+    this.valueNotesDisplayUpdateEvent.trigger(this.valueNotesDisplay);
+  }
+
+  setValueNotesMode(newMode) {
+    if (Object.values(this.valueNotesMode.constants).includes(newMode)) {
+      this.valueNotesMode.value = newMode;
+    }
+  }
+
   getType() {
-    return { ...this.type };
+    return {
+      value: this.type.value,
+      constants: { ...this.type.constants },
+    };
   }
 
   getLimits() {
@@ -117,12 +191,34 @@ class Model {
     return this.step;
   }
 
-  addEvents() {
-    this.valueUpdateEvent = makeEvent();
-    this.limitsUpdateEvent = makeEvent();
-    this.stepUpdateEvent = makeEvent();
-    this.percentageUpdateEvent = makeEvent();
-    this.typeUpdateEvent = makeEvent();
+  getRoots() {
+    return this.roots;
+  }
+
+  getTheme() {
+    return this.theme.value;
+  }
+
+  getDirection() {
+    return {
+      value: this.direction.value,
+      constants: { ...this.direction.constants },
+    };
+  }
+
+  getValueNotesDisplay() {
+    return this.valueNotesDisplay;
+  }
+
+  getValueNotesMode() {
+    return {
+      value: this.valueNotesMode.value,
+      constants: { ...this.valueNotesMode.constants },
+    };
+  }
+
+  getDivisionsCount() {
+    return this.divisionsCount;
   }
 }
 

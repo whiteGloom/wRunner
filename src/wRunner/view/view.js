@@ -1,23 +1,9 @@
-import ViewDefaults from './view.defaults';
 import makeEventModule from '@event';
-import helperModule from '@helper';
 
 const makeEvent = makeEventModule;
-const helper = helperModule;
 
 class View {
   constructor() {
-    // Defaults
-    const defaults = new ViewDefaults();
-    this.roots = defaults.roots;
-    this.divisionsCount = defaults.divisionsCount;
-    this.valueNotesDisplay = defaults.valueNotesDisplay;
-    this.valueNotesMode = defaults.valueNotesMode;
-    this.valueNotesModeConstants = defaults.valueNotesModeConstants;
-    this.theme = defaults.theme;
-    this.direction = defaults.direction;
-
-    // Stable elements
     this.mainNode = document.createElement('div');
     this.outer = document.createElement('div');
     this.path = document.createElement('div');
@@ -50,28 +36,24 @@ class View {
   }
 
   addEvents() {
-    this.UIMouseActionEvent = makeEvent();
-    this.rootsUpdateEvent = makeEvent();
-    this.themeUpdateEvent = makeEvent();
-    this.directionUpdateEvent = makeEvent();
-    this.valueNotesDisplayUpdateEvent = makeEvent();
-    this.valueNoteRangeModeUpdateEvent = makeEvent();
-    this.divisionsCountUpdateEvent = makeEvent();
+    this.UIActionMouseDown = makeEvent();
+    this.UIValueAction = makeEvent();
+    this.valueNoteModeUpdateEvent = makeEvent();
     this.windowResizeEvent = makeEvent();
   }
 
   addListenners() {
-    this.path.addEventListener('mousedown', this.mouseDownActionHandler.bind(this));
+    this.path.addEventListener('mousedown', this.UIActionMouseDown.trigger);
     window.addEventListener('resize', this.windowResizeEvent.trigger);
   }
 
-  mouseDownActionHandler(eventDown) {
+  handlerMouseDownAction(eventDown, direction) {
     if (eventDown.button !== 0) return;
     let wasDragged = false;
 
     // Handlers
     function handlerFunction(event) {
-      const isHorizontal = this.direction.value === this.direction.constants.horizontalValue;
+      const isHorizontal = direction.value === direction.constants.horizontalValue;
       const scale = this.path[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
       const min = this.path.getBoundingClientRect()[isHorizontal ? 'left' : 'top'];
       const pos = event[isHorizontal ? 'clientX' : 'clientY'];
@@ -79,11 +61,8 @@ class View {
       // If the dragging is out of slider's range, the function stops.
       if (pos < min - 10 || pos > min + scale + 10) return;
 
-      if (isHorizontal) {
-        this.UIMouseActionEvent.trigger(((pos - min) / scale) * 100);
-      } else {
-        this.UIMouseActionEvent.trigger(100 - ((pos - min) / scale) * 100);
-      }
+      const data = ((pos - min) / scale) * 100;
+      this.UIValueAction.trigger(isHorizontal ? data : 100 - data);
     }
     const handler = handlerFunction.bind(this);
 
@@ -119,8 +98,8 @@ class View {
     this.valueNotesList.length = 0;
 
     if (type.value === type.constants.singleValue) {
-      this.handlersList.push(makeEl(['wrunner__handle']));
-      this.valueNotesList.push(makeEl(['wrunner__value-note']));
+      this.handlersList.push(makeEl(['wrunner__handle', 'wrunner__handle_type_single']));
+      this.valueNotesList.push(makeEl(['wrunner__value-note', 'wrunner__value-note_type_single']));
     }
     if (type.value === type.constants.rangeValue) {
       this.handlersList.push(makeEl(['wrunner__handle', 'wrunner__handle_type_min']));
@@ -140,13 +119,11 @@ class View {
     });
   }
 
-  append() {
-    this.roots.appendChild(this.mainNode);
-    return this.roots;
+  append(roots) {
+    roots.appendChild(this.mainNode);
   }
 
-  applyStyles() {
-    const styles = [this.theme, this.direction];
+  applyStyles(styles) {
     const els = [
       this.mainNode, this.outer,
       this.path, this.pathPassed,
@@ -166,10 +143,10 @@ class View {
     });
   }
 
-  drawValue(values, limits, direction, type) {
+  drawValue(values, limits, direction, type, valueNotesMode) {
     this.setPathPosition(limits, values, direction, type);
     this.setHandlersPosition(limits, values, direction);
-    this.setValueNotesPosition(limits, values, direction);
+    this.setValueNotesPosition(limits, values, direction, valueNotesMode);
   }
 
   setPathPosition(
@@ -237,178 +214,111 @@ class View {
     { minLimit, valuesCount },
     { singleValue, rangeValueMin, rangeValueMax },
     direction,
+    valueNotesMode,
   ) {
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const getSizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const posProp = isHorizontal ? 'left' : 'top';
 
-    function draw(element, value, title = '') {
+    function drawEl(element, value, title) {
       const pathScale = this.path[getSizeProp];
       const el = element;
-      el.style.cssText = '';
-      if (typeof title === 'string' || typeof title === 'number') {
-        el.innerHTML = title;
-      } else {
-        el.innerHTML = `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`;
-      }
-
       const percent = (value - minLimit) / valuesCount;
+      el.style.cssText = '';
+      el.innerHTML = typeof title === 'object'
+        ? `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`
+        : title;
+
       const position = isHorizontal
         ? ((percent * pathScale - el[getSizeProp] / 2) / pathScale) * 100
         : 100 - ((percent * pathScale + el[getSizeProp] / 2) / pathScale) * 100;
-
       el.style[posProp] = `${position}%`;
     }
+    const draw = drawEl.bind(this);
 
     window.requestAnimationFrame(() => {
       if (this.valueNotesList.length === 1) {
-        draw.call(this, this.valueNotesList[0], singleValue, singleValue);
+        draw(this.valueNotesList[0], singleValue, singleValue);
       }
       if (this.valueNotesList.length === 3) {
-        draw.call(this, this.valueNotesList[0], rangeValueMin, rangeValueMin);
-        draw.call(this, this.valueNotesList[1], (rangeValueMin + rangeValueMax) / 2,
+        draw(this.valueNotesList[0], rangeValueMin, rangeValueMin);
+        draw(this.valueNotesList[1], (rangeValueMin + rangeValueMax) / 2,
           [rangeValueMin, rangeValueMax]);
-        draw.call(this, this.valueNotesList[2], rangeValueMax, rangeValueMax);
+        draw(this.valueNotesList[2], rangeValueMax, rangeValueMax);
+
         this.checkValueNotesMode(
           { minLimit, valuesCount },
           { rangeValueMin, rangeValueMax },
           direction,
+          valueNotesMode,
         );
       }
     });
   }
 
-  checkValueNotesMode({ minLimit, valuesCount }, { rangeValueMin, rangeValueMax }, direction) {
+  checkValueNotesMode(
+    { minLimit, valuesCount },
+    { rangeValueMin, rangeValueMax },
+    direction,
+    valueNotesMode,
+  ) {
     if (this.valueNotesList.length < 3) return;
     const getSizeProp = direction.value === direction.constants.horizontalValue ? 'offsetWidth' : 'offsetHeight';
     const [elFirst,, elSec] = this.valueNotesList;
+    const sizes = (elFirst[getSizeProp] + elSec[getSizeProp]) / 2;
     function calcPos(el, value) {
       return ((value - minLimit) / valuesCount) * this.path[getSizeProp] + el[getSizeProp] / 2;
     }
     const calc = calcPos.bind(this);
     const distance = calc(elSec, rangeValueMax) - calc(elFirst, rangeValueMin);
-    const sizes = (elFirst[getSizeProp] + elSec[getSizeProp]) / 2;
 
     if (distance >= sizes) {
-      if (this.valueNotesMode !== this.valueNotesModeConstants.separateValue) {
-        this.valueNotesMode = this.valueNotesModeConstants.separateValue;
-        this.valueNoteRangeModeUpdateEvent.trigger();
+      if (valueNotesMode.value !== valueNotesMode.constants.separateValue) {
+        this.valueNoteModeUpdateEvent.trigger(valueNotesMode.constants.separateValue);
       }
-    } else if (this.valueNotesMode !== this.valueNotesModeConstants.commonValue) {
-      this.valueNotesMode = this.valueNotesModeConstants.commonValue;
-      this.valueNoteRangeModeUpdateEvent.trigger();
+    } else if (valueNotesMode.value !== valueNotesMode.constants.commonValue) {
+      this.valueNoteModeUpdateEvent.trigger(valueNotesMode.constants.commonValue);
     }
   }
 
-  applyValueNotesDisplay(display) {
+  applyValueNotesDisplay(display, valueNotesMode) {
     function set(el, value) {
       const mark = el.classList[0];
-      window.requestAnimationFrame(() => {
         el.classList[value ? 'add' : 'remove'](`${mark}_display_visible`);
         el.classList[value ? 'remove' : 'add'](`${mark}_display_hidden`);
-      });
     }
 
-    if (this.valueNotesList.length === 1) {
-      set(this.valueNotesList[0], display);
-    }
-    if (this.valueNotesList.length === 3) {
+    window.requestAnimationFrame(() => {
       if (!display) {
         this.valueNotesList.forEach((el) => {
           set(el, false);
         });
-      } else {
-        if (this.valueNotesMode === this.valueNotesModeConstants.separateValue) {
-          set(this.valueNotesList[0], true);
-          set(this.valueNotesList[1], false);
-          set(this.valueNotesList[2], true);
-        }
-        if (this.valueNotesMode === this.valueNotesModeConstants.commonValue) {
-          set(this.valueNotesList[0], false);
-          set(this.valueNotesList[1], true);
-          set(this.valueNotesList[2], false);
-        }
+        return;
       }
-    }
+      if (this.valueNotesList.length === 1) {
+        set(this.valueNotesList[0], true);
+      }
+      if (this.valueNotesList.length === 3) {
+        const values = [true, false, true];
+        const isSep = valueNotesMode.value === valueNotesMode.constants.separateValue;
+        this.valueNotesList.forEach((el, i) => {
+          set(el, isSep ? values[i] : !values[i]);
+        });
+      }
+    });
   }
 
-  generateDivisions() {
+  generateDivisions(count) {
     this.divisionsBlock.innerHTML = '';
     this.divisionsList.length = 0;
 
-    while (this.divisionsList.length < this.divisionsCount) {
+    while (this.divisionsList.length < count) {
       const instance = document.createElement('div');
       instance.classList.add('wrunner__division');
 
       this.divisionsList.push(instance);
       this.divisionsBlock.appendChild(instance);
     }
-  }
-
-  setRoots(newRoots) {
-    if (!helper.isDOMEl(newRoots)) return;
-    this.roots = newRoots;
-
-    this.rootsUpdateEvent.trigger(this.roots);
-  }
-
-  setDivisionsCount(newCount) {
-    if (!helper.isNumber(newCount) || newCount < 0) return;
-
-    this.divisionsCount = Math.round(+newCount) !== 1
-      ? Math.round(+newCount)
-      : Math.round(+newCount) + 1;
-    this.divisionsCountUpdateEvent.trigger(this.divisionsCount);
-  }
-
-  setTheme(newTheme) {
-    if (typeof newTheme !== 'string') return;
-
-    this.theme.oldValue = this.theme.value;
-    this.theme.value = newTheme;
-
-    this.themeUpdateEvent.trigger(this.theme.value);
-  }
-
-  setDirection(newDirection) {
-    if (Object.values(this.direction.constants).includes(newDirection)) {
-      this.direction.oldValue = this.direction.value;
-      this.direction.value = newDirection;
-      this.directionUpdateEvent.trigger({
-        value: this.direction.value,
-        constants: { ...this.direction.constants },
-      });
-    }
-  }
-
-  setValueNotesDisplay(newValue) {
-    if (typeof newValue !== 'boolean') return;
-    this.valueNotesDisplay = newValue;
-
-    this.valueNotesDisplayUpdateEvent.trigger(this.valueNotesDisplay);
-  }
-
-  getRoots() {
-    return this.roots;
-  }
-
-  getTheme() {
-    return this.theme.value;
-  }
-
-  getDirection() {
-    return {
-      value: this.direction.value,
-      constants: { ...this.direction.constants },
-    };
-  }
-
-  getValueNotesDisplay() {
-    return this.valueNotesDisplay;
-  }
-
-  getDivisionsCount() {
-    return this.divisionsCount;
   }
 }
 

@@ -17,6 +17,30 @@ class ModelDefaults {
         rangeValue: 'range',
       },
     };
+    this.valueNotesMode = {
+      value: 'separate',
+      constants: {
+        separateValue: 'separate',
+        commonValue: 'common',
+      }
+    };
+    this.theme = {
+      value: 'default',
+      className: 'theme',
+      oldValue: null,
+    };
+    this.direction = {
+      value: 'horizontal',
+      className: 'direction',
+      oldValue: null,
+      constants: {
+        horizontalValue: 'horizontal',
+        verticalValue: 'vertical',
+      }
+    }
+    this.roots = document.body;
+    this.divisionsCount = 5;
+    this.valueNotesDisplay = true;
     this.step = 1;
   }
 
@@ -27,6 +51,11 @@ class ModelDefaults {
       step: this.step,
       singleValue: this.singleValue,
       rangeValue: { minValue: this.values.rangeValueMin, maxValue: this.values.rangeValueMax },
+      roots: this.roots,
+      theme: this.theme.value,
+      direction: this.direction.value,
+      divisionsCount: this.divisionsCount,
+      valueNotesDisplay: this.valueNotesDisplay,
     };
 
     return presets;

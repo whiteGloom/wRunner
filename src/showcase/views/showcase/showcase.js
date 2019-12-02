@@ -13,7 +13,6 @@ function makeSlider(index, specOptions, sliderType, element) {
   const $divisionsCountController = $controllersHolders.eq(10).find('input');
 
   const options = {
-    ...specOptions,
     ...{
       onStepUpdate(step) {
         $stepController.val(step);
@@ -43,8 +42,8 @@ function makeSlider(index, specOptions, sliderType, element) {
 
       onValueUpdate(values) {
         $valueController.val(values.singleValue);
-        $minValueController.val(values.rangeMinValue);
-        $maxValueController.val(values.rangeMaxValue);
+        $minValueController.val(values.rangeValueMin);
+        $maxValueController.val(values.rangeValueMax);
       },
 
       onRootsUpdate(roots) {
@@ -73,6 +72,7 @@ function makeSlider(index, specOptions, sliderType, element) {
         $divisionsCountController.val(count);
       },
     },
+    ...specOptions,
   };
 
   let slider;
@@ -124,7 +124,7 @@ function makeSlider(index, specOptions, sliderType, element) {
   });
 
   $valueNotesDisplayController.on('input', () => {
-    slider.setValueNoteDisplay($valueNotesDisplayController[0].checked);
+    slider.setValueNotesDisplay($valueNotesDisplayController[0].checked);
   });
 
   makeTextInput($stepController, { method: 'setStep' });
@@ -135,9 +135,9 @@ function makeSlider(index, specOptions, sliderType, element) {
 
   makeTextInput($valueController, { method: 'setSingleValue' });
 
-  makeTextInput($minValueController, { method: 'setRangeValue', action(val) { return { minValue: val }; } });
+  makeTextInput($minValueController, { method: 'setRangeValues', action(val) { return { minValue: val }; } });
 
-  makeTextInput($maxValueController, { method: 'setRangeValue', action(val) { return { maxValue: val }; } });
+  makeTextInput($maxValueController, { method: 'setRangeValues', action(val) { return { maxValue: val }; } });
 
   makeTextInput($divisionsCountController, { method: 'setDivisionsCount' });
 }
@@ -159,7 +159,7 @@ function test() {
   }, 'jquery', document.getElementById('sample2'));
 
   makeSlider(3, {
-    valueNoteDisplay: false,
+    valueNotesDisplay: false,
     divisionsCount: 0,
   }, 'jquery', document.getElementById('sample3'));
 }
