@@ -1,6 +1,5 @@
-// Requirements
 import helper from '@helper';
-import ModelModule from '../modelMain';
+import ModelModule from '../ModelMain';
 
 const jsdom = require('jsdom');
 
@@ -10,8 +9,6 @@ global.window = window;
 global.document = window.document;
 
 const model = new ModelModule();
-
-// Getters
 
 describe('getLimits method.', () => {
   it('Returns { minLimit: *minimum limit*, maxLimit: *maximum limit*, valuesCount: *count of integer values* }', () => {
@@ -330,20 +327,20 @@ describe('setNearestValue', () => {
     });
 
     it('Taking 75 and true (change via percents), changes value to 75%.', () => {
-      spyOn(model, 'setSingleValue').and.callThrough();
+      const spy = spyOn(model, 'setSingleValue').and.callThrough();
 
       model.setNearestValue(75);
 
-      expect(model.setSingleValue).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
       expect(model.values.singleValue).toEqual(model.limits.valuesCount * 0.75);
     });
 
     it('Taking 23, changes value to 23', () => {
-      spyOn(model, 'setSingleValue').and.callThrough();
+      const spy = spyOn(model, 'setSingleValue').and.callThrough();
 
       model.setNearestValue(23);
 
-      expect(model.setSingleValue).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
       expect(model.values.singleValue).toEqual(23);
     });
   });
@@ -360,38 +357,38 @@ describe('setNearestValue', () => {
     });
 
     it('Taking 30 and true (change via percents), changes minimum value to 30%.', () => {
-      spyOn(model, 'setRangeValues').and.callThrough();
+      const spy = spyOn(model, 'setRangeValues').and.callThrough();
 
       model.setNearestValue(30, true);
 
-      expect(model.setRangeValues).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
       expect(model.values.rangeValueMin).toEqual(model.limits.valuesCount * 0.3);
     });
 
     it('Taking 90 and true (change via percents), changes minimum value to 90%.', () => {
-      spyOn(model, 'setRangeValues').and.callThrough();
+      const spy = spyOn(model, 'setRangeValues').and.callThrough();
 
       model.setNearestValue(90, true);
 
-      expect(model.setRangeValues).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
       expect(model.values.rangeValueMax).toEqual(model.limits.valuesCount * 0.9);
     });
 
     it('Taking 11 and true (change via percents), changes minimum value to 11.', () => {
-      spyOn(model, 'setRangeValues').and.callThrough();
+      const spy = spyOn(model, 'setRangeValues').and.callThrough();
 
       model.setNearestValue(11);
 
-      expect(model.setRangeValues).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
       expect(model.values.rangeValueMin).toEqual(11);
     });
 
     it('Taking 77 and true (change via percents), changes minimum value to 77.', () => {
-      spyOn(model, 'setRangeValues').and.callThrough();
+      const spy = spyOn(model, 'setRangeValues').and.callThrough();
 
       model.setNearestValue(77);
 
-      expect(model.setRangeValues).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
       expect(model.values.rangeValueMax).toEqual(77);
     });
   });

@@ -45,7 +45,7 @@ class ModelDefaults {
   }
 
   getOptionsPresets() {
-    const presets = {
+    return {
       type: this.type.value,
       limits: { minLimit: this.limits.minLimit, maxLimit: this.limits.maxLimit },
       step: this.step,
@@ -57,8 +57,6 @@ class ModelDefaults {
       scaleDivisionsCount: this.scaleDivisionsCount,
       valueNotesDisplay: this.valueNotesDisplay,
     };
-
-    return presets;
   }
 }
 

@@ -1,6 +1,5 @@
-// Requirements
 import helper from '@helper';
-import ViewModule from '../view';
+import ViewModule from '../View';
 
 const jsdom = require('jsdom');
 

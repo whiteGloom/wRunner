@@ -1,5 +1,5 @@
 import { boundMethod } from 'autobind-decorator';
-import ModelDefaults from '../modelDefaults/modelDefaults';
+import ModelDefaults from '../ModelDefaults/ModelDefaults';
 
 import makeEventModule from '@event';
 import helperModule from '@helper';

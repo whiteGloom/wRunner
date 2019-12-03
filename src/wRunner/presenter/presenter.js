@@ -1,11 +1,7 @@
 import { boundMethod } from 'autobind-decorator';
-import ModelDefaults from '../model/modelDefaults/modelDefaults';
 
 class Presenter {
-  constructor(options = {}) {
-    const { userOptions, model, view } = options;
-
-    const modelDefaults = new ModelDefaults();
+  constructor({ userOptions, model, modelDefaults, view }) {
     const combinedOptions = { ...modelDefaults.getOptionsPresets(), ...userOptions };
 
     this.model = model;

@@ -49,21 +49,42 @@ webpackLoader.addToDevServerConfig({
   open: false,
 });
 
-function ghPagesInit() {
-  ghpages.publish('prod', { branch: 'Production' }, (err) => {
-    if (err) console.log(err);
-    console.log('Prod branch updated.');
+function updateServiceBranches(branches) {
+  let current = 0;
 
-    ghpages.publish('docs', (err) => {
+  function update() {
+    const { dir, branchName, logs } = branches[current];
+    ghpages.publish(`${dir}`, { branch: `${branchName}` }, (err) => {
       if (err) console.log(err);
-      console.log('GitHub Pages branch updated.');
+      console.log(`${logs}`);
+      if (branches[current + 1]) {
+        current += 1;
+        update();
+      }
     });
-  });
+  }
+
+  update();
 }
 
 // Init
 // If mode is build
-if (npmArguments.indexOf('build') > -1) webpackLoader.run(ghPagesInit);
+if (npmArguments.indexOf('build') > -1) {
+  webpackLoader.run(() => {
+    updateServiceBranches([
+      {
+        dir: 'prod',
+        branchName: 'production',
+        logs: 'Prod branch updated.',
+      },
+      {
+        dir: 'docs',
+        branchName: 'gh-pages',
+        logs: 'GitHub Pages branch updated.',
+      },
+    ]);
+  });
+}
 
 // If mode is build-watch
 if (npmArguments.indexOf('build-watch') > -1) webpackLoader.runWatch();
