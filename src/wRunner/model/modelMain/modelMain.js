@@ -1,4 +1,6 @@
+import { boundMethod } from 'autobind-decorator';
 import ModelDefaults from '../modelDefaults/modelDefaults';
+
 import makeEventModule from '@event';
 import helperModule from '@helper';
 
@@ -51,6 +53,7 @@ class ModelMain {
     return Math.round((value) / this.step) * this.step;
   }
 
+  @boundMethod
   setType(newType) {
     if (Object.values(this.type.constants).includes(newType)) {
       this.type.value = newType;
@@ -61,6 +64,7 @@ class ModelMain {
     }
   }
 
+  @boundMethod
   setLimits(newLimits = {}) {
     let min = helper.isNumber(newLimits.minLimit) ? +newLimits.minLimit : this.limits.minLimit;
     let max = helper.isNumber(newLimits.maxLimit) ? +newLimits.maxLimit : this.limits.maxLimit;
@@ -74,6 +78,7 @@ class ModelMain {
     this.limitsUpdateEvent.trigger({ ...this.limits });
   }
 
+  @boundMethod
   setStep(newStep) {
     if (!helper.isNumber(newStep) || +newStep < 1) return;
     this.step = +newStep;
@@ -81,6 +86,7 @@ class ModelMain {
     this.stepUpdateEvent.trigger(this.step);
   }
 
+  @boundMethod
   setSingleValue(newValue) {
     const value = helper.isNumber(newValue) ? +newValue : this.values.singleValue;
 
@@ -88,6 +94,7 @@ class ModelMain {
     this.valueUpdateEvent.trigger({ ...this.values });
   }
 
+  @boundMethod
   setRangeValues(newValues) {
     const values = helper.isObject(newValues) ? newValues : {};
     let min = helper.isNumber(values.minValue)
@@ -104,6 +111,7 @@ class ModelMain {
     this.valueUpdateEvent.trigger({ ...this.values });
   }
 
+  @boundMethod
   setNearestValue(newValue, viaPercents) {
     if (!helper.isNumber(newValue)) return;
 
@@ -123,6 +131,7 @@ class ModelMain {
     }
   }
 
+  @boundMethod
   setRoots(newRoots) {
     if (!helper.isDOMEl(newRoots)) return;
     this.roots = newRoots;
@@ -130,6 +139,7 @@ class ModelMain {
     this.rootsUpdateEvent.trigger(this.roots);
   }
 
+  @boundMethod
   setTheme(newTheme) {
     if (typeof newTheme !== 'string') return;
 
@@ -139,6 +149,7 @@ class ModelMain {
     this.themeUpdateEvent.trigger(this.theme.value);
   }
 
+  @boundMethod
   setDirection(newDirection) {
     if (Object.values(this.direction.constants).includes(newDirection)) {
       this.direction.oldValue = this.direction.value;
@@ -150,6 +161,7 @@ class ModelMain {
     }
   }
 
+  @boundMethod
   setValueNotesDisplay(newValue) {
     if (typeof newValue !== 'boolean') return;
     this.valueNotesDisplay = newValue;
@@ -157,12 +169,14 @@ class ModelMain {
     this.valueNotesDisplayUpdateEvent.trigger(this.valueNotesDisplay);
   }
 
+  @boundMethod
   setValueNotesMode(newMode) {
     if (Object.values(this.valueNotesMode.constants).includes(newMode)) {
       this.valueNotesMode.value = newMode;
     }
   }
 
+  @boundMethod
   setScaleDivisionsCount(newCount) {
     if (!helper.isNumber(newCount) || newCount < 0) return;
 
@@ -172,6 +186,7 @@ class ModelMain {
     this.scaleDivisionsCountUpdateEvent.trigger(this.scaleDivisionsCount);
   }
 
+  @boundMethod
   getType() {
     return {
       value: this.type.value,
@@ -179,26 +194,32 @@ class ModelMain {
     };
   }
 
+  @boundMethod
   getLimits() {
     return { ...this.limits };
   }
 
+  @boundMethod
   getValues() {
     return { ...this.values };
   }
 
+  @boundMethod
   getStep() {
     return this.step;
   }
 
+  @boundMethod
   getRoots() {
     return this.roots;
   }
 
+  @boundMethod
   getTheme() {
     return this.theme.value;
   }
 
+  @boundMethod
   getDirection() {
     return {
       value: this.direction.value,
@@ -206,10 +227,12 @@ class ModelMain {
     };
   }
 
+  @boundMethod
   getValueNotesDisplay() {
     return this.valueNotesDisplay;
   }
 
+  @boundMethod
   getValueNotesMode() {
     return {
       value: this.valueNotesMode.value,
@@ -217,6 +240,7 @@ class ModelMain {
     };
   }
 
+  @boundMethod
   getScaleDivisionsCount() {
     return this.scaleDivisionsCount;
   }

@@ -1,3 +1,5 @@
+include ../textInput/textInput
+
 mixin sample(options = {})
     -
         const {title = "", id="", data = [
@@ -31,4 +33,4 @@ mixin sample(options = {})
                                 when "checkbox"
                                     input(type="checkbox")
                                 default
-                                    input(type="text")
+                                    +textInput

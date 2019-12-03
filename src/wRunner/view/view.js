@@ -53,7 +53,7 @@ class View {
     let wasDragged = false;
 
     // Handlers
-    function handlerFunction(event) {
+    const handler = (event) => {
       const isHorizontal = direction.value === direction.constants.horizontalValue;
       const scale = this.path[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
       const min = this.path.getBoundingClientRect()[isHorizontal ? 'left' : 'top'];
@@ -64,10 +64,8 @@ class View {
 
       const data = ((pos - min) / scale) * 100;
       this.UIValueAction.trigger(isHorizontal ? data : 100 - data);
-    }
-    const handler = handlerFunction.bind(this);
-
-    function mouseUpFunction(eventUp) {
+    };
+    const mouseUp = (eventUp) => {
       const { target } = eventUp;
       document.body.removeEventListener('mousemove', handler);
 
@@ -75,8 +73,7 @@ class View {
       if (target === this.handle || target === this.handleMin || target === this.handleMax) return;
 
       handler(eventUp);
-    }
-    const mouseUp = mouseUpFunction.bind(this);
+    };
 
     document.body.addEventListener('mousemove', () => { wasDragged = true; }, { once: true });
     document.body.addEventListener('mousemove', handler);
@@ -221,12 +218,12 @@ class View {
     const getSizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const posProp = isHorizontal ? 'left' : 'top';
 
-    function drawEl(element, value, title) {
+    const draw = (element, value, title) => {
       const pathScale = this.path[getSizeProp];
       const el = element;
       const percent = (value - minLimit) / valuesCount;
       el.style.cssText = '';
-      el.innerHTML = typeof title === 'object'
+      el.textContent = typeof title === 'object'
         ? `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`
         : title;
 
@@ -234,8 +231,7 @@ class View {
         ? ((percent * pathScale - el[getSizeProp] / 2) / pathScale) * 100
         : 100 - ((percent * pathScale + el[getSizeProp] / 2) / pathScale) * 100;
       el.style[posProp] = `${position}%`;
-    }
-    const draw = drawEl.bind(this);
+    };
 
     window.requestAnimationFrame(() => {
       if (this.valueNotesList.length === 1) {
@@ -267,11 +263,11 @@ class View {
     const getSizeProp = direction.value === direction.constants.horizontalValue ? 'offsetWidth' : 'offsetHeight';
     const [elFirst,, elSec] = this.valueNotesList;
     const sizes = (elFirst[getSizeProp] + elSec[getSizeProp]) / 2;
-    function calcPos(el, value) {
-      return ((value - minLimit) / valuesCount) * this.path[getSizeProp] + el[getSizeProp] / 2;
-    }
-    const calc = calcPos.bind(this);
-    const distance = calc(elSec, rangeValueMax) - calc(elFirst, rangeValueMin);
+    const calcPos = (el, value) => {
+      const percent = (value - minLimit) / valuesCount;
+      return percent * this.path[getSizeProp] + el[getSizeProp] / 2;
+    };
+    const distance = calcPos(elSec, rangeValueMax) - calcPos(elFirst, rangeValueMin);
 
     if (distance >= sizes) {
       if (valueNotesMode.value !== valueNotesMode.constants.separateValue) {

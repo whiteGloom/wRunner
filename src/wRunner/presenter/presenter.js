@@ -1,3 +1,4 @@
+import { boundMethod } from 'autobind-decorator';
 import ModelDefaults from '../model/modelDefaults/modelDefaults';
 
 class Presenter {
@@ -19,27 +20,27 @@ class Presenter {
 
   getPublicMethods() {
     return {
-      setType: this.model.setType.bind(this.model),
-      setLimits: this.model.setLimits.bind(this.model),
-      setStep: this.model.setStep.bind(this.model),
-      setSingleValue: this.model.setSingleValue.bind(this.model),
-      setRangeValues: this.model.setRangeValues.bind(this.model),
-      setNearestValue: this.model.setNearestValue.bind(this.model),
-      setRoots: this.model.setRoots.bind(this.model),
-      setTheme: this.model.setTheme.bind(this.model),
-      setDirection: this.model.setDirection.bind(this.model),
-      setValueNotesDisplay: this.model.setValueNotesDisplay.bind(this.model),
-      setScaleDivisionsCount: this.model.setScaleDivisionsCount.bind(this.model),
+      setType: this.model.setType,
+      setLimits: this.model.setLimits,
+      setStep: this.model.setStep,
+      setSingleValue: this.model.setSingleValue,
+      setRangeValues: this.model.setRangeValues,
+      setNearestValue: this.model.setNearestValue,
+      setRoots: this.model.setRoots,
+      setTheme: this.model.setTheme,
+      setDirection: this.model.setDirection,
+      setValueNotesDisplay: this.model.setValueNotesDisplay,
+      setScaleDivisionsCount: this.model.setScaleDivisionsCount,
 
-      getType: this.model.getType.bind(this.model),
-      getLimits: this.model.getLimits.bind(this.model),
-      getStep: this.model.getStep.bind(this.model),
-      getValues: this.model.getValues.bind(this.model),
-      getRoots: this.model.getRoots.bind(this.model),
-      getTheme: this.model.getTheme.bind(this.model),
-      getDirection: this.model.getDirection.bind(this.model),
-      getValueNotesDisplay: this.model.getValueNotesDisplay.bind(this.model),
-      getScaleDivisionsCount: this.model.getScaleDivisionsCount.bind(this.model),
+      getType: this.model.getType,
+      getLimits: this.model.getLimits,
+      getStep: this.model.getStep,
+      getValues: this.model.getValues,
+      getRoots: this.model.getRoots,
+      getTheme: this.model.getTheme,
+      getDirection: this.model.getDirection,
+      getValueNotesDisplay: this.model.getValueNotesDisplay,
+      getScaleDivisionsCount: this.model.getScaleDivisionsCount,
 
       onThemeUpdate: this.model.themeUpdateEvent.addHandler,
       onDirectionUpdate: this.model.directionUpdateEvent.addHandler,
@@ -53,6 +54,7 @@ class Presenter {
     };
   }
 
+  @boundMethod
   typeUpdateEventHandler() {
     this.view.updateDOM(this.model.getType());
     this.view.applyStyles([this.model.theme, this.model.direction]);
@@ -63,14 +65,17 @@ class Presenter {
     this.model.recalculateValue();
   }
 
+  @boundMethod
   limitsUpdateEventHandler() {
     this.model.recalculateValue();
   }
 
+  @boundMethod
   stepUpdateEventHandler() {
     this.model.recalculateValue();
   }
 
+  @boundMethod
   valueUpdateEventHandler() {
     this.view.drawValue(
       this.model.getValues(),
@@ -81,6 +86,7 @@ class Presenter {
     );
   }
 
+  @boundMethod
   rootsUpdateEventHandler() {
     this.view.append(this.model.roots);
     this.view.drawValue(
@@ -92,6 +98,7 @@ class Presenter {
     );
   }
 
+  @boundMethod
   themeUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
     this.view.drawValue(
@@ -103,6 +110,7 @@ class Presenter {
     );
   }
 
+  @boundMethod
   directionUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
     this.view.drawValue(
@@ -114,6 +122,7 @@ class Presenter {
     );
   }
 
+  @boundMethod
   valueNotesDisplayUpdateEventHandler() {
     this.view.applyValueNotesDisplay(
       this.model.getValueNotesDisplay(),
@@ -128,11 +137,13 @@ class Presenter {
     );
   }
 
+  @boundMethod
   scaleDivisionsCountUpdateEventHandler() {
     this.view.generateScaleDivisions(this.model.getScaleDivisionsCount());
     this.view.applyStyles([this.model.theme, this.model.direction]);
   }
 
+  @boundMethod
   windowResizeEventHandler() {
     this.view.drawValue(
       this.model.getValues(),
@@ -143,14 +154,17 @@ class Presenter {
     );
   }
 
+  @boundMethod
   UIActionMouseDownHandler(event) {
     this.view.handlerMouseDownAction(event, this.model.getDirection());
   }
 
+  @boundMethod
   UIValueActionHandler(data) {
     this.model.setNearestValue(data);
   }
 
+  @boundMethod
   valueNoteModeUpdateEventHandler(value) {
     this.model.setValueNotesMode(value);
     this.view.applyValueNotesDisplay(
@@ -162,32 +176,32 @@ class Presenter {
   applyDefaultEvents() {
     // Model events
     this.model.typeUpdateEvent
-      .addHandler(this.typeUpdateEventHandler.bind(this));
+      .addHandler(this.typeUpdateEventHandler);
     this.model.limitsUpdateEvent
-      .addHandler(this.limitsUpdateEventHandler.bind(this));
+      .addHandler(this.limitsUpdateEventHandler);
     this.model.stepUpdateEvent
-      .addHandler(this.stepUpdateEventHandler.bind(this));
+      .addHandler(this.stepUpdateEventHandler);
     this.model.valueUpdateEvent
-      .addHandler(this.valueUpdateEventHandler.bind(this));
+      .addHandler(this.valueUpdateEventHandler);
     this.model.rootsUpdateEvent
-      .addHandler(this.rootsUpdateEventHandler.bind(this));
+      .addHandler(this.rootsUpdateEventHandler);
     this.model.themeUpdateEvent
-      .addHandler(this.themeUpdateEventHandler.bind(this));
+      .addHandler(this.themeUpdateEventHandler);
     this.model.directionUpdateEvent
-      .addHandler(this.directionUpdateEventHandler.bind(this));
+      .addHandler(this.directionUpdateEventHandler);
     this.model.valueNotesDisplayUpdateEvent
-      .addHandler(this.valueNotesDisplayUpdateEventHandler.bind(this));
+      .addHandler(this.valueNotesDisplayUpdateEventHandler);
     this.model.scaleDivisionsCountUpdateEvent
-      .addHandler(this.scaleDivisionsCountUpdateEventHandler.bind(this));
+      .addHandler(this.scaleDivisionsCountUpdateEventHandler);
 
     this.view.valueNoteModeUpdateEvent
-      .addHandler(this.valueNoteModeUpdateEventHandler.bind(this));
+      .addHandler(this.valueNoteModeUpdateEventHandler);
     this.view.windowResizeEvent
-      .addHandler(this.windowResizeEventHandler.bind(this));
+      .addHandler(this.windowResizeEventHandler);
     this.view.UIActionMouseDown
-      .addHandler(this.UIActionMouseDownHandler.bind(this));
+      .addHandler(this.UIActionMouseDownHandler);
     this.view.UIValueAction
-      .addHandler(this.UIValueActionHandler.bind(this));
+      .addHandler(this.UIValueActionHandler);
   }
 
   applyUserEvents(options = {}) {
