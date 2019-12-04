@@ -1,18 +1,21 @@
 import { boundMethod } from 'autobind-decorator';
 
 class Presenter {
-  constructor({ userOptions, model, modelDefaults, view }) {
+  constructor({
+    userOptions,
+    model,
+    modelDefaults,
+    view,
+  }) {
     const combinedOptions = { ...modelDefaults.getOptionsPresets(), ...userOptions };
 
     this.model = model;
     this.view = view;
 
-    // Plugin load
-    this.applyDefaultEvents();
-    this.applyUserEvents(combinedOptions);
-    this.applyUserOptions(combinedOptions);
+    this._applyDefaultEvents();
+    this._applyUserEvents(combinedOptions);
+    this._applyUserOptions(combinedOptions);
   }
-
 
   getPublicMethods() {
     return {
@@ -51,7 +54,7 @@ class Presenter {
   }
 
   @boundMethod
-  typeUpdateEventHandler() {
+  _typeUpdateEventHandler() {
     this.view.updateDOM(this.model.getType());
     this.view.applyStyles([this.model.theme, this.model.direction]);
     this.view.applyValueNotesDisplay(
@@ -62,17 +65,17 @@ class Presenter {
   }
 
   @boundMethod
-  limitsUpdateEventHandler() {
+  _limitsUpdateEventHandler() {
     this.model.recalculateValue();
   }
 
   @boundMethod
-  stepUpdateEventHandler() {
+  _stepUpdateEventHandler() {
     this.model.recalculateValue();
   }
 
   @boundMethod
-  valueUpdateEventHandler() {
+  _valueUpdateEventHandler() {
     this.view.drawValue(
       this.model.getValues(),
       this.model.getLimits(),
@@ -83,7 +86,7 @@ class Presenter {
   }
 
   @boundMethod
-  rootsUpdateEventHandler() {
+  _rootsUpdateEventHandler() {
     this.view.append(this.model.roots);
     this.view.drawValue(
       this.model.getValues(),
@@ -95,7 +98,7 @@ class Presenter {
   }
 
   @boundMethod
-  themeUpdateEventHandler() {
+  _themeUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
     this.view.drawValue(
       this.model.getValues(),
@@ -107,7 +110,7 @@ class Presenter {
   }
 
   @boundMethod
-  directionUpdateEventHandler() {
+  _directionUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
     this.view.drawValue(
       this.model.getValues(),
@@ -119,7 +122,7 @@ class Presenter {
   }
 
   @boundMethod
-  valueNotesDisplayUpdateEventHandler() {
+  _valueNotesDisplayUpdateEventHandler() {
     this.view.applyValueNotesDisplay(
       this.model.getValueNotesDisplay(),
       this.model.getValueNotesMode(),
@@ -134,13 +137,13 @@ class Presenter {
   }
 
   @boundMethod
-  scaleDivisionsCountUpdateEventHandler() {
+  _scaleDivisionsCountUpdateEventHandler() {
     this.view.generateScaleDivisions(this.model.getScaleDivisionsCount());
     this.view.applyStyles([this.model.theme, this.model.direction]);
   }
 
   @boundMethod
-  windowResizeEventHandler() {
+  _windowResizeEventHandler() {
     this.view.drawValue(
       this.model.getValues(),
       this.model.getLimits(),
@@ -151,17 +154,17 @@ class Presenter {
   }
 
   @boundMethod
-  UIActionMouseDownHandler(event) {
+  _UIActionMouseDownHandler(event) {
     this.view.handlerMouseDownAction(event, this.model.getDirection());
   }
 
   @boundMethod
-  UIValueActionHandler(data) {
+  _UIValueActionHandler(data) {
     this.model.setNearestValue(data);
   }
 
   @boundMethod
-  valueNoteModeUpdateEventHandler(value) {
+  _valueNoteModeUpdateEventHandler(value) {
     this.model.setValueNotesMode(value);
     this.view.applyValueNotesDisplay(
       this.model.getValueNotesDisplay(),
@@ -169,38 +172,38 @@ class Presenter {
     );
   }
 
-  applyDefaultEvents() {
+  _applyDefaultEvents() {
     // Model events
     this.model.typeUpdateEvent
-      .addHandler(this.typeUpdateEventHandler);
+      .addHandler(this._typeUpdateEventHandler);
     this.model.limitsUpdateEvent
-      .addHandler(this.limitsUpdateEventHandler);
+      .addHandler(this._limitsUpdateEventHandler);
     this.model.stepUpdateEvent
-      .addHandler(this.stepUpdateEventHandler);
+      .addHandler(this._stepUpdateEventHandler);
     this.model.valueUpdateEvent
-      .addHandler(this.valueUpdateEventHandler);
+      .addHandler(this._valueUpdateEventHandler);
     this.model.rootsUpdateEvent
-      .addHandler(this.rootsUpdateEventHandler);
+      .addHandler(this._rootsUpdateEventHandler);
     this.model.themeUpdateEvent
-      .addHandler(this.themeUpdateEventHandler);
+      .addHandler(this._themeUpdateEventHandler);
     this.model.directionUpdateEvent
-      .addHandler(this.directionUpdateEventHandler);
+      .addHandler(this._directionUpdateEventHandler);
     this.model.valueNotesDisplayUpdateEvent
-      .addHandler(this.valueNotesDisplayUpdateEventHandler);
+      .addHandler(this._valueNotesDisplayUpdateEventHandler);
     this.model.scaleDivisionsCountUpdateEvent
-      .addHandler(this.scaleDivisionsCountUpdateEventHandler);
+      .addHandler(this._scaleDivisionsCountUpdateEventHandler);
 
     this.view.valueNoteModeUpdateEvent
-      .addHandler(this.valueNoteModeUpdateEventHandler);
+      .addHandler(this._valueNoteModeUpdateEventHandler);
     this.view.windowResizeEvent
-      .addHandler(this.windowResizeEventHandler);
+      .addHandler(this._windowResizeEventHandler);
     this.view.UIActionMouseDown
-      .addHandler(this.UIActionMouseDownHandler);
+      .addHandler(this._UIActionMouseDownHandler);
     this.view.UIValueAction
-      .addHandler(this.UIValueActionHandler);
+      .addHandler(this._UIValueActionHandler);
   }
 
-  applyUserEvents(options = {}) {
+  _applyUserEvents(options = {}) {
     const {
       onTypeUpdate,
       onLimitsUpdate,
@@ -224,7 +227,7 @@ class Presenter {
     this.model.valueNotesDisplayUpdateEvent.addHandler(onValueNotesDisplayUpdate);
   }
 
-  applyUserOptions(options = {}) {
+  _applyUserOptions(options = {}) {
     const {
       type,
       limits,

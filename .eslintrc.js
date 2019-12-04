@@ -7,5 +7,7 @@ module.exports = {
     "jquery": true,
     "jasmine": true
   },
-  "rules": {}
+  "rules": {
+  	"no-underscore-dangle": "off" 
+  }
 };

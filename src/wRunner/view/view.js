@@ -9,43 +9,13 @@ class View {
     this.scaleDivisionsList = [];
 
     // Init
-    this.init();
-    this.addEvents();
-    this.addListenners();
+    this._init();
+    this._addEvents();
+    this._addListenners();
   }
 
-  init() {
-    this.mainNode = document.createElement('div');
-    this.outer = document.createElement('div');
-    this.path = document.createElement('div');
-    this.pathPassed = document.createElement('div');
-    this.scaleDivisionsBlock = document.createElement('div');
-
-    this.mainNode.classList.add('wrunner');
-    this.outer.classList.add('wrunner__outer');
-    this.path.classList.add('wrunner__path');
-    this.pathPassed.classList.add('wrunner__path-passed');
-    this.scaleDivisionsBlock.classList.add('wrunner__scaleDivisionsBlock');
-
-    this.path.appendChild(this.pathPassed);
-    this.outer.appendChild(this.path);
-    this.outer.appendChild(this.scaleDivisionsBlock);
-
-    window.requestAnimationFrame(() => {
-      this.mainNode.appendChild(this.outer);
-    });
-  }
-
-  addEvents() {
-    this.UIActionMouseDown = makeEvent();
-    this.UIValueAction = makeEvent();
-    this.valueNoteModeUpdateEvent = makeEvent();
-    this.windowResizeEvent = makeEvent();
-  }
-
-  addListenners() {
-    this.path.addEventListener('mousedown', this.UIActionMouseDown.trigger);
-    window.addEventListener('resize', this.windowResizeEvent.trigger);
+  append(roots) {
+    roots.appendChild(this.mainNode);
   }
 
   handlerMouseDownAction(eventDown, direction) {
@@ -115,10 +85,6 @@ class View {
         this.outer.appendChild(el);
       });
     });
-  }
-
-  append(roots) {
-    roots.appendChild(this.mainNode);
   }
 
   applyStyles(styles) {
@@ -316,6 +282,40 @@ class View {
       this.scaleDivisionsList.push(instance);
       this.scaleDivisionsBlock.appendChild(instance);
     }
+  }
+
+  _init() {
+    this.mainNode = document.createElement('div');
+    this.outer = document.createElement('div');
+    this.path = document.createElement('div');
+    this.pathPassed = document.createElement('div');
+    this.scaleDivisionsBlock = document.createElement('div');
+
+    this.mainNode.classList.add('wrunner');
+    this.outer.classList.add('wrunner__outer');
+    this.path.classList.add('wrunner__path');
+    this.pathPassed.classList.add('wrunner__path-passed');
+    this.scaleDivisionsBlock.classList.add('wrunner__scaleDivisionsBlock');
+
+    this.path.appendChild(this.pathPassed);
+    this.outer.appendChild(this.path);
+    this.outer.appendChild(this.scaleDivisionsBlock);
+
+    window.requestAnimationFrame(() => {
+      this.mainNode.appendChild(this.outer);
+    });
+  }
+
+  _addEvents() {
+    this.UIActionMouseDown = makeEvent();
+    this.UIValueAction = makeEvent();
+    this.valueNoteModeUpdateEvent = makeEvent();
+    this.windowResizeEvent = makeEvent();
+  }
+
+  _addListenners() {
+    this.path.addEventListener('mousedown', this.UIActionMouseDown.trigger);
+    window.addEventListener('resize', this.windowResizeEvent.trigger);
   }
 }
 

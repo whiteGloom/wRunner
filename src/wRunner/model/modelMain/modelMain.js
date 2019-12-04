@@ -21,36 +21,13 @@ class ModelMain {
     this.theme = defaults.theme;
     this.direction = defaults.direction;
 
-    this.addEvents();
-  }
-
-  addEvents() {
-    this.valueUpdateEvent = makeEvent();
-    this.limitsUpdateEvent = makeEvent();
-    this.stepUpdateEvent = makeEvent();
-    this.percentageUpdateEvent = makeEvent();
-    this.typeUpdateEvent = makeEvent();
-    this.rootsUpdateEvent = makeEvent();
-    this.themeUpdateEvent = makeEvent();
-    this.directionUpdateEvent = makeEvent();
-    this.valueNotesDisplayUpdateEvent = makeEvent();
-    this.scaleDivisionsCountUpdateEvent = makeEvent();
+    this._addEvents();
   }
 
   recalculateValue() {
     const isSingle = this.type.value === this.type.constants.singleValue;
     if (isSingle) this.setSingleValue(null);
     if (!isSingle) this.setRangeValues(null);
-  }
-
-  cutToLimits(value) {
-    if (value < this.limits.minLimit) return this.limits.minLimit;
-    if (value > this.limits.maxLimit) return this.limits.maxLimit;
-    return value;
-  }
-
-  calcStepped(value) {
-    return Math.round((value) / this.step) * this.step;
   }
 
   @boundMethod
@@ -90,7 +67,7 @@ class ModelMain {
   setSingleValue(newValue) {
     const value = helper.isNumber(newValue) ? +newValue : this.values.singleValue;
 
-    this.values.singleValue = this.cutToLimits(this.calcStepped(value));
+    this.values.singleValue = this._cutToLimits(this._calcStepped(value));
     this.valueUpdateEvent.trigger({ ...this.values });
   }
 
@@ -106,8 +83,8 @@ class ModelMain {
     if (min === max) max += this.step;
     if (min > max) [min, max] = [max, min];
 
-    this.values.rangeValueMin = this.cutToLimits(this.calcStepped(min));
-    this.values.rangeValueMax = this.cutToLimits(this.calcStepped(max));
+    this.values.rangeValueMin = this._cutToLimits(this._calcStepped(min));
+    this.values.rangeValueMax = this._cutToLimits(this._calcStepped(max));
     this.valueUpdateEvent.trigger({ ...this.values });
   }
 
@@ -243,6 +220,29 @@ class ModelMain {
   @boundMethod
   getScaleDivisionsCount() {
     return this.scaleDivisionsCount;
+  }
+
+  _addEvents() {
+    this.valueUpdateEvent = makeEvent();
+    this.limitsUpdateEvent = makeEvent();
+    this.stepUpdateEvent = makeEvent();
+    this.percentageUpdateEvent = makeEvent();
+    this.typeUpdateEvent = makeEvent();
+    this.rootsUpdateEvent = makeEvent();
+    this.themeUpdateEvent = makeEvent();
+    this.directionUpdateEvent = makeEvent();
+    this.valueNotesDisplayUpdateEvent = makeEvent();
+    this.scaleDivisionsCountUpdateEvent = makeEvent();
+  }
+
+  _cutToLimits(value) {
+    if (value < this.limits.minLimit) return this.limits.minLimit;
+    if (value > this.limits.maxLimit) return this.limits.maxLimit;
+    return value;
+  }
+
+  _calcStepped(value) {
+    return Math.round((value) / this.step) * this.step;
   }
 }
 
