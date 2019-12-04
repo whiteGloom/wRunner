@@ -14,24 +14,16 @@ describe('getLimits method.', () => {
   it('Returns { minLimit: *minimum limit*, maxLimit: *maximum limit*, valuesCount: *count of integer values* }', () => {
     const result = model.getLimits();
 
-    // The result is an object.
     expect(helper.isObject(result)).toBeTruthy();
 
-    // The 'minLimit' property is an number.
     expect(helper.isNumber(result.minLimit)).toBeTruthy();
-    // The 'minLimit' property is equal to model.minLimit.
     expect(result.minLimit).toEqual(model.limits.minLimit);
 
-    // The 'maxLimit' property is an number.
     expect(helper.isNumber(result.maxLimit)).toBeTruthy();
-    // The 'maxLimit' property is equal to model.minLimit.
     expect(result.maxLimit).toEqual(model.limits.maxLimit);
 
-    // The 'valuesCount' property is an number.
     expect(helper.isNumber(result.valuesCount)).toBeTruthy();
-    // The 'valuesCount' property is equal to: maxLimit - minLimit
     expect(result.valuesCount).toEqual(result.maxLimit - result.minLimit);
-    // The 'valuesCount' property is equal to model.valuesCount.
     expect(result.valuesCount).toEqual(model.limits.valuesCount);
   });
 });
@@ -65,21 +57,17 @@ describe('getType method.', () => {
   it('Returns { value: *sliders type*, constants: *object - list of reserved type names* }.', () => {
     const result = model.getType();
 
-    // The result is an object.
     expect(helper.isObject(result)).toBeTruthy();
 
-    // The 'value' property is an string.
     expect(typeof result.value === 'string').toBeTruthy();
     expect(result.value).toEqual(model.type.value);
 
-    // The 'typeConstants' property is an object.
     expect(helper.isObject(result.constants)).toBeTruthy();
     expect(result.constants).toEqual(model.type.constants);
   });
 });
 
 
-// Setters
 
 describe('setLimits method.', () => {
   describe('Normal values.', () => {
@@ -460,7 +448,6 @@ describe('setType method.', () => {
     it('Taking "royal", return undefined.', () => {
       model.setType('royal');
 
-      // The type stays the same.
       expect(model.type.value).toEqual('single');
     });
   });
@@ -673,49 +660,42 @@ describe('setTheme method.', () => {
     it('Taking NaN.', () => {
       model.setTheme(NaN);
 
-      // Theme stays the same.
       expect(model.theme.value).toEqual('default');
     });
 
     it('Taking true.', () => {
       model.setTheme(true);
 
-      // Theme stays the same.
       expect(model.theme.value).toEqual('default');
     });
 
     it('Taking false.', () => {
       model.setTheme(false);
 
-      // Theme stays the same.
       expect(model.theme.value).toEqual('default');
     });
 
     it('Taking 123.', () => {
       model.setTheme(123);
 
-      // Theme stays the same.
       expect(model.theme.value).toEqual('default');
     });
 
     it('Taking {}.', () => {
       model.setTheme({});
 
-      // Theme stays the same.
       expect(model.theme.value).toEqual('default');
     });
 
     it('Taking undefined.', () => {
       model.setTheme(undefined);
 
-      // Theme stays the same.
       expect(model.theme.value).toEqual('default');
     });
 
     it('Taking null.', () => {
       model.setTheme(null);
 
-      // Theme stays the same.
       expect(model.theme.value).toEqual('default');
     });
   });
@@ -753,56 +733,48 @@ describe('setDirection method.', () => {
     it('Taking "SomeNotListed".', () => {
       model.setDirection('SomeNotListed');
 
-      // Direction stays the same.
       expect(model.direction.value).toEqual('horizontal');
     });
 
     it('Taking NaN.', () => {
       model.setDirection(NaN);
 
-      // Direction stays the same.
       expect(model.direction.value).toEqual('horizontal');
     });
 
     it('Taking true.', () => {
       model.setDirection(true);
 
-      // Direction stays the same.
       expect(model.direction.value).toEqual('horizontal');
     });
 
     it('Taking false.', () => {
       model.setDirection(false);
 
-      // Direction stays the same.
       expect(model.direction.value).toEqual('horizontal');
     });
 
     it('Taking 123.', () => {
       model.setDirection(123);
 
-      // Direction stays the same.
       expect(model.direction.value).toEqual('horizontal');
     });
 
     it('Taking {}.', () => {
       model.setDirection({});
 
-      // Direction stays the same.
       expect(model.direction.value).toEqual('horizontal');
     });
 
     it('Taking undefined.', () => {
       model.setDirection(undefined);
 
-      // Direction stays the same.
       expect(model.direction.value).toEqual('horizontal');
     });
 
     it('Taking null.', () => {
       model.setDirection(null);
 
-      // Direction stays the same.
       expect(model.direction.value).toEqual('horizontal');
     });
   });

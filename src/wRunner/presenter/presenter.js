@@ -173,7 +173,6 @@ class Presenter {
   }
 
   _applyDefaultEvents() {
-    // Model events
     this.model.typeUpdateEvent
       .addHandler(this._typeUpdateEventHandler);
     this.model.limitsUpdateEvent

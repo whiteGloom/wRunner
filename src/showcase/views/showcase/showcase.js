@@ -76,7 +76,6 @@ function makeSlider(index, specOptions, sliderType, element) {
   };
 
   let slider;
-  // Creating sliders
   if (sliderType === 'native') {
     slider = window.wRunner({ ...options, roots: element });
   } else {
@@ -106,7 +105,6 @@ function makeSlider(index, specOptions, sliderType, element) {
     });
   }
 
-  // Change slider parameters using conrtollers
   $typeControllers[0].on('input', () => {
     slider.setType($typeControllers[0].val());
   });

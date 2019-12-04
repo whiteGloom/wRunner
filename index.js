@@ -1,8 +1,6 @@
-// External modules
 import WebpackLoader from 'webpack-loader';
 import ghpages from 'gh-pages';
 
-// Local modules
 import getAliasesConfig from './webpackConfigs/vendors/aliasesConfig';
 import getBabelConfig from './webpackConfigs/vendors/babelConfig';
 import getStylusConfig from './webpackConfigs/vendors/stylusConfig';
@@ -13,13 +11,11 @@ import getMainConfig from './webpackConfigs/mainConfig';
 import getShowcaseConfig from './webpackConfigs/showcaseConfig';
 
 
-// Variables
 const workFolder = process.cwd();
 const npmArguments = process.argv.slice(2);
 const webpackLoader = new WebpackLoader();
 
 
-// Config
 webpackLoader.makeNewConfig('main', [
   getMainConfig({ workFolder }),
   getBabelConfig(),
@@ -67,8 +63,8 @@ function updateServiceBranches(branches) {
   update();
 }
 
-// Init
-// If mode is build
+
+
 if (npmArguments.indexOf('build') > -1) {
   webpackLoader.run(() => {
     updateServiceBranches([
@@ -86,8 +82,6 @@ if (npmArguments.indexOf('build') > -1) {
   });
 }
 
-// If mode is build-watch
 if (npmArguments.indexOf('build-watch') > -1) webpackLoader.runWatch();
 
-// If mode is build-live
 if (npmArguments.indexOf('build-live') > -1) webpackLoader.runDevServer();

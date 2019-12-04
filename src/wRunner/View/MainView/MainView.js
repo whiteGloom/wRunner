@@ -65,7 +65,6 @@ class View {
     if (eventDown.button !== 0) return;
     let wasDragged = false;
 
-    // Handlers
     const handler = (event) => {
       const isHorizontal = direction.value === direction.constants.horizontalValue;
       const scale = this.path[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
