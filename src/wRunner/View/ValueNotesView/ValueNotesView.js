@@ -107,8 +107,8 @@ class ValueNotesView {
     if (this.valueNotesList.length < 3) return;
     const { minLimit, valuesCount } = limits;
     const { singleValue, rangeValueMin, rangeValueMax } = values;
-    const getSizeProp = direction.value === direction.constants.horizontalValue ? 'offsetWidth' : 'offsetHeight';
     const [elFirst,, elSec] = this.valueNotesList;
+    const getSizeProp = direction.value === direction.constants.horizontalValue ? 'offsetWidth' : 'offsetHeight';
     const sizes = (elFirst[getSizeProp] + elSec[getSizeProp]) / 2;
     const calcPos = (el, value) => {
       const percent = (value - minLimit) / valuesCount;

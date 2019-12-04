@@ -16,9 +16,24 @@ class View {
     roots.appendChild(this.mainNode);
   }
 
+  applyValueNotesDisplay(...args) {
+    this.valueNotes.applyDisplay(...args, this.path);
+  }
+
+  generateScaleDivisions(...args) {
+    this.scale.generateDivisions(...args);
+  }
+
   updateDOM(type) {
     this.handlers.updateDOM(type);
     this.valueNotes.updateDOM(type);
+  }
+
+  setPositions(values, limits, direction, type, valueNotesMode) {
+    this.pathPassed.setPosition(limits, values, direction, type);
+
+    this.handlers.setPosition(limits, values, direction);
+    this.valueNotes.setPosition(limits, values, direction, valueNotesMode, this.path);
   }
 
   applyStyles(styles) {
@@ -44,21 +59,6 @@ class View {
         });
       });
     });
-  }
-
-  setPositions(values, limits, direction, type, valueNotesMode) {
-    this.pathPassed.setPosition(limits, values, direction, type);
-
-    this.handlers.setPosition(limits, values, direction);
-    this.valueNotes.setPosition(limits, values, direction, valueNotesMode, this.path);
-  }
-
-  applyValueNotesDisplay(...args) {
-    this.valueNotes.applyDisplay(...args, this.path);
-  }
-
-  generateScaleDivisions(...args) {
-    this.scale.generateDivisions(...args);
   }
 
   handleMouseDownAction(eventDown, direction) {
