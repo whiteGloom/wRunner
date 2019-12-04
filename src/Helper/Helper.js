@@ -25,6 +25,14 @@ class Helper {
 
     return false;
   }
+
+  makeEl(classes) {
+    const el = document.createElement('div');
+    classes.forEach((nodeClass) => {
+      el.classList.add(nodeClass);
+    });
+    return el;
+  }
 }
 
 export default new Helper();

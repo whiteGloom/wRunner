@@ -1,5 +1,5 @@
 import helper from '@helper';
-import ViewModule from '../View';
+import ValueNotesView from '../ValueNotesView';
 
 const jsdom = require('jsdom');
 
@@ -11,21 +11,16 @@ window.requestAnimationFrame = function gag(callback) {
   callback();
 };
 
-
-const view = new ViewModule();
+const view = new ValueNotesView({parent: document.getElementById('root')});
 
 describe('updateDOM method.', () => {
   describe('When type is "single".', () => {
     it('Rebuild plugin structure.', () => {
       view.updateDOM({ value: 'single', constants: { singleValue: 'single', rangeValue: 'range' } });
 
-      view.handlersList.length = 1;
       view.valueNotesList.length = 1;
-      view.handlersList.forEach((el) => {
-        expect(el.parentNode === view.path).toBeTruthy();
-      });
       view.valueNotesList.forEach((el) => {
-        expect(el.parentNode === view.outer).toBeTruthy();
+        expect(el.parentNode === view.parent).toBeTruthy();
       });
     });
   });
@@ -34,88 +29,19 @@ describe('updateDOM method.', () => {
     it('Rebuild plugin structure.', () => {
       view.updateDOM({ value: 'range', constants: { singleValue: 'single', rangeValue: 'range' } });
 
-      view.handlersList.length = 2;
       view.valueNotesList.length = 3;
-      view.handlersList.forEach((el) => {
-        expect(el.parentNode === view.path).toBeTruthy();
-      });
       view.valueNotesList.forEach((el) => {
-        expect(el.parentNode === view.outer).toBeTruthy();
+        expect(el.parentNode === view.parent).toBeTruthy();
       });
     });
   });
 });
 
-describe('append method.', () => {
-  it('Applying sliders roots.', () => {
-    const roots = document.getElementById('root');
-    view.append(roots);
-
-    expect(view.mainNode.parentNode === roots).toBeTruthy();
-  });
-});
-
-describe('generateScaleDivisions method.', () => {
-  it('Generate divisions for sliders.', () => {
-    view.generateScaleDivisions(3);
-
-    expect(view.scaleDivisionsList.length).toEqual(3);
-
-    for (let i = 0; i < view.scaleDivisionsList.length; i += 1) {
-      expect(helper.isDOMEl(view.scaleDivisionsList[i])).toBeTruthy();
-      expect(view.scaleDivisionsList[i].parentNode).toEqual(view.scaleDivisionsBlock);
-    }
-  });
-});
-
-describe('applyStyles method.', () => {
-  describe('Applying theme and direction to sliders elements.', () => {
-    it('Set theme to "default", direction to "horizontal".', () => {
-      view.applyStyles([
-        { value: 'default', oldValue: null, className: 'theme' },
-        { value: 'horizontal', oldValue: null, className: 'direction' },
-      ]);
-      const els = [
-        view.mainNode, view.outer,
-        view.path, view.pathPassed,
-        view.scaleDivisionsBlock,
-      ].concat(view.scaleDivisionsList, view.valueNotesList, view.handlersList);
-
-      for (let i = 0; i < els.length; i += 1) {
-        const el = els[i];
-
-        expect(el).toHaveClass(`${el.classList[0]}_theme_default`);
-        expect(el).toHaveClass(`${el.classList[0]}_direction_horizontal`);
-      }
-    });
-  });
-
-  describe('Removes old themes.', () => {
-    it('Removes old themes.', () => {
-      view.applyStyles([
-        { value: 'someAnother', oldValue: 'default', className: 'theme' },
-        { value: 'someAnother', oldValue: 'horizontal', className: 'direction' },
-      ]);
-      const els = [
-        view.mainNode, view.outer,
-        view.path, view.pathPassed,
-        view.scaleDivisionsBlock,
-      ].concat(view.scaleDivisionsList, view.valueNotesList, view.handlersList);
-
-      for (let i = 0; i < els.length; i += 1) {
-        const el = els[i];
-        expect(el).not.toHaveClass(`${el.classList[0]}_theme_default`);
-        expect(el).not.toHaveClass(`${el.classList[0]}_direction_horizontal`);
-      }
-    });
-  });
-});
-
-describe('applyValueNotesDisplay method.', () => {
+describe('applyDisplay method.', () => {
   describe('When display is true, type is single.', () => {
     it('Applying display of value note.', () => {
       view.updateDOM({ value: 'single', constants: { singleValue: 'single', rangeValue: 'range' } });
-      view.applyValueNotesDisplay(
+      view.applyDisplay(
         true,
         {
           value: 'separate',
@@ -135,7 +61,7 @@ describe('applyValueNotesDisplay method.', () => {
   describe('When display is true, type is range.', () => {
     it('If valueNoteMode is "separate", shows first and last note.', () => {
       view.updateDOM({ value: 'range', constants: { singleValue: 'single', rangeValue: 'range' } });
-      view.applyValueNotesDisplay(
+      view.applyDisplay(
         true,
         {
           value: 'separate',
@@ -153,7 +79,7 @@ describe('applyValueNotesDisplay method.', () => {
 
     it('If valueNoteMode is "common", shows second note.', () => {
       view.updateDOM({ value: 'range', constants: { singleValue: 'single', rangeValue: 'range' } });
-      view.applyValueNotesDisplay(
+      view.applyDisplay(
         true,
         {
           value: 'common',
@@ -172,7 +98,7 @@ describe('applyValueNotesDisplay method.', () => {
 
   describe('When display is false.', () => {
     it('Hide notes.', () => {
-      view.applyValueNotesDisplay(
+      view.applyDisplay(
         false,
         {
           value: 'separate',
@@ -187,5 +113,13 @@ describe('applyValueNotesDisplay method.', () => {
         expect(el).toHaveClass(`${el.classList[0]}_display_hidden`);
       });
     });
+  });
+});
+
+describe('getElements method.', () => {
+  it('Returns array of elements.', () => {
+    const result = view.getElements();
+
+    expect(result).toEqual([...view.valueNotesList]);
   });
 });

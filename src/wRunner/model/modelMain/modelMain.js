@@ -1,11 +1,8 @@
 import { boundMethod } from 'autobind-decorator';
 import ModelDefaults from '../ModelDefaults/ModelDefaults';
 
-import makeEventModule from '@event';
-import helperModule from '@helper';
-
-const helper = helperModule;
-const makeEvent = makeEventModule;
+import makeEvent from '@event';
+import helper from '@helper';
 
 class ModelMain {
   constructor() {

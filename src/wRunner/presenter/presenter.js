@@ -76,7 +76,7 @@ class Presenter {
 
   @boundMethod
   _valueUpdateEventHandler() {
-    this.view.drawValue(
+    this.view.setPositions(
       this.model.getValues(),
       this.model.getLimits(),
       this.model.getDirection(),
@@ -88,7 +88,7 @@ class Presenter {
   @boundMethod
   _rootsUpdateEventHandler() {
     this.view.append(this.model.roots);
-    this.view.drawValue(
+    this.view.setPositions(
       this.model.getValues(),
       this.model.getLimits(),
       this.model.getDirection(),
@@ -100,7 +100,7 @@ class Presenter {
   @boundMethod
   _themeUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
-    this.view.drawValue(
+    this.view.setPositions(
       this.model.getValues(),
       this.model.getLimits(),
       this.model.getDirection(),
@@ -112,7 +112,7 @@ class Presenter {
   @boundMethod
   _directionUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
-    this.view.drawValue(
+    this.view.setPositions(
       this.model.getValues(),
       this.model.getLimits(),
       this.model.getDirection(),
@@ -127,7 +127,7 @@ class Presenter {
       this.model.getValueNotesDisplay(),
       this.model.getValueNotesMode(),
     );
-    this.view.drawValue(
+    this.view.setPositions(
       this.model.getValues(),
       this.model.getLimits(),
       this.model.getDirection(),
@@ -144,7 +144,7 @@ class Presenter {
 
   @boundMethod
   _windowResizeEventHandler() {
-    this.view.drawValue(
+    this.view.setPositions(
       this.model.getValues(),
       this.model.getLimits(),
       this.model.getDirection(),
@@ -155,7 +155,7 @@ class Presenter {
 
   @boundMethod
   _UIActionMouseDownHandler(event) {
-    this.view.handlerMouseDownAction(event, this.model.getDirection());
+    this.view.handleMouseDownAction(event, this.model.getDirection());
   }
 
   @boundMethod

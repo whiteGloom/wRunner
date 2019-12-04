@@ -1,6 +1,6 @@
 import ModelModule from './Model/ModelMain/ModelMain';
 import ModelDefaults from './Model/ModelDefaults/ModelDefaults';
-import ViewModule from './View/View';
+import ViewModule from './View/MainView/MainView';
 import PresenterModule from './Presenter/Presenter';
 
 function makeInstance(userOptions = {}) {
