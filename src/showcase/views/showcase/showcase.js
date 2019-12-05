@@ -1,144 +1,164 @@
-function makeSlider(index, specOptions, sliderType, element) {
-  const $controllersHolders = $('.js-sample').eq(index).find('.js-sample__parameter-value');
-  const $stepController = $controllersHolders.eq(0).find('input');
-  const $minLimitController = $controllersHolders.eq(1).find('input');
-  const $maxLimitController = $controllersHolders.eq(2).find('input');
-  const $typeControllers = [$controllersHolders.eq(3).find('input').eq(0), $controllersHolders.eq(3).find('input').eq(1)];
-  const $valueController = $controllersHolders.eq(4).find('input');
-  const $minValueController = $controllersHolders.eq(5).find('input');
-  const $maxValueController = $controllersHolders.eq(6).find('input');
-  const $rootsController = $controllersHolders.eq(7).find('input');
-  const $directionControllers = [$controllersHolders.eq(8).find('input').eq(0), $controllersHolders.eq(8).find('input').eq(1)];
-  const $valueNotesDisplayController = $controllersHolders.eq(9).find('input');
-  const $scaleDivisionsCountController = $controllersHolders.eq(10).find('input');
+class SliderExample {
+  constructor(index, userOptions, sliderType, parent) {
+    this.userOptions = userOptions;
+    this.sliderType = sliderType;
+    this.parent = parent;
+    this.index = index;
 
-  const options = {
-    ...{
-      onStepUpdate(step) {
-        $stepController.val(step);
+    this._findControllers();
+    this._makeSlider();
+    this._addControllerLogics();
+  }
+
+  _makeSlider() {
+    if (this.sliderType === 'native') {
+      this.slider = window.wRunner({ ...this._getDefaultOptions(), ...this.userOptions, roots: this.parent });
+    } else {
+      this.slider = $(this.parent).wRunner({ ...this._getDefaultOptions(), ...this.userOptions });
+    }
+  }
+
+  _findControllers() {
+    this.$controllersHolders = $('.js-sample').eq(this.index).find('.js-sample__parameter-value');
+    this.$stepController = this.$controllersHolders.eq(0).find('input');
+    this.$minLimitController = this.$controllersHolders.eq(1).find('input');
+    this.$maxLimitController = this.$controllersHolders.eq(2).find('input');
+    this.$typeControllers = [this.$controllersHolders.eq(3).find('input').eq(0), this.$controllersHolders.eq(3).find('input').eq(1)];
+    this.$valueController = this.$controllersHolders.eq(4).find('input');
+    this.$minValueController = this.$controllersHolders.eq(5).find('input');
+    this.$maxValueController = this.$controllersHolders.eq(6).find('input');
+    this.$rootsController = this.$controllersHolders.eq(7).find('input');
+    this.$directionControllers = [this.$controllersHolders.eq(8).find('input').eq(0), this.$controllersHolders.eq(8).find('input').eq(1)];
+    this.$valueNotesDisplayController = this.$controllersHolders.eq(9).find('input');
+    this.$scaleDivisionsCountController = this.$controllersHolders.eq(10).find('input');
+  }
+
+  _addControllerLogics() {
+    function keyPressHandler(e) {
+      const $el = $(this);
+      if (e.key === 'Enter') {
+        this.slider[e.data.method](e.data.action ? e.data.action($el.val()) : $el.val());
+        $el.blur();
+      }
+      if (e.key === 'Escape') {
+        $el.val(e.data.snapshot);
+        $el.blur();
+      }
+    }
+
+    function makeTextInput(controller, eventaData) {
+      controller.on('focus', () => {
+        const snapshot = controller.val();
+        controller.on('keydown', { ...eventaData, snapshot }, keyPressHandler);
+        controller.on('blur', () => {
+          controller.off('keydown', { ...eventaData, snapshot }, keyPressHandler);
+        });
+      });
+    }
+
+    this.$typeControllers[0].on('input', () => {
+      this.slider.setType(this.$typeControllers[0].val());
+    });
+
+    this.$typeControllers[1].on('input', () => {
+      this.slider.setType(this.$typeControllers[1].val());
+    });
+
+    this.$directionControllers[0].on('input', () => {
+      this.slider.setDirection(this.$directionControllers[0].val());
+    });
+
+    this.$directionControllers[1].on('input', () => {
+      this.slider.setDirection(this.$directionControllers[1].val());
+    });
+
+    this.$valueNotesDisplayController.on('input', () => {
+      this.slider.setValueNotesDisplay(this.$valueNotesDisplayController[0].checked);
+    });
+
+    makeTextInput(this.$stepController, { method: 'setStep' });
+
+    makeTextInput(this.$minLimitController, { method: 'setLimits', action(val) { return { minLimit: val }; } });
+
+    makeTextInput(this.$maxLimitController, { method: 'setLimits', action(val) { return { maxLimit: val }; } });
+
+    makeTextInput(this.$valueController, { method: 'setSingleValue' });
+
+    makeTextInput(this.$minValueController, { method: 'setRangeValues', action(val) { return { minValue: val }; } });
+
+    makeTextInput(this.$maxValueController, { method: 'setRangeValues', action(val) { return { maxValue: val }; } });
+
+    makeTextInput(this.$scaleDivisionsCountController, { method: 'setScaleDivisionsCount' });
+  }
+
+  _getDefaultOptions() {
+    return {
+      onStepUpdate: (step) => {
+        this.$stepController.val(step);
       },
 
-      onLimitsUpdate(limits) {
-        $minLimitController.val(limits.minLimit);
-        $maxLimitController.val(limits.maxLimit);
+      onLimitsUpdate: (limits) => {
+        this.$minLimitController.val(limits.minLimit);
+        this.$maxLimitController.val(limits.maxLimit);
       },
 
-      onTypeUpdate(type) {
-        if (type.value === $typeControllers[0].val()) {
-          $typeControllers[0][0].checked = true;
+      onTypeUpdate: (type) => {
+        if (type.value === this.$typeControllers[0].val()) {
+          this.$typeControllers[0][0].checked = true;
 
-          $minValueController.parent().parent().css('visibility', 'hidden');
-          $maxValueController.parent().parent().css('visibility', 'hidden');
-          $valueController.parent().parent().css('visibility', 'visible');
+          this.$minValueController.parent().parent().css('visibility', 'hidden');
+          this.$maxValueController.parent().parent().css('visibility', 'hidden');
+          this.$valueController.parent().parent().css('visibility', 'visible');
         }
-        if (type.value === $typeControllers[1].val()) {
-          $typeControllers[1][0].checked = true;
+        if (type.value === this.$typeControllers[1].val()) {
+          this.$typeControllers[1][0].checked = true;
 
-          $valueController.parent().parent().css('visibility', 'hidden');
-          $minValueController.parent().parent().css('visibility', 'visible');
-          $maxValueController.parent().parent().css('visibility', 'visible');
+          this.$valueController.parent().parent().css('visibility', 'hidden');
+          this.$minValueController.parent().parent().css('visibility', 'visible');
+          this.$maxValueController.parent().parent().css('visibility', 'visible');
         }
       },
 
-      onValueUpdate(values) {
-        $valueController.val(values.singleValue);
-        $minValueController.val(values.rangeValueMin);
-        $maxValueController.val(values.rangeValueMax);
+      onValueUpdate: (values) => {
+        this.$valueController.val(values.singleValue);
+        this.$minValueController.val(values.rangeValueMin);
+        this.$maxValueController.val(values.rangeValueMax);
       },
 
-      onRootsUpdate(roots) {
+      onRootsUpdate: (roots) => {
         const $roots = $(roots);
         let str = '';
         for (let i = 0; i < $roots[0].classList.length; i += 1) {
           str += `.${$roots[0].classList[i]}`;
         }
-        $rootsController.val(str);
+        this.$rootsController.val(str);
       },
 
-      onDirectionUpdate(direction) {
-        if (direction.value === $directionControllers[0].val()) {
-          $directionControllers[0][0].checked = true;
+      onDirectionUpdate: (direction) => {
+        if (direction.value === this.$directionControllers[0].val()) {
+          this.$directionControllers[0][0].checked = true;
         }
-        if (direction.value === $directionControllers[1].val()) {
-          $directionControllers[1][0].checked = true;
+        if (direction.value === this.$directionControllers[1].val()) {
+          this.$directionControllers[1][0].checked = true;
         }
       },
 
-      onValueNotesDisplayUpdate(value) {
-        $valueNotesDisplayController[0].checked = value;
+      onValueNotesDisplayUpdate: (value) => {
+        this.$valueNotesDisplayController[0].checked = value;
       },
 
-      onScaleDivisionsCountUpdate(count) {
-        $scaleDivisionsCountController.val(count);
+      onScaleDivisionsCountUpdate: (count) => {
+        this.$scaleDivisionsCountController.val(count);
       },
-    },
-    ...specOptions,
-  };
-
-  let slider;
-  if (sliderType === 'native') {
-    slider = window.wRunner({ ...options, roots: element });
-  } else {
-    slider = $(element).wRunner(options);
-  }
-
-
-  function keyPressHandler(e) {
-    const $el = $(this);
-    if (e.key === 'Enter') {
-      slider[e.data.method](e.data.action ? e.data.action($el.val()) : $el.val());
-      $el.blur();
-    }
-    if (e.key === 'Escape') {
-      $el.val(e.data.snapshot);
-      $el.blur();
     }
   }
-
-  function makeTextInput(controller, eventaData) {
-    controller.on('focus', () => {
-      const snapshot = controller.val();
-      controller.on('keydown', { ...eventaData, snapshot }, keyPressHandler);
-      controller.on('blur', () => {
-        controller.off('keydown', { ...eventaData, snapshot }, keyPressHandler);
-      });
-    });
-  }
-
-  $typeControllers[0].on('input', () => {
-    slider.setType($typeControllers[0].val());
-  });
-
-  $typeControllers[1].on('input', () => {
-    slider.setType($typeControllers[1].val());
-  });
-
-  $directionControllers[0].on('input', () => {
-    slider.setDirection($directionControllers[0].val());
-  });
-
-  $directionControllers[1].on('input', () => {
-    slider.setDirection($directionControllers[1].val());
-  });
-
-  $valueNotesDisplayController.on('input', () => {
-    slider.setValueNotesDisplay($valueNotesDisplayController[0].checked);
-  });
-
-  makeTextInput($stepController, { method: 'setStep' });
-
-  makeTextInput($minLimitController, { method: 'setLimits', action(val) { return { minLimit: val }; } });
-
-  makeTextInput($maxLimitController, { method: 'setLimits', action(val) { return { maxLimit: val }; } });
-
-  makeTextInput($valueController, { method: 'setSingleValue' });
-
-  makeTextInput($minValueController, { method: 'setRangeValues', action(val) { return { minValue: val }; } });
-
-  makeTextInput($maxValueController, { method: 'setRangeValues', action(val) { return { maxValue: val }; } });
-
-  makeTextInput($scaleDivisionsCountController, { method: 'setScaleDivisionsCount' });
 }
+
+function makeSlider(...args) {
+  const result = new SliderExample(...args);
+  return result;
+}
+
 
 function test() {
   makeSlider(0, {}, 'native', document.getElementById('sample0'));
