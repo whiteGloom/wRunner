@@ -1,3 +1,4 @@
+import { boundMethod } from 'autobind-decorator';
 import makeEvent from '@event';
 import helper from '@helper';
 import ValueNotesView from '../ValueNotesView/ValueNotesView';
@@ -61,14 +62,14 @@ class View {
     });
   }
 
-  handleMouseDownAction(eventDown, direction) {
+  handleMouseDown(eventDown, direction) {
     if (eventDown.button !== 0) return;
     let wasDragged = false;
 
-    const handler = (event) => {
+    const calc = (event) => {
       const isHorizontal = direction.value === direction.constants.horizontalValue;
-      const scale = this.path[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
       const min = this.path.getBoundingClientRect()[isHorizontal ? 'left' : 'top'];
+      const scale = this.path[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
       const pos = event[isHorizontal ? 'clientX' : 'clientY'];
 
       // If the dragging is out of slider's range, the function stops.
@@ -77,19 +78,22 @@ class View {
       const data = ((pos - min) / scale) * 100;
       this.UIValueAction.trigger(isHorizontal ? data : 100 - data);
     };
-    const mouseUp = (eventUp) => {
+
+    const handleMouseMove = (eventMove) => { calc(eventMove); };
+
+    const handleMouseMoveOnce = () => { wasDragged = true; };
+
+    const handleMouseUp = (eventUp) => {
       const { target } = eventUp;
-      document.body.removeEventListener('mousemove', handler);
+      document.body.removeEventListener('mousemove', handleMouseMove);
+      if (wasDragged || this.handlers.getElements().includes(target)) return;
 
-      if (wasDragged) return;
-      if (this.handlers.getElements().includes(target)) return;
-
-      handler(eventUp);
+      calc(eventUp);
     };
 
-    document.body.addEventListener('mousemove', () => { wasDragged = true; }, { once: true });
-    document.body.addEventListener('mousemove', handler);
-    document.body.addEventListener('mouseup', mouseUp, { once: true });
+    document.body.addEventListener('mousemove', handleMouseMoveOnce, { once: true });
+    document.body.addEventListener('mousemove', handleMouseMove);
+    document.body.addEventListener('mouseup', handleMouseUp, { once: true });
   }
 
   _init() {
@@ -109,6 +113,16 @@ class View {
     });
   }
 
+  @boundMethod
+  _resize(event) {
+    this.windowResizeEvent.trigger(event);
+  }
+
+  @boundMethod
+  _handleMouseDown(event) {
+    this.UIActionMouseDown.trigger(event);
+  }
+
   _addEvents() {
     this.UIActionMouseDown = makeEvent();
     this.UIValueAction = makeEvent();
@@ -118,8 +132,8 @@ class View {
   }
 
   _addListenners() {
-    this.path.addEventListener('mousedown', this.UIActionMouseDown.trigger);
-    window.addEventListener('resize', this.windowResizeEvent.trigger);
+    window.addEventListener('resize', this._resize);
+    this.path.addEventListener('mousedown', this._handleMouseDown);
   }
 }
 

@@ -155,7 +155,7 @@ class Presenter {
 
   @boundMethod
   _UIActionMouseDownHandler(event) {
-    this.view.handleMouseDownAction(event, this.model.getDirection());
+    this.view.handleMouseDown(event, this.model.getDirection());
   }
 
   @boundMethod
