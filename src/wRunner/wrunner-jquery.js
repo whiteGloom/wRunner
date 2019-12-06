@@ -14,15 +14,15 @@ import makeInstance from './makeInstance';
       const method = args[0];
       const options = args[1];
       const results = [];
-      let haveUniqueAnswer = false;
+      let isMethodReturnResult = false;
 
       this.each((index, el) => {
         const result = $(el).data('wRunner')[method](options);
         results.push(result);
-        if (result !== undefined) haveUniqueAnswer = true;
+        if (result !== undefined) isMethodReturnResult = true;
       });
 
-      if (!haveUniqueAnswer) {
+      if (!isMethodReturnResult) {
         return this;
       } else {
         if (results.length === 1) return results[0];
