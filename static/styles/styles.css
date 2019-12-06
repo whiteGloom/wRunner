@@ -57,7 +57,6 @@ input[type="checkbox"] {
 }
 .sample__parameter-value {
   width: 100%;
-  color: #000;
 }
 .sample__title {
   text-align: center;
@@ -72,5 +71,6 @@ input[type="checkbox"] {
   height: 100%;
   border-radius: 3px;
   background-color: #fff;
+  color: #000;
 }
 
