@@ -7,7 +7,7 @@ function config(options = {}) {
     entry: {
       'wrunner-native': `${workFolder}/src/wRunner/wrunner-native.js`,
       'wrunner-jquery': `${workFolder}/src/wRunner/wrunner-jquery.js`,
-      'wrunner-default-theme': `${workFolder}/src/themes/wrunner-default-theme/wrunner-default-theme.js`,
+      'wrunner-default-theme': `${workFolder}/src/wRunner/themes/wrunner-default-theme/wrunner-default-theme.js`,
     },
     output: {
       path: `${workFolder}/prod/`,
