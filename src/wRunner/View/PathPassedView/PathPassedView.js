@@ -36,10 +36,6 @@ class PathPassedView {
     });
   }
 
-  getElements() {
-    return [this.pathPassed];
-  }
-
   _init() {
     this.pathPassed = helper.makeEl(['wrunner__path-passed']);
     this.parent.appendChild(this.pathPassed);

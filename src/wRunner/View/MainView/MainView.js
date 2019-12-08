@@ -11,14 +11,28 @@ class View {
     this._init();
     this._addEvents();
     this._addListenners();
+    this.handlersList = [];
+    this.valueNotesList = [];
   }
 
   append(roots) {
     roots.appendChild(this.mainNode);
   }
 
-  applyValueNotesDisplay(...args) {
-    this.valueNotes.applyDisplay(...args, this.path);
+  applyValueNotesDisplay(display, valueNotesMode) {
+    if (!display) {
+      this.valueNotesList.forEach((el) => { el.applyDisplay(false); });
+      return;
+    }
+
+    if (this.valueNotesList.length === 1) this.valueNotesList[0].applyDisplay(true);
+    if (this.valueNotesList.length === 3) {
+      const values = [true, false, true];
+      const isSeparate = valueNotesMode.value === valueNotesMode.constants.separateValue;
+      this.valueNotesList.forEach((el, i) => {
+        el.applyDisplay(isSeparate ? values[i] : !values[i]);
+      });
+    }
   }
 
   generateScaleDivisions(...args) {
@@ -26,26 +40,76 @@ class View {
   }
 
   updateDOM(type) {
-    this.handlers.updateDOM(type);
-    this.valueNotes.updateDOM(type);
+    this.handlersList.concat(this.valueNotesList).forEach((el) => {
+      el.destroy();
+    });
+    this.handlersList.length = 0;
+    this.valueNotesList.length = 0;
+
+    if (type.value === type.constants.singleValue) {
+      this.handlersList.push(new HandlersView(this.path, 'single'));
+      this.valueNotesList.push(new ValueNotesView(this.outer, 'single'));
+    }
+    if (type.value === type.constants.rangeValue) {
+      this.handlersList.push(new HandlersView(this.path, 'min'));
+      this.handlersList.push(new HandlersView(this.path, 'max'));
+      this.valueNotesList.push(new ValueNotesView(this.outer, 'min'));
+      this.valueNotesList.push(new ValueNotesView(this.outer, 'common'));
+      this.valueNotesList.push(new ValueNotesView(this.outer, 'max'));
+    }
   }
 
   setPositions(values, limits, direction, type, valueNotesMode) {
-    this.pathPassed.setPosition(limits, values, direction, type);
+    const { singleValue, rangeValueMin, rangeValueMax } = values;
+    const isSingle = type.value === type.constants.singleValue;
+    const setValueNote = (el, value, title) => {
+      el.setPosition(
+        value,
+        title || value,
+        limits,
+        direction,
+        this.path,
+      );
+    };
 
-    this.handlers.setPosition(limits, values, direction);
-    this.valueNotes.setPosition(limits, values, direction, valueNotesMode, this.path);
+    window.requestAnimationFrame(() => {
+      this.pathPassed.setPosition(limits, values, direction, type);
+      if (isSingle) {
+        this.handlersList[0].setPosition(singleValue, limits, direction);
+        setValueNote(this.valueNotesList[0], singleValue);
+      }
+      if (!isSingle) {
+        const [noteOne, noteSecond, noteThird] = this.valueNotesList;
+        this.handlersList[0].setPosition(rangeValueMin, limits, direction);
+        this.handlersList[1].setPosition(rangeValueMax, limits, direction);
+        setValueNote(noteOne, rangeValueMin);
+        setValueNote(noteThird, rangeValueMax);
+        setValueNote(
+          noteSecond,
+          (rangeValueMax + rangeValueMin) / 2,
+          [rangeValueMin, rangeValueMax],
+        );
+        ValueNotesView.checkValueNotesMode(
+          [noteOne, noteThird],
+          limits,
+          values,
+          direction,
+          valueNotesMode,
+          this.path,
+          this.valueNoteModeUpdateEvent,
+        );
+      }
+    });
   }
 
   applyStyles(styles) {
     const els = [
       ...[
         this.mainNode, this.outer,
-        this.path,
+        this.path, this.pathPassed.pathPassed,
       ],
-      ...this.pathPassed.getElements(),
-      ...this.handlers.getElements(),
-      ...this.valueNotes.getElements(),
+      ...this.handlersList.map((el) => el.handler),
+      ...this.valueNotesList.map((el) => el.valueNote),
       ...this.scale.getElements(),
     ];
 
@@ -92,7 +156,7 @@ class View {
       const { target } = eventUp;
       document.body.removeEventListener('mousemove', handleMouseMove);
 
-      if (wasDragged || this.handlers.getElements().includes(target)) return;
+      if (wasDragged || this.handlersList.map((el) => el.handler).includes(target)) return;
 
       calc(eventUp);
     };
@@ -110,8 +174,6 @@ class View {
     this.outer.appendChild(this.path);
 
     this.pathPassed = new PathPassedView({ parent: this.path });
-    this.handlers = new HandlersView({ parent: this.path });
-    this.valueNotes = new ValueNotesView({ parent: this.outer });
     this.scale = new ScaleView({ parent: this.outer });
 
     window.requestAnimationFrame(() => {
@@ -134,7 +196,7 @@ class View {
     this.UIValueAction = makeEvent();
     this.windowResizeEvent = makeEvent();
 
-    this.valueNoteModeUpdateEvent = this.valueNotes.valueNoteModeUpdateEvent;
+    this.valueNoteModeUpdateEvent = makeEvent();
   }
 
   _addListenners() {

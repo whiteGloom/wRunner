@@ -2,127 +2,66 @@ import makeEvent from '@event';
 import helper from '@helper';
 
 class ValueNotesView {
-  constructor({ parent }) {
+  constructor(parent) {
     this.parent = parent;
-    this.valueNotesList = [];
 
-    this._addEvents();
+    this._init();
   }
 
-  updateDOM(type) {
-    this.valueNotesList.forEach((el) => {
-      el.remove();
-    });
-    this.valueNotesList.length = 0;
-
-    if (type.value === type.constants.singleValue) {
-      this.valueNotesList.push(helper.makeEl(['wrunner__value-note', 'wrunner__value-note_type_single']));
-    }
-    if (type.value === type.constants.rangeValue) {
-      this.valueNotesList.push(helper.makeEl(['wrunner__value-note', 'wrunner__value-note_type_min']));
-      this.valueNotesList.push(helper.makeEl(['wrunner__value-note', 'wrunner__value-note_type_common']));
-      this.valueNotesList.push(helper.makeEl(['wrunner__value-note', 'wrunner__value-note_type_max']));
-    }
-
-    window.requestAnimationFrame(() => {
-      this.valueNotesList.forEach((el) => {
-        this.parent.appendChild(el);
-      });
-    });
+  destroy() {
+    this.valueNote.remove();
   }
 
-  setPosition(limits, values, direction, valueNotesMode, path) {
+  setPosition(value, title, limits, direction, path) {
     const { minLimit, valuesCount } = limits;
-    const { singleValue, rangeValueMin, rangeValueMax } = values;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const sizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const posProp = isHorizontal ? 'left' : 'top';
+    const pathScale = path[sizeProp];
+    const noteHalfScale = this.valueNote[sizeProp] / 2;
 
-    const draw = (element, value, title) => {
-      const el = element;
-      const pathScale = path[sizeProp];
+    this.valueNote.innerHTML = typeof title === 'object'
+      ? `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`
+      : title;
 
-      el.innerHTML = typeof title === 'object'
-        ? `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`
-        : title;
+    const globalPosition = ((value - minLimit) / valuesCount) * pathScale;
+    const position = isHorizontal
+      ? ((globalPosition - noteHalfScale) / pathScale) * 100
+      : 100 - ((globalPosition + noteHalfScale) / pathScale) * 100;
 
-      const percent = (value - minLimit) / valuesCount;
-      const position = isHorizontal
-        ? ((percent * pathScale - el[sizeProp] / 2) / pathScale) * 100
-        : 100 - ((percent * pathScale + el[sizeProp] / 2) / pathScale) * 100;
-
-      el.style.cssText = '';
-      el.style[posProp] = `${position}%`;
-    };
-
-    window.requestAnimationFrame(() => {
-      if (this.valueNotesList.length === 1) {
-        draw(this.valueNotesList[0], singleValue, singleValue);
-      }
-      if (this.valueNotesList.length === 3) {
-        const [first, second, third] = this.valueNotesList;
-        draw(first, rangeValueMin, rangeValueMin);
-        draw(second, (rangeValueMin + rangeValueMax) / 2, [rangeValueMin, rangeValueMax]);
-        draw(third, rangeValueMax, rangeValueMax);
-
-        this._checkValueNotesMode(limits, values, direction, valueNotesMode, path);
-      }
-    });
+    this.valueNote.style.cssText = '';
+    this.valueNote.style[posProp] = `${position}%`;
   }
 
-  applyDisplay(display, valueNotesMode) {
-    function set(el, value) {
-      const mark = el.classList[0];
-      el.classList[value ? 'add' : 'remove'](`${mark}_display_visible`);
-      el.classList[value ? 'remove' : 'add'](`${mark}_display_hidden`);
-    }
-
-    window.requestAnimationFrame(() => {
-      if (!display) {
-        this.valueNotesList.forEach((el) => { set(el, false); });
-        return;
-      }
-      if (this.valueNotesList.length === 1) set(this.valueNotesList[0], true);
-      if (this.valueNotesList.length === 3) {
-        const values = [true, false, true];
-        const isSeparate = valueNotesMode.value === valueNotesMode.constants.separateValue;
-        this.valueNotesList.forEach((el, i) => {
-          set(el, isSeparate ? values[i] : !values[i]);
-        });
-      }
-    });
+  applyDisplay(value) {
+    const mark = this.valueNote.classList[0];
+    this.valueNote.classList[value ? 'add' : 'remove'](`${mark}_display_visible`);
+    this.valueNote.classList[value ? 'remove' : 'add'](`${mark}_display_hidden`);
   }
 
-  getElements() {
-    return [...this.valueNotesList];
+  _init() {
+    this.valueNote = helper.makeEl(['wrunner__value-note', `wrunner__value-note_type_${this.type}`]);
+    this.parent.appendChild(this.valueNote);
   }
 
-  _addEvents() {
-    this.valueNoteModeUpdateEvent = makeEvent();
-  }
-
-  _checkValueNotesMode(limits, values, direction, valueNotesMode, path) {
-    if (this.valueNotesList.length < 3) return;
-
+  static checkValueNotesMode(els, limits, values, direction, mode, path, event) {
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const sizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
-    const [elFirst,, elSec] = this.valueNotesList;
     const { minLimit, valuesCount } = limits;
     const { rangeValueMin, rangeValueMax } = values;
     const calcPos = (el, value) => {
       const percent = (value - minLimit) / valuesCount;
-      return percent * path[sizeProp] + el[sizeProp] / 2;
+      return percent * path[sizeProp] + el.valueNote[sizeProp] / 2;
     };
 
-    const sizes = (elFirst[sizeProp] + elSec[sizeProp]) / 2;
-    const distance = calcPos(elSec, rangeValueMax) - calcPos(elFirst, rangeValueMin);
-
+    const sizes = (els[0].valueNote[sizeProp] + els[1].valueNote[sizeProp]) / 2;
+    const distance = calcPos(els[1], rangeValueMax) - calcPos(els[0], rangeValueMin);
     if (distance >= sizes) {
-      if (valueNotesMode.value !== valueNotesMode.constants.separateValue) {
-        this.valueNoteModeUpdateEvent.trigger(valueNotesMode.constants.separateValue);
+      if (mode.value !== mode.constants.separateValue) {
+        event.trigger(mode.constants.separateValue);
       }
-    } else if (valueNotesMode.value !== valueNotesMode.constants.commonValue) {
-      this.valueNoteModeUpdateEvent.trigger(valueNotesMode.constants.commonValue);
+    } else if (mode.value !== mode.constants.commonValue) {
+      event.trigger(mode.constants.commonValue);
     }
   }
 }
