@@ -1,9 +1,10 @@
 import makeEvent from '@event';
 import helper from '@helper';
 
-class ValueNotesView {
-  constructor(parent) {
+class ValueNoteView {
+  constructor(parent, type) {
     this.parent = parent;
+    this.type = type;
 
     this._init();
   }
@@ -18,12 +19,12 @@ class ValueNotesView {
     const sizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const posProp = isHorizontal ? 'left' : 'top';
     const pathScale = path[sizeProp];
-    const noteHalfScale = this.valueNote[sizeProp] / 2;
 
     this.valueNote.innerHTML = typeof title === 'object'
       ? `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`
       : title;
 
+    const noteHalfScale = this.valueNote[sizeProp] / 2;
     const globalPosition = ((value - minLimit) / valuesCount) * pathScale;
     const position = isHorizontal
       ? ((globalPosition - noteHalfScale) / pathScale) * 100
@@ -66,4 +67,4 @@ class ValueNotesView {
   }
 }
 
-export default ValueNotesView;
+export default ValueNoteView;

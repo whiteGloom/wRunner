@@ -1,6 +1,6 @@
 import helper from '@helper';
 
-class HandlersView {
+class HandlerView {
   constructor(parent, type) {
     this.parent = parent;
     this.type = type;
@@ -30,4 +30,4 @@ class HandlersView {
   }
 }
 
-export default HandlersView;
+export default HandlerView;

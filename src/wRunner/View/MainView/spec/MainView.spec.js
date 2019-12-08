@@ -22,6 +22,34 @@ describe('append method.', () => {
   });
 });
 
+describe('updateDOM method.', () => {
+  describe('When type is "single".', () => {
+    it('Rebuild plugin structure.', () => {
+      view.updateDOM({ value: 'single', constants: { singleValue: 'single', rangeValue: 'range' } });
+
+      view.valueNotesList.forEach((el) => {
+        expect(el.valueNote.parentNode === view.outer).toBeTruthy();
+      });
+      view.handlersList.forEach((el) => {
+        expect(el.handler.parentNode === view.path).toBeTruthy();
+      });
+    });
+  });
+
+  describe('When type is "range".', () => {
+    it('Rebuild plugin structure.', () => {
+      view.updateDOM({ value: 'range', constants: { singleValue: 'single', rangeValue: 'range' } });
+
+      view.valueNotesList.forEach((el) => {
+        expect(el.valueNote.parentNode === view.outer).toBeTruthy();
+      });
+      view.handlersList.forEach((el) => {
+        expect(el.handler.parentNode === view.path).toBeTruthy();
+      });
+    });
+  });
+});
+
 describe('applyStyles method.', () => {
   describe('Applying theme and direction to sliders elements.', () => {
     it('Set theme to "default", direction to "horizontal".', () => {
@@ -32,11 +60,10 @@ describe('applyStyles method.', () => {
       const els = [
         ...[
           view.mainNode, view.outer,
-          view.path,
+          view.path, view.pathPassed.pathPassed,
         ],
-        ...view.pathPassed.getElements(),
-        ...view.handlers.getElements(),
-        ...view.valueNotes.getElements(),
+        ...view.handlersList.map((el) => el.handler),
+        ...view.valueNotesList.map((el) => el.valueNote),
         ...view.scale.getElements(),
       ];
 
@@ -56,11 +83,10 @@ describe('applyStyles method.', () => {
       const els = [
         ...[
           view.mainNode, view.outer,
-          view.path,
+          view.path, view.pathPassed.pathPassed,
         ],
-        ...view.pathPassed.getElements(),
-        ...view.handlers.getElements(),
-        ...view.valueNotes.getElements(),
+        ...view.handlersList.map((el) => el.handler),
+        ...view.valueNotesList.map((el) => el.valueNote),
         ...view.scale.getElements(),
       ];
 

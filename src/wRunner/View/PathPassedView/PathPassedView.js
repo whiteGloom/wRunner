@@ -14,26 +14,24 @@ class PathPassedView {
     const isSingle = type.value === type.constants.singleValue;
     const posProp = isHorizontal ? 'left' : 'top';
     const sizeProp = isHorizontal ? 'width' : 'height';
-    window.requestAnimationFrame(() => {
-      this.pathPassed.style.cssText = '';
+    this.pathPassed.style.cssText = '';
 
-      let position;
-      if (isSingle) {
-        position = isHorizontal
-          ? 0 : 100 - ((singleValue - minLimit) / valuesCount) * 100;
-      }
-      if (!isSingle) {
-        position = isHorizontal
-          ? ((rangeValueMin - minLimit) / valuesCount) * 100
-          : ((maxLimit - rangeValueMax) / valuesCount) * 100;
-      }
-      const size = isSingle
-        ? ((singleValue - minLimit) / valuesCount) * 100
-        : ((rangeValueMax - rangeValueMin) / valuesCount) * 100;
+    let position;
+    if (isSingle) {
+      position = isHorizontal
+        ? 0 : 100 - ((singleValue - minLimit) / valuesCount) * 100;
+    }
+    if (!isSingle) {
+      position = isHorizontal
+        ? ((rangeValueMin - minLimit) / valuesCount) * 100
+        : ((maxLimit - rangeValueMax) / valuesCount) * 100;
+    }
+    const size = isSingle
+      ? ((singleValue - minLimit) / valuesCount) * 100
+      : ((rangeValueMax - rangeValueMin) / valuesCount) * 100;
 
-      this.pathPassed.style[sizeProp] = `${size}%`;
-      this.pathPassed.style[posProp] = `${position}%`;
-    });
+    this.pathPassed.style[sizeProp] = `${size}%`;
+    this.pathPassed.style[posProp] = `${position}%`;
   }
 
   _init() {

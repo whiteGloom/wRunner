@@ -1,18 +1,19 @@
 import { boundMethod } from 'autobind-decorator';
 import makeEvent from '@event';
 import helper from '@helper';
-import ValueNotesView from '../ValueNotesView/ValueNotesView';
-import HandlersView from '../HandlersView/HandlersView';
+import ValueNoteView from '../ValueNoteView/ValueNoteView';
+import HandlerView from '../HandlerView/HandlerView';
 import ScaleView from '../ScaleView/ScaleView';
 import PathPassedView from '../PathPassedView/PathPassedView';
 
 class View {
   constructor() {
+    this.handlersList = [];
+    this.valueNotesList = [];
+
     this._init();
     this._addEvents();
     this._addListenners();
-    this.handlersList = [];
-    this.valueNotesList = [];
   }
 
   append(roots) {
@@ -47,15 +48,15 @@ class View {
     this.valueNotesList.length = 0;
 
     if (type.value === type.constants.singleValue) {
-      this.handlersList.push(new HandlersView(this.path, 'single'));
-      this.valueNotesList.push(new ValueNotesView(this.outer, 'single'));
+      this.handlersList.push(new HandlerView(this.path, 'single'));
+      this.valueNotesList.push(new ValueNoteView(this.outer, 'single'));
     }
     if (type.value === type.constants.rangeValue) {
-      this.handlersList.push(new HandlersView(this.path, 'min'));
-      this.handlersList.push(new HandlersView(this.path, 'max'));
-      this.valueNotesList.push(new ValueNotesView(this.outer, 'min'));
-      this.valueNotesList.push(new ValueNotesView(this.outer, 'common'));
-      this.valueNotesList.push(new ValueNotesView(this.outer, 'max'));
+      this.handlersList.push(new HandlerView(this.path, 'min'));
+      this.handlersList.push(new HandlerView(this.path, 'max'));
+      this.valueNotesList.push(new ValueNoteView(this.outer, 'min'));
+      this.valueNotesList.push(new ValueNoteView(this.outer, 'common'));
+      this.valueNotesList.push(new ValueNoteView(this.outer, 'max'));
     }
   }
 
@@ -89,7 +90,7 @@ class View {
           (rangeValueMax + rangeValueMin) / 2,
           [rangeValueMin, rangeValueMax],
         );
-        ValueNotesView.checkValueNotesMode(
+        ValueNoteView.checkValueNotesMode(
           [noteOne, noteThird],
           limits,
           values,
