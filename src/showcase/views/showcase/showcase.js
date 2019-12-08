@@ -18,6 +18,12 @@ class SliderExample {
     }
   }
 
+  _execute(methodName, value) {
+    this.sliderType === 'native'
+      ? this.slider[methodName](value)
+      : $(this.parent).wRunner(methodName, value);
+  }
+
   _findControllers() {
     this.$controllersHolders = $('.js-sample').eq(this.index).find('.js-sample__parameter-value');
     this.$stepController = this.$controllersHolders.eq(0).find('input');
@@ -34,10 +40,10 @@ class SliderExample {
   }
 
   _addControllerLogics() {
-    function keyPressHandler(e) {
-      const $el = $(this);
+    const handleKeyDown = (e) => {
+      const $el = $(e.target);
       if (e.key === 'Enter') {
-        this.slider[e.data.method](e.data.action ? e.data.action($el.val()) : $el.val());
+        this._execute(e.data.method, e.data.action ? e.data.action($el.val()) : $el.val())
         $el.blur();
       }
       if (e.key === 'Escape') {
@@ -46,34 +52,34 @@ class SliderExample {
       }
     }
 
-    function makeTextInput(controller, eventaData) {
+    function makeTextInput(controller, data) {
       controller.on('focus', () => {
         const snapshot = controller.val();
-        controller.on('keydown', { ...eventaData, snapshot }, keyPressHandler);
+        controller.on('keydown', { ...data, snapshot }, handleKeyDown);
         controller.on('blur', () => {
-          controller.off('keydown', { ...eventaData, snapshot }, keyPressHandler);
+          controller.off('keydown', { ...data, snapshot }, handleKeyDown);
         });
       });
     }
 
     this.$typeControllers[0].on('input', () => {
-      this.slider.setType(this.$typeControllers[0].val());
+      this._execute('setType', this.$typeControllers[0].val());
     });
 
     this.$typeControllers[1].on('input', () => {
-      this.slider.setType(this.$typeControllers[1].val());
+      this._execute('setType', this.$typeControllers[1].val());
     });
 
     this.$directionControllers[0].on('input', () => {
-      this.slider.setDirection(this.$directionControllers[0].val());
+      this._execute('setDirection', this.$directionControllers[0].val());
     });
 
     this.$directionControllers[1].on('input', () => {
-      this.slider.setDirection(this.$directionControllers[1].val());
+      this._execute('setDirection', this.$directionControllers[1].val());
     });
 
     this.$valueNotesDisplayController.on('input', () => {
-      this.slider.setValueNotesDisplay(this.$valueNotesDisplayController[0].checked);
+      this._execute('setValueNotesDisplay', this.$valueNotesDisplayController[0].checked);
     });
 
     makeTextInput(this.$stepController, { method: 'setStep' });

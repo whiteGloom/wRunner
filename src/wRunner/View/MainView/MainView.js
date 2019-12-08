@@ -63,6 +63,7 @@ class View {
   }
 
   handleMouseDown(eventDown, direction) {
+    eventDown.preventDefault();
     if (eventDown.button !== 0) return;
     let wasDragged = false;
 
@@ -79,13 +80,18 @@ class View {
       this.UIValueAction.trigger(isHorizontal ? data : 100 - data);
     };
 
-    const handleMouseMove = (eventMove) => { calc(eventMove); };
+    const handleMouseMove = (eventMove) => {
+      eventMove.preventDefault();
+      calc(eventMove);
+    };
 
     const handleMouseMoveOnce = () => { wasDragged = true; };
 
     const handleMouseUp = (eventUp) => {
+      eventUp.preventDefault();
       const { target } = eventUp;
       document.body.removeEventListener('mousemove', handleMouseMove);
+
       if (wasDragged || this.handlers.getElements().includes(target)) return;
 
       calc(eventUp);

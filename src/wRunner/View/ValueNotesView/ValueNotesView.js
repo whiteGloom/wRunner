@@ -35,21 +35,23 @@ class ValueNotesView {
     const { minLimit, valuesCount } = limits;
     const { singleValue, rangeValueMin, rangeValueMax } = values;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
-    const getSizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
+    const sizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const posProp = isHorizontal ? 'left' : 'top';
 
     const draw = (element, value, title) => {
-      const pathScale = path[getSizeProp];
       const el = element;
-      const percent = (value - minLimit) / valuesCount;
-      el.style.cssText = '';
+      const pathScale = path[sizeProp];
+
       el.innerHTML = typeof title === 'object'
         ? `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`
         : title;
 
+      const percent = (value - minLimit) / valuesCount;
       const position = isHorizontal
-        ? ((percent * pathScale - el[getSizeProp] / 2) / pathScale) * 100
-        : 100 - ((percent * pathScale + el[getSizeProp] / 2) / pathScale) * 100;
+        ? ((percent * pathScale - el[sizeProp] / 2) / pathScale) * 100
+        : 100 - ((percent * pathScale + el[sizeProp] / 2) / pathScale) * 100;
+
+      el.style.cssText = '';
       el.style[posProp] = `${position}%`;
     };
 
@@ -58,10 +60,10 @@ class ValueNotesView {
         draw(this.valueNotesList[0], singleValue, singleValue);
       }
       if (this.valueNotesList.length === 3) {
-        draw(this.valueNotesList[0], rangeValueMin, rangeValueMin);
-        draw(this.valueNotesList[1], (rangeValueMin + rangeValueMax) / 2,
-          [rangeValueMin, rangeValueMax]);
-        draw(this.valueNotesList[2], rangeValueMax, rangeValueMax);
+        const [first, second, third] = this.valueNotesList;
+        draw(first, rangeValueMin, rangeValueMin);
+        draw(second, (rangeValueMin + rangeValueMax) / 2, [rangeValueMin, rangeValueMax]);
+        draw(third, rangeValueMax, rangeValueMax);
 
         this._checkValueNotesMode(limits, values, direction, valueNotesMode, path);
       }
@@ -77,19 +79,15 @@ class ValueNotesView {
 
     window.requestAnimationFrame(() => {
       if (!display) {
-        this.valueNotesList.forEach((el) => {
-          set(el, false);
-        });
+        this.valueNotesList.forEach((el) => { set(el, false); });
         return;
       }
-      if (this.valueNotesList.length === 1) {
-        set(this.valueNotesList[0], true);
-      }
+      if (this.valueNotesList.length === 1) set(this.valueNotesList[0], true);
       if (this.valueNotesList.length === 3) {
         const values = [true, false, true];
-        const isSep = valueNotesMode.value === valueNotesMode.constants.separateValue;
+        const isSeparate = valueNotesMode.value === valueNotesMode.constants.separateValue;
         this.valueNotesList.forEach((el, i) => {
-          set(el, isSep ? values[i] : !values[i]);
+          set(el, isSeparate ? values[i] : !values[i]);
         });
       }
     });
@@ -105,15 +103,18 @@ class ValueNotesView {
 
   _checkValueNotesMode(limits, values, direction, valueNotesMode, path) {
     if (this.valueNotesList.length < 3) return;
-    const { minLimit, valuesCount } = limits;
-    const { singleValue, rangeValueMin, rangeValueMax } = values;
+
+    const isHorizontal = direction.value === direction.constants.horizontalValue;
+    const sizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const [elFirst,, elSec] = this.valueNotesList;
-    const getSizeProp = direction.value === direction.constants.horizontalValue ? 'offsetWidth' : 'offsetHeight';
-    const sizes = (elFirst[getSizeProp] + elSec[getSizeProp]) / 2;
+    const { minLimit, valuesCount } = limits;
+    const { rangeValueMin, rangeValueMax } = values;
     const calcPos = (el, value) => {
       const percent = (value - minLimit) / valuesCount;
-      return percent * path[getSizeProp] + el[getSizeProp] / 2;
+      return percent * path[sizeProp] + el[sizeProp] / 2;
     };
+
+    const sizes = (elFirst[sizeProp] + elSec[sizeProp]) / 2;
     const distance = calcPos(elSec, rangeValueMax) - calcPos(elFirst, rangeValueMin);
 
     if (distance >= sizes) {
