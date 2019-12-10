@@ -13,4 +13,4 @@ function config(options = {}) {
   };
 }
 
-export default config;
+module.exports = config;

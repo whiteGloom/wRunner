@@ -1,4 +1,4 @@
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 function config(options = {}) {
   const { path } = options;
@@ -26,4 +26,4 @@ function config(options = {}) {
   };
 }
 
-export default config;
+module.exports = config;

@@ -1,5 +1,5 @@
-import HTMLWebpackPlugin from 'html-webpack-plugin';
-import HtmlBeautifyPlugin from 'html-beautify-webpack-plugin';
+const HTMLWebpackPlugin = require('html-webpack-plugin');
+const HtmlBeautifyPlugin = require('html-beautify-webpack-plugin');
 
 function config(options = {}) {
   const { workFolder } = options;
@@ -34,4 +34,4 @@ function config(options = {}) {
   };
 }
 
-export default config;
+module.exports = config;

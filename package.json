@@ -5,10 +5,11 @@
   "homepage": "https://github.com/whiteGloom/wRunner",
   "main": "./prod/wrunner-native.js",
   "scripts": {
-    "build": "babel-node index.js -- build",
-    "build-watch": "babel-node index.js -- build-watch",
-    "build-live": "babel-node index.js -- build-live",
-    "test": "babel-node spec/run.js"
+    "build": "webpack",
+    "build-watch": "webpack --watch",
+    "build-live": "webpack-dev-server",
+    "test": "babel-node spec/run.js",
+    "updBranches": "babel-node updateBranches.js"
   },
   "_moduleAliases": {
     "@helper": "./src/Helper/Helper.js",
