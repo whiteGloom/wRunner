@@ -46,6 +46,9 @@ class SliderExample {
         $el.val(e.data.snapshot);
         $el.blur();
       }
+      if (e.key === 'Enter') {
+        $el.blur();
+      }
     }
 
     const makeTextInput = (controller, data) => {
