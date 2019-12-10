@@ -42,22 +42,19 @@ class SliderExample {
   _addControllerLogics() {
     const handleKeyDown = (e) => {
       const $el = $(e.target);
-      if (e.key === 'Enter') {
-        this._execute(e.data.method, e.data.action ? e.data.action($el.val()) : $el.val())
-        $el.blur();
-      }
       if (e.key === 'Escape') {
         $el.val(e.data.snapshot);
         $el.blur();
       }
     }
 
-    function makeTextInput(controller, data) {
+    const makeTextInput = (controller, data) => {
       controller.on('focus', () => {
         const snapshot = controller.val();
-        controller.on('keydown', { ...data, snapshot }, handleKeyDown);
+        controller.on('keydown', { snapshot }, handleKeyDown);
         controller.on('blur', () => {
-          controller.off('keydown', { ...data, snapshot }, handleKeyDown);
+          controller.off('keydown', { snapshot }, handleKeyDown);
+          this._execute(data.method, data.action ? data.action(controller.val()) : controller.val())
         });
       });
     }
