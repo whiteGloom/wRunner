@@ -80,31 +80,31 @@
   margin-top: -0.35rem;
   margin-left: -0.6rem;
 }
-.wrunner__path_theme_default.wrunner__path {
+.wrunner__track_theme_default.wrunner__track {
   position: absolute;
   background-color: rgba(205,205,205,0.75);
   border-radius: 0.25rem;
   cursor: pointer;
 }
-.wrunner__path_theme_default.wrunner__path_direction_horizontal {
+.wrunner__track_theme_default.wrunner__track_direction_horizontal {
   height: 0.5rem;
   width: 100%;
   top: 2.3rem;
 }
-.wrunner__path_theme_default.wrunner__path_direction_vertical {
+.wrunner__track_theme_default.wrunner__track_direction_vertical {
   height: 100%;
   width: 0.5rem;
   left: 1.2rem;
 }
-.wrunner__path-passed_theme_default.wrunner__path-passed {
+.wrunner__progress_theme_default.wrunner__progress {
   position: absolute;
   background-color: #cb73a4;
   border-radius: 0.25rem;
 }
-.wrunner__path-passed_theme_default.wrunner__path-passed_direction_horizontal {
+.wrunner__progress_theme_default.wrunner__progress_direction_horizontal {
   height: 100%;
 }
-.wrunner__path-passed_theme_default.wrunner__path-passed_direction_vertical {
+.wrunner__progress_theme_default.wrunner__progress_direction_vertical {
   width: 100%;
   bottom: 0;
 }
