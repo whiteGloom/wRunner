@@ -31,7 +31,7 @@ describe('updateDOM method.', () => {
         expect(el.valueNote.parentNode === view.outer).toBeTruthy();
       });
       view.handlersList.forEach((el) => {
-        expect(el.handler.parentNode === view.path).toBeTruthy();
+        expect(el.handler.parentNode === view.track.track).toBeTruthy();
       });
     });
   });
@@ -44,7 +44,7 @@ describe('updateDOM method.', () => {
         expect(el.valueNote.parentNode === view.outer).toBeTruthy();
       });
       view.handlersList.forEach((el) => {
-        expect(el.handler.parentNode === view.path).toBeTruthy();
+        expect(el.handler.parentNode === view.track.track).toBeTruthy();
       });
     });
   });
@@ -58,10 +58,8 @@ describe('applyStyles method.', () => {
         { value: 'horizontal', oldValue: null, className: 'direction' },
       ]);
       const els = [
-        ...[
-          view.mainNode, view.outer,
-          view.path, view.pathPassed.pathPassed,
-        ],
+        ...[view.mainNode, view.outer],
+        ...[view.track.track, view.track.progress],
         ...view.handlersList.map((el) => el.handler),
         ...view.valueNotesList.map((el) => el.valueNote),
         ...view.scale.getElements(),
@@ -81,10 +79,8 @@ describe('applyStyles method.', () => {
         { value: 'someAnother', oldValue: 'horizontal', className: 'direction' },
       ]);
       const els = [
-        ...[
-          view.mainNode, view.outer,
-          view.path, view.pathPassed.pathPassed,
-        ],
+        ...[view.mainNode, view.outer],
+        ...[view.track.track, view.track.progress],
         ...view.handlersList.map((el) => el.handler),
         ...view.valueNotesList.map((el) => el.valueNote),
         ...view.scale.getElements(),
