@@ -154,12 +154,12 @@ class Presenter {
   }
 
   @boundMethod
-  _UIActionMouseDownHandler(event) {
-    this.view.handleMouseDown(event, this.model.getDirection());
+  _trackMousedownEventHandler(event) {
+    this.view.handleUIAction(event, this.model.getDirection());
   }
 
   @boundMethod
-  _UIValueActionHandler(data) {
+  _UIActionPosCalculatedHandler(data) {
     this.model.setNearestValue(data);
   }
 
@@ -196,10 +196,10 @@ class Presenter {
       .addHandler(this._valueNoteModeUpdateEventHandler);
     this.view.windowResizeEvent
       .addHandler(this._windowResizeEventHandler);
-    this.view.UIActionMouseDown
-      .addHandler(this._UIActionMouseDownHandler);
-    this.view.UIValueAction
-      .addHandler(this._UIValueActionHandler);
+    this.view.trackMousedownEvent
+      .addHandler(this._trackMousedownEventHandler);
+    this.view.UIActionPosCalculatedEvent
+      .addHandler(this._UIActionPosCalculatedHandler);
   }
 
   _applyUserEvents(options = {}) {

@@ -1,10 +1,11 @@
 import { boundMethod } from 'autobind-decorator';
 import makeEvent from '@event';
 import helper from '@helper';
-import ValueNoteView from '../ValueNoteView/ValueNoteView';
+
+import TrackView from '../TrackView/TrackView';
 import HandlerView from '../HandlerView/HandlerView';
+import ValueNoteView from '../ValueNoteView/ValueNoteView';
 import ScaleView from '../ScaleView/ScaleView';
-import PathPassedView from '../PathPassedView/PathPassedView';
 
 class View {
   constructor() {
@@ -18,6 +19,14 @@ class View {
 
   append(roots) {
     roots.appendChild(this.mainNode);
+  }
+
+  handleUIAction(event, direction) {
+    this.track.handleUIAction(event, direction, this.handlersList.map((el) => el.handler));
+  }
+
+  generateScaleDivisions(count) {
+    this.scale.generateDivisions(count);
   }
 
   applyValueNotesDisplay(display, valueNotesMode) {
@@ -36,10 +45,6 @@ class View {
     }
   }
 
-  generateScaleDivisions(...args) {
-    this.scale.generateDivisions(...args);
-  }
-
   updateDOM(type) {
     this.handlersList.concat(this.valueNotesList).forEach((el) => {
       el.destroy();
@@ -48,12 +53,12 @@ class View {
     this.valueNotesList.length = 0;
 
     if (type.value === type.constants.singleValue) {
-      this.handlersList.push(new HandlerView(this.path, 'single'));
+      this.handlersList.push(new HandlerView(this.track.track, 'single'));
       this.valueNotesList.push(new ValueNoteView(this.outer, 'single'));
     }
     if (type.value === type.constants.rangeValue) {
-      this.handlersList.push(new HandlerView(this.path, 'min'));
-      this.handlersList.push(new HandlerView(this.path, 'max'));
+      this.handlersList.push(new HandlerView(this.track.track, 'min'));
+      this.handlersList.push(new HandlerView(this.track.track, 'max'));
       this.valueNotesList.push(new ValueNoteView(this.outer, 'min'));
       this.valueNotesList.push(new ValueNoteView(this.outer, 'common'));
       this.valueNotesList.push(new ValueNoteView(this.outer, 'max'));
@@ -69,12 +74,12 @@ class View {
         title || value,
         limits,
         direction,
-        this.path,
+        this.track.track,
       );
     };
 
     window.requestAnimationFrame(() => {
-      this.pathPassed.setPosition(limits, values, direction, type);
+      this.track.setPosition(limits, values, direction, type);
       if (isSingle) {
         this.handlersList[0].setPosition(singleValue, limits, direction);
         setValueNote(this.valueNotesList[0], singleValue);
@@ -96,7 +101,7 @@ class View {
           values,
           direction,
           valueNotesMode,
-          this.path,
+          this.track.track,
           this.valueNoteModeUpdateEvent,
         );
       }
@@ -105,10 +110,8 @@ class View {
 
   applyStyles(styles) {
     const els = [
-      ...[
-        this.mainNode, this.outer,
-        this.path, this.pathPassed.pathPassed,
-      ],
+      ...[this.mainNode, this.outer],
+      ...[this.track.track, this.track.progress],
       ...this.handlersList.map((el) => el.handler),
       ...this.valueNotesList.map((el) => el.valueNote),
       ...this.scale.getElements(),
@@ -127,54 +130,11 @@ class View {
     });
   }
 
-  handleMouseDown(eventDown, direction) {
-    eventDown.preventDefault();
-    if (eventDown.button !== 0) return;
-    let wasDragged = false;
-
-    const calc = (event) => {
-      const isHorizontal = direction.value === direction.constants.horizontalValue;
-      const min = this.path.getBoundingClientRect()[isHorizontal ? 'left' : 'top'];
-      const scale = this.path[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
-      const pos = event[isHorizontal ? 'clientX' : 'clientY'];
-
-      // If the dragging is out of slider's range, the function stops.
-      if (pos < min - 10 || pos > min + scale + 10) return;
-
-      const data = ((pos - min) / scale) * 100;
-      this.UIValueAction.trigger(isHorizontal ? data : 100 - data);
-    };
-
-    const handleMouseMove = (eventMove) => {
-      eventMove.preventDefault();
-      calc(eventMove);
-    };
-
-    const handleMouseMoveOnce = () => { wasDragged = true; };
-
-    const handleMouseUp = (eventUp) => {
-      eventUp.preventDefault();
-      const { target } = eventUp;
-      document.body.removeEventListener('mousemove', handleMouseMove);
-
-      if (wasDragged || this.handlersList.map((el) => el.handler).includes(target)) return;
-
-      calc(eventUp);
-    };
-
-    document.body.addEventListener('mousemove', handleMouseMoveOnce, { once: true });
-    document.body.addEventListener('mousemove', handleMouseMove);
-    document.body.addEventListener('mouseup', handleMouseUp, { once: true });
-  }
-
   _init() {
     this.mainNode = helper.makeEl(['wrunner']);
     this.outer = helper.makeEl(['wrunner__outer']);
-    this.path = helper.makeEl(['wrunner__path']);
 
-    this.outer.appendChild(this.path);
-
-    this.pathPassed = new PathPassedView({ parent: this.path });
+    this.track = new TrackView({ parent: this.outer });
     this.scale = new ScaleView({ parent: this.outer });
 
     window.requestAnimationFrame(() => {
@@ -187,22 +147,16 @@ class View {
     this.windowResizeEvent.trigger(event);
   }
 
-  @boundMethod
-  _handleMouseDown(event) {
-    this.UIActionMouseDown.trigger(event);
-  }
-
   _addEvents() {
-    this.UIActionMouseDown = makeEvent();
-    this.UIValueAction = makeEvent();
     this.windowResizeEvent = makeEvent();
-
     this.valueNoteModeUpdateEvent = makeEvent();
+
+    this.trackMousedownEvent = this.track.mousedownEvent;
+    this.UIActionPosCalculatedEvent = this.track.UIActionPosCalculatedEvent;
   }
 
   _addListenners() {
     window.addEventListener('resize', this._resize);
-    this.path.addEventListener('mousedown', this._handleMouseDown);
   }
 }
 
