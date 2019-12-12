@@ -161,12 +161,11 @@ class SliderExample {
 }
 
 function makeSlider(...args) {
-  const result = new SliderExample(...args);
-  return result;
+  return new SliderExample(...args);
 }
 
 
-function test() {
+function init() {
   makeSlider(0, {}, 'native', document.getElementById('sample0'));
 
   makeSlider(1, {
@@ -188,4 +187,4 @@ function test() {
   }, 'jquery', document.getElementById('sample3'));
 }
 
-document.addEventListener('DOMContentLoaded', test);
+document.addEventListener('DOMContentLoaded', init);

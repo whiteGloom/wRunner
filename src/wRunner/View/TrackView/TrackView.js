@@ -26,16 +26,16 @@ class TrackView {
     const handleMouseUp = (eventUp) => {
       eventUp.preventDefault();
       const { target } = eventUp;
-      document.body.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
 
       if (wasDragged || handlers.includes(target)) return;
 
       this._calculateUIMouseActionPosition(eventUp, direction);
     };
 
-    document.body.addEventListener('mousemove', handleMouseMoveOnce, { once: true });
-    document.body.addEventListener('mousemove', handleMouseMove);
-    document.body.addEventListener('mouseup', handleMouseUp, { once: true });
+    window.addEventListener('mousemove', handleMouseMoveOnce, { once: true });
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp, { once: true });
   }
 
   setPosition(limits, values, direction, type) {
