@@ -74,6 +74,7 @@ describe('setLimits method.', () => {
     beforeEach(() => {
       model.limits.minLimit = 0;
       model.limits.maxLimit = 100;
+      model.setStep(1);
     });
 
     it('Set a sliders limits. Taking { [minLimit]: *new minimum limit*, [maxLimit]: *new maximum limit* }. Returns { minLimit: *minimum limit*, maxLimit: *maximum limit*, valuesCount: *count of integer values* }', () => {
@@ -306,11 +307,11 @@ describe('setNearestValue', () => {
   describe('When sliders type is "single".', () => {
     beforeAll(() => {
       model.setType('single');
-      model.setLimits({ minLimit: 0, maxLimit: 100 });
       model.setStep(1);
     });
 
     beforeEach(() => {
+      model.setLimits({ minLimit: 0, maxLimit: 100 });
       model.setSingleValue(50);
     });
 

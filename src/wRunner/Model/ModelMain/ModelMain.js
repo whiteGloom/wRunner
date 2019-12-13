@@ -44,8 +44,8 @@ class ModelMain {
     let min = helper.isNumber(limits.minLimit) ? +limits.minLimit : this.limits.minLimit;
     let max = helper.isNumber(limits.maxLimit) ? +limits.maxLimit : this.limits.maxLimit;
 
-    if (max - min < this.step) max += this.step;
     if (min > max) [min, max] = [max, min];
+    if (max - min < this.step) max += this.step;
 
     this.limits.minLimit = Math.round((min / this.step)) * this.step;
     this.limits.maxLimit = Math.round((max / this.step)) * this.step;

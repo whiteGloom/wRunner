@@ -26,7 +26,7 @@ class Helper {
     return false;
   }
 
-  makeEl(classes) {
+  makeElement(classes) {
     const el = document.createElement('div');
     classes.forEach((nodeClass) => {
       el.classList.add(nodeClass);

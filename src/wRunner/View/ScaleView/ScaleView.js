@@ -8,30 +8,34 @@ class ScaleView {
     this._init();
   }
 
-  generateDivisions(count) {
-    this.scaleDivisionsList.forEach((el) => {
-      el.remove();
+  updateDivisions(count) {
+    this.scaleDivisionsList.forEach((division) => {
+      division.remove();
     });
     this.scaleDivisionsList.length = 0;
 
     while (this.scaleDivisionsList.length < count) {
-      const el = helper.makeEl(['wrunner__scaleDivision']);
-      this.scaleDivisionsList.push(el);
+      const division = helper.makeElement(['wrunner__scaleDivision']);
+      this.scaleDivisionsList.push(division);
     }
 
-    window.requestAnimationFrame(() => {
-      this.scaleDivisionsList.forEach((el) => {
-        this.scaleDivisionsBlock.appendChild(el);
-      });
-    });
+    this._appendDivisions();
   }
 
   getElements() {
     return [this.scaleDivisionsBlock, ...this.scaleDivisionsList];
   }
 
+  _appendDivisions() {
+    window.requestAnimationFrame(() => {
+      this.scaleDivisionsList.forEach((division) => {
+        this.scaleDivisionsBlock.appendChild(division);
+      });
+    });
+  }
+
   _init() {
-    this.scaleDivisionsBlock = helper.makeEl(['wrunner__scaleDivisionsBlock']);
+    this.scaleDivisionsBlock = helper.makeElement(['wrunner__scaleDivisionsBlock']);
 
     this.parent.appendChild(this.scaleDivisionsBlock);
   }

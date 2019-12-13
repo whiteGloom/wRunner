@@ -12,20 +12,20 @@ class HandlerView {
     this.handler.remove();
   }
 
-  setPosition(value, limits, direction) {
+  setPosition(positionValue, limits, direction) {
     const { minLimit, valuesCount } = limits;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
-    const posProp = isHorizontal ? 'left' : 'top';
+    const positionProperty = isHorizontal ? 'left' : 'top';
     const position = isHorizontal
-      ? ((value - minLimit) / valuesCount) * 100
-      : 100 - ((value - minLimit) / valuesCount) * 100;
+      ? ((positionValue - minLimit) / valuesCount) * 100
+      : 100 - ((positionValue - minLimit) / valuesCount) * 100;
 
     this.handler.style.cssText = '';
-    this.handler.style[posProp] = `${position}%`;
+    this.handler.style[positionProperty] = `${position}%`;
   }
 
   _init() {
-    this.handler = helper.makeEl(['wrunner__handle', `wrunner__handle_type_${this.type}`]);
+    this.handler = helper.makeElement(['wrunner__handle', `wrunner__handle_type_${this.type}`]);
     this.parent.appendChild(this.handler);
   }
 }

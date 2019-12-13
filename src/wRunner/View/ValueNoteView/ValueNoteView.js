@@ -13,50 +13,53 @@ class ValueNoteView {
     this.valueNote.remove();
   }
 
-  setPosition(value, title, limits, direction, path) {
+  setPosition(positionValue, title, limits, direction, track) {
     const { minLimit, valuesCount } = limits;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
-    const sizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
-    const posProp = isHorizontal ? 'left' : 'top';
-    const pathScale = path[sizeProp];
+    const sizeProperty = isHorizontal ? 'offsetWidth' : 'offsetHeight';
+    const positionProperty = isHorizontal ? 'left' : 'top';
+    const trackScale = track[sizeProperty];
 
     this.valueNote.innerHTML = typeof title === 'object'
       ? `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`
       : title;
 
-    const noteHalfScale = this.valueNote[sizeProp] / 2;
-    const globalPosition = ((value - minLimit) / valuesCount) * pathScale;
+    const noteHalfScale = this.valueNote[sizeProperty] / 2;
+    const globalPosition = ((positionValue - minLimit) / valuesCount) * trackScale;
     const position = isHorizontal
-      ? ((globalPosition - noteHalfScale) / pathScale) * 100
-      : 100 - ((globalPosition + noteHalfScale) / pathScale) * 100;
+      ? ((globalPosition - noteHalfScale) / trackScale) * 100
+      : 100 - ((globalPosition + noteHalfScale) / trackScale) * 100;
 
     this.valueNote.style.cssText = '';
-    this.valueNote.style[posProp] = `${position}%`;
+    this.valueNote.style[positionProperty] = `${position}%`;
   }
 
-  applyDisplay(value) {
-    const mark = this.valueNote.classList[0];
-    this.valueNote.classList[value ? 'add' : 'remove'](`${mark}_display_visible`);
-    this.valueNote.classList[value ? 'remove' : 'add'](`${mark}_display_hidden`);
+  applyDisplay(displayValue) {
+    const classMark = this.valueNote.classList[0];
+    this.valueNote.classList[displayValue ? 'add' : 'remove'](`${classMark}_display_visible`);
+    this.valueNote.classList[displayValue ? 'remove' : 'add'](`${classMark}_display_hidden`);
   }
 
   _init() {
-    this.valueNote = helper.makeEl(['wrunner__value-note', `wrunner__value-note_type_${this.type}`]);
+    this.valueNote = helper.makeElement(['wrunner__value-note', `wrunner__value-note_type_${this.type}`]);
     this.parent.appendChild(this.valueNote);
   }
 
-  static checkValueNotesMode(els, limits, values, direction, mode, path, event) {
+  static checkValueNotesMode(notes, limits, values, direction, mode, path, event) {
+    const [noteOne, noteTwo] = notes;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
-    const sizeProp = isHorizontal ? 'offsetWidth' : 'offsetHeight';
+    const sizeProperty = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const { minLimit, valuesCount } = limits;
     const { rangeValueMin, rangeValueMax } = values;
-    const calcPos = (el, value) => {
+
+    const calcPosition = (element, value) => {
       const percent = (value - minLimit) / valuesCount;
-      return percent * path[sizeProp] + el.valueNote[sizeProp] / 2;
+      return percent * path[sizeProperty] + element.valueNote[sizeProperty] / 2;
     };
 
-    const sizes = (els[0].valueNote[sizeProp] + els[1].valueNote[sizeProp]) / 2;
-    const distance = calcPos(els[1], rangeValueMax) - calcPos(els[0], rangeValueMin);
+    const sizes = (noteOne.valueNote[sizeProperty] + noteTwo.valueNote[sizeProperty]) / 2;
+    const distance = calcPosition(noteTwo, rangeValueMax) - calcPosition(noteOne, rangeValueMin);
+
     if (distance >= sizes) {
       if (mode.value !== mode.constants.separateValue) {
         event.trigger(mode.constants.separateValue);

@@ -139,7 +139,7 @@ class Presenter {
 
   @boundMethod
   _scaleDivisionsCountUpdateEventHandler() {
-    this.view.generateScaleDivisions(this.model.getScaleDivisionsCount());
+    this.view.updateScaleDivisions(this.model.getScaleDivisionsCount());
     this.view.applyStyles([this.model.theme, this.model.direction]);
   }
 
@@ -156,11 +156,11 @@ class Presenter {
 
   @boundMethod
   _trackMousedownEventHandler(event) {
-    this.view.handleUIAction(event, this.model.getDirection());
+    this.view.handleMouseAction(event, this.model.getDirection());
   }
 
   @boundMethod
-  _UIActionPosCalculatedHandler(data) {
+  _actionPositionCalculatedHandler(data) {
     this.model.setNearestValue(data);
   }
 
@@ -199,8 +199,8 @@ class Presenter {
       .addHandler(this._windowResizeEventHandler);
     this.view.trackMousedownEvent
       .addHandler(this._trackMousedownEventHandler);
-    this.view.UIActionPosCalculatedEvent
-      .addHandler(this._UIActionPosCalculatedHandler);
+    this.view.actionPositionCalculatedEvent
+      .addHandler(this._actionPositionCalculatedHandler);
   }
 
   _applyUserEvents(options = {}) {

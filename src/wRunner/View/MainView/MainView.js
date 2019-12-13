@@ -21,12 +21,12 @@ class View {
     roots.appendChild(this.mainNode);
   }
 
-  handleUIAction(event, direction) {
-    this.track.handleUIAction(event, direction, this.handlersList.map((el) => el.handler));
+  handleMouseAction(event, direction) {
+    this.track.handleMouseAction(event, direction, this.handlersList.map((el) => el.handler));
   }
 
-  generateScaleDivisions(count) {
-    this.scale.generateDivisions(count);
+  updateScaleDivisions(count) {
+    this.scale.updateDivisions(count);
   }
 
   applyValueNotesDisplay(display, valueNotesMode) {
@@ -68,10 +68,10 @@ class View {
   setPositions(values, limits, direction, type, valueNotesMode) {
     const { singleValue, rangeValueMin, rangeValueMax } = values;
     const isSingle = type.value === type.constants.singleValue;
-    const setValueNote = (el, value, title) => {
-      el.setPosition(
-        value,
-        title || value,
+    const setValueNotePosition = (note, positionValue, title) => {
+      note.setPosition(
+        positionValue,
+        title || positionValue,
         limits,
         direction,
         this.track.track,
@@ -82,18 +82,18 @@ class View {
       this.track.setPosition(limits, values, direction, type);
       if (isSingle) {
         this.handlersList[0].setPosition(singleValue, limits, direction);
-        setValueNote(this.valueNotesList[0], singleValue);
+        setValueNotePosition(this.valueNotesList[0], singleValue);
       }
       if (!isSingle) {
         const [handlerOne, handlerTwo] = this.handlersList;
         const [noteOne, noteSecond, noteThird] = this.valueNotesList;
-        
+
         handlerOne.setPosition(rangeValueMin, limits, direction);
         handlerTwo.setPosition(rangeValueMax, limits, direction);
 
-        setValueNote(noteOne, rangeValueMin);
-        setValueNote(noteThird, rangeValueMax);
-        setValueNote(
+        setValueNotePosition(noteOne, rangeValueMin);
+        setValueNotePosition(noteThird, rangeValueMax);
+        setValueNotePosition(
           noteSecond,
           (rangeValueMax + rangeValueMin) / 2,
           [rangeValueMin, rangeValueMax],
@@ -112,30 +112,30 @@ class View {
   }
 
   applyStyles(styles) {
-    const els = [
+    const elements = [
       ...[this.mainNode, this.outer],
       ...[this.track.track, this.track.progress],
-      ...this.handlersList.map((el) => el.handler),
-      ...this.valueNotesList.map((el) => el.valueNote),
+      ...this.handlersList.map((handlerInstance) => handlerInstance.handler),
+      ...this.valueNotesList.map((valueNoteInstance) => valueNoteInstance.valueNote),
       ...this.scale.getElements(),
     ];
 
     window.requestAnimationFrame(() => {
-      els.forEach((el) => {
+      elements.forEach((element) => {
         Object.values(styles).forEach((style) => {
-          const name = el.classList[0];
+          const name = element.classList[0];
           const { oldValue, value } = style;
 
-          if (oldValue) el.classList.remove(`${name}_${style.className}_${oldValue}`);
-          el.classList.add(`${name}_${style.className}_${value}`);
+          if (oldValue) element.classList.remove(`${name}_${style.className}_${oldValue}`);
+          element.classList.add(`${name}_${style.className}_${value}`);
         });
       });
     });
   }
 
   _init() {
-    this.mainNode = helper.makeEl(['wrunner']);
-    this.outer = helper.makeEl(['wrunner__outer']);
+    this.mainNode = helper.makeElement(['wrunner']);
+    this.outer = helper.makeElement(['wrunner__outer']);
 
     this.track = new TrackView({ parent: this.outer });
     this.scale = new ScaleView({ parent: this.outer });
@@ -155,7 +155,7 @@ class View {
     this.valueNoteModeUpdateEvent = makeEvent();
 
     this.trackMousedownEvent = this.track.mousedownEvent;
-    this.UIActionPosCalculatedEvent = this.track.UIActionPosCalculatedEvent;
+    this.actionPositionCalculatedEvent = this.track.actionPositionCalculatedEvent;
   }
 
   _addListenners() {

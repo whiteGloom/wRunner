@@ -8,10 +8,10 @@ class TrackView {
 
     this._init();
     this._addEvents();
-    this._addListenners();
+    this._addListeners();
   }
 
-  handleUIAction(eventDown, direction, handlers) {
+  handleMouseAction(eventDown, direction, handlers) {
     eventDown.preventDefault();
     if (eventDown.button !== 0) return;
     let wasDragged = false;
@@ -20,7 +20,7 @@ class TrackView {
 
     const handleMouseMove = (eventMove) => {
       eventMove.preventDefault();
-      this._calculateUIMouseActionPosition(eventMove, direction);
+      this._calculateMouseActionPosition(eventMove, direction);
     };
 
     const handleMouseUp = (eventUp) => {
@@ -30,7 +30,7 @@ class TrackView {
 
       if (wasDragged || handlers.includes(target)) return;
 
-      this._calculateUIMouseActionPosition(eventUp, direction);
+      this._calculateMouseActionPosition(eventUp, direction);
     };
 
     window.addEventListener('mousemove', handleMouseMoveOnce, { once: true });
@@ -43,8 +43,8 @@ class TrackView {
     const { singleValue, rangeValueMin, rangeValueMax } = values;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const isSingle = type.value === type.constants.singleValue;
-    const posProp = isHorizontal ? 'left' : 'top';
-    const sizeProp = isHorizontal ? 'width' : 'height';
+    const positionProperty = isHorizontal ? 'left' : 'top';
+    const sizeProperty = isHorizontal ? 'width' : 'height';
     this.progress.style.cssText = '';
 
     let position;
@@ -60,19 +60,19 @@ class TrackView {
       ? ((singleValue - minLimit) / valuesCount) * 100
       : ((rangeValueMax - rangeValueMin) / valuesCount) * 100;
 
-    this.progress.style[sizeProp] = `${size}%`;
-    this.progress.style[posProp] = `${position}%`;
+    this.progress.style[sizeProperty] = `${size}%`;
+    this.progress.style[positionProperty] = `${position}%`;
   }
 
   @boundMethod
-  _calculateUIMouseActionPosition(action, direction) {
+  _calculateMouseActionPosition(action, direction) {
     const isHorizontal = direction.value === direction.constants.horizontalValue;
-    const min = this.track.getBoundingClientRect()[isHorizontal ? 'left' : 'top'];
-    const scale = this.track[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
-    const pos = action[isHorizontal ? 'clientX' : 'clientY'];
+    const leftTrackBorder = this.track.getBoundingClientRect()[isHorizontal ? 'left' : 'top'];
+    const trackScale = this.track[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
+    const position = action[isHorizontal ? 'clientX' : 'clientY'];
 
-    const eventPos = ((pos - min) / scale) * 100;
-    this.UIActionPosCalculatedEvent.trigger(isHorizontal ? eventPos : 100 - eventPos);
+    const eventPosition = ((position - leftTrackBorder) / trackScale) * 100;
+    this.actionPositionCalculatedEvent.trigger(isHorizontal ? eventPosition : 100 - eventPosition);
   }
 
   @boundMethod
@@ -82,16 +82,16 @@ class TrackView {
 
   _addEvents() {
     this.mousedownEvent = makeEvent();
-    this.UIActionPosCalculatedEvent = makeEvent();
+    this.actionPositionCalculatedEvent = makeEvent();
   }
 
-  _addListenners() {
+  _addListeners() {
     this.track.addEventListener('mousedown', this._handleMouseDown);
   }
 
   _init() {
-    this.track = helper.makeEl(['wrunner__track']);
-    this.progress = helper.makeEl(['wrunner__progress']);
+    this.track = helper.makeElement(['wrunner__track']);
+    this.progress = helper.makeElement(['wrunner__progress']);
     this.track.appendChild(this.progress);
     this.parent.appendChild(this.track);
   }

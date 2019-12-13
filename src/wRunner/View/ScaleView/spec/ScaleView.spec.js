@@ -13,9 +13,9 @@ window.requestAnimationFrame = function gag(callback) {
 
 const view = new ScaleView({parent: document.getElementById('root')});
 
-describe('generateDivisions method.', () => {
+describe('updateDivisions method.', () => {
   it('Generate divisions for sliders.', () => {
-    view.generateDivisions(3);
+    view.updateDivisions(3);
 
     expect(view.scaleDivisionsList.length).toEqual(3);
 
