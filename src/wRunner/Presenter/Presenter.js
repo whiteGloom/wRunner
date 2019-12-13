@@ -71,6 +71,7 @@ class Presenter {
 
   @boundMethod
   _stepUpdateEventHandler() {
+    this.model.setLimits();
     this.model.recalculateValue();
   }
 

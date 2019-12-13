@@ -71,9 +71,6 @@ class TrackView {
     const scale = this.track[isHorizontal ? 'offsetWidth' : 'offsetHeight'];
     const pos = action[isHorizontal ? 'clientX' : 'clientY'];
 
-    // If the dragging is out of slider's range, the function stops.
-    if (pos < min - 10 || pos > min + scale + 10) return;
-
     const eventPos = ((pos - min) / scale) * 100;
     this.UIActionPosCalculatedEvent.trigger(isHorizontal ? eventPos : 100 - eventPos);
   }

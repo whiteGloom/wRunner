@@ -12,7 +12,7 @@ class ModelMain {
     this.type = defaults.type;
     this.step = defaults.step;
     this.roots = defaults.roots;
-    this.scaleDivisionsCount = defaults.divisionsCount;
+    this.scaleDivisionsCount = defaults.scaleDivisionsCount;
     this.valueNotesDisplay = defaults.valueNotesDisplay;
     this.valueNotesMode = defaults.valueNotesMode;
     this.theme = defaults.theme;
@@ -39,15 +39,16 @@ class ModelMain {
   }
 
   @boundMethod
-  setLimits(newLimits = {}) {
-    let min = helper.isNumber(newLimits.minLimit) ? +newLimits.minLimit : this.limits.minLimit;
-    let max = helper.isNumber(newLimits.maxLimit) ? +newLimits.maxLimit : this.limits.maxLimit;
+  setLimits(newLimits) {
+    const limits = helper.isObject(newLimits) ? newLimits : {};
+    let min = helper.isNumber(limits.minLimit) ? +limits.minLimit : this.limits.minLimit;
+    let max = helper.isNumber(limits.maxLimit) ? +limits.maxLimit : this.limits.maxLimit;
 
-    if (min === max) max += 1;
+    if (max - min < this.step) max += this.step;
     if (min > max) [min, max] = [max, min];
 
-    this.limits.minLimit = min;
-    this.limits.maxLimit = max;
+    this.limits.minLimit = Math.round((min / this.step)) * this.step;
+    this.limits.maxLimit = Math.round((max / this.step)) * this.step;
     this.limits.valuesCount = this.limits.maxLimit - this.limits.minLimit;
     this.limitsUpdateEvent.trigger({ ...this.limits });
   }

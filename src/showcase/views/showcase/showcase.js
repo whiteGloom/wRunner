@@ -18,12 +18,6 @@ class SliderExample {
     }
   }
 
-  _execute(methodName, value) {
-    this.sliderType === 'native'
-      ? this.slider[methodName](value)
-      : $(this.parent).wRunner(methodName, value);
-  }
-
   _findControllers() {
     this.$controllersHolders = $('.js-sample').eq(this.index).find('.js-sample__parameter-value');
     this.$stepController = this.$controllersHolders.eq(0).find('input');
@@ -39,6 +33,12 @@ class SliderExample {
     this.$scaleDivisionsCountController = this.$controllersHolders.eq(10).find('input');
   }
 
+  _execute(methodName, value) {
+    this.sliderType === 'native'
+      ? this.slider[methodName](value)
+      : $(this.parent).wRunner(methodName, value);
+  }
+
   _addControllerLogics() {
     const handleKeyDown = (e) => {
       const $el = $(e.target);
@@ -49,7 +49,7 @@ class SliderExample {
       if (e.key === 'Enter') {
         $el.blur();
       }
-    }
+    };
 
     const makeTextInput = (controller, data) => {
       controller.on('focus', () => {
@@ -57,10 +57,10 @@ class SliderExample {
         controller.on('keydown', { snapshot }, handleKeyDown);
         controller.on('blur', () => {
           controller.off('keydown', { snapshot }, handleKeyDown);
-          this._execute(data.method, data.action ? data.action(controller.val()) : controller.val())
+          this._execute(data.method, data.action ? data.action(controller.val()) : controller.val());
         });
       });
-    }
+    };
 
     this.$typeControllers[0].on('input', () => {
       this._execute('setType', this.$typeControllers[0].val());
@@ -156,7 +156,7 @@ class SliderExample {
       onScaleDivisionsCountUpdate: (count) => {
         this.$scaleDivisionsCountController.val(count);
       },
-    }
+    };
   }
 }
 
