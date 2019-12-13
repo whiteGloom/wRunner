@@ -85,9 +85,12 @@ class View {
         setValueNote(this.valueNotesList[0], singleValue);
       }
       if (!isSingle) {
+        const [handlerOne, handlerTwo] = this.handlersList;
         const [noteOne, noteSecond, noteThird] = this.valueNotesList;
-        this.handlersList[0].setPosition(rangeValueMin, limits, direction);
-        this.handlersList[1].setPosition(rangeValueMax, limits, direction);
+        
+        handlerOne.setPosition(rangeValueMin, limits, direction);
+        handlerTwo.setPosition(rangeValueMax, limits, direction);
+
         setValueNote(noteOne, rangeValueMin);
         setValueNote(noteThird, rangeValueMax);
         setValueNote(
