@@ -16,10 +16,9 @@ class TrackView {
     if (eventDown.button !== 0) return;
     let wasDragged = false;
 
-    const handleMouseMoveOnce = () => { wasDragged = true; };
-
     const handleMouseMove = (eventMove) => {
       eventMove.preventDefault();
+      if (!wasDragged) wasDragged = true;
       this._calculateMouseActionPosition(eventMove, direction);
     };
 
@@ -33,7 +32,6 @@ class TrackView {
       this._calculateMouseActionPosition(eventUp, direction);
     };
 
-    window.addEventListener('mousemove', handleMouseMoveOnce, { once: true });
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp, { once: true });
   }
