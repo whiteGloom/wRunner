@@ -63,7 +63,7 @@ class View {
     }
   }
 
-  setPositions(values, limits, direction, type, valueNotesMode) {
+  setPositions({values, limits, direction, type, valueNotesMode}) {
     const { singleValue, rangeValueMin, rangeValueMax } = values;
     const isSingle = type.value === type.constants.singleValue;
     const setValueNotePosition = (note, positionValue, title) => {
@@ -131,22 +131,6 @@ class View {
     });
   }
 
-  _init() {
-    this.mainNode = Helper.makeElement(['wrunner']);
-    this.outer = Helper.makeElement(['wrunner__outer']);
-
-    this.track = new TrackView({ parent: this.outer });
-    this.scale = new ScaleView({ parent: this.outer });
-
-    window.requestAnimationFrame(() => {
-      this.mainNode.appendChild(this.outer);
-    });
-
-
-    this._addEvents();
-    this._addListenners();
-  }
-
   @boundMethod
   _resize(event) {
     this.windowResizeEvent.trigger(event);
@@ -162,6 +146,21 @@ class View {
 
   _addListenners() {
     window.addEventListener('resize', this._resize);
+  }
+
+  _init() {
+    this.mainNode = Helper.makeElement(['wrunner']);
+    this.outer = Helper.makeElement(['wrunner__outer']);
+
+    this.track = new TrackView({ parent: this.outer });
+    this.scale = new ScaleView({ parent: this.outer });
+
+    window.requestAnimationFrame(() => {
+      this.mainNode.appendChild(this.outer);
+    });
+
+    this._addEvents();
+    this._addListenners();
   }
 }
 

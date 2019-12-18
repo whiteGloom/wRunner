@@ -12,9 +12,7 @@ class Presenter {
     this.model = model;
     this.view = view;
 
-    this._applyDefaultEvents();
-    this._applyUserEvents(combinedOptions);
-    this._applyUserOptions(combinedOptions);
+    this._init(combinedOptions);
   }
 
   getPublicMethods() {
@@ -53,6 +51,21 @@ class Presenter {
     };
   }
 
+  _updatePositions() {
+    this.view.setPositions({
+      values: this.model.getValues(),
+      limits: this.model.getLimits(),
+      direction: this.model.getDirection(),
+      type: this.model.getType(),
+      valueNotesMode: this.model.getValueNotesMode(),
+    });
+  }
+
+  @boundMethod
+  _valueUpdateEventHandler() {
+    this._updatePositions();
+  }
+
   @boundMethod
   _typeUpdateEventHandler() {
     this.view.updateDOM(this.model.getType());
@@ -76,50 +89,21 @@ class Presenter {
   }
 
   @boundMethod
-  _valueUpdateEventHandler() {
-    this.view.setPositions(
-      this.model.getValues(),
-      this.model.getLimits(),
-      this.model.getDirection(),
-      this.model.getType(),
-      this.model.getValueNotesMode(),
-    );
-  }
-
-  @boundMethod
   _rootsUpdateEventHandler() {
     this.view.append(this.model.roots);
-    this.view.setPositions(
-      this.model.getValues(),
-      this.model.getLimits(),
-      this.model.getDirection(),
-      this.model.getType(),
-      this.model.getValueNotesMode(),
-    );
+    this._updatePositions();
   }
 
   @boundMethod
   _themeUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
-    this.view.setPositions(
-      this.model.getValues(),
-      this.model.getLimits(),
-      this.model.getDirection(),
-      this.model.getType(),
-      this.model.getValueNotesMode(),
-    );
+    this._updatePositions();
   }
 
   @boundMethod
   _directionUpdateEventHandler() {
     this.view.applyStyles([this.model.theme, this.model.direction]);
-    this.view.setPositions(
-      this.model.getValues(),
-      this.model.getLimits(),
-      this.model.getDirection(),
-      this.model.getType(),
-      this.model.getValueNotesMode(),
-    );
+    this._updatePositions();
   }
 
   @boundMethod
@@ -128,13 +112,7 @@ class Presenter {
       this.model.getValueNotesDisplay(),
       this.model.getValueNotesMode(),
     );
-    this.view.setPositions(
-      this.model.getValues(),
-      this.model.getLimits(),
-      this.model.getDirection(),
-      this.model.getType(),
-      this.model.getValueNotesMode(),
-    );
+    this._updatePositions();
   }
 
   @boundMethod
@@ -145,13 +123,7 @@ class Presenter {
 
   @boundMethod
   _windowResizeEventHandler() {
-    this.view.setPositions(
-      this.model.getValues(),
-      this.model.getLimits(),
-      this.model.getDirection(),
-      this.model.getType(),
-      this.model.getValueNotesMode(),
-    );
+    this._updatePositions();
   }
 
   @boundMethod
@@ -251,6 +223,12 @@ class Presenter {
     this.model.setType(type);
     this.model.setSingleValue(singleValue);
     this.model.setRangeValues(rangeValues);
+  }
+
+  _init(options) {
+    this._applyDefaultEvents();
+    this._applyUserEvents(options);
+    this._applyUserOptions(options);
   }
 }
 
