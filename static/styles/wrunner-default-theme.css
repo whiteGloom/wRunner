@@ -24,30 +24,30 @@
   width: 5.5rem;
   min-height: 10rem;
 }
-.wrunner__scaleDivisionsBlock_theme_default.wrunner__scaleDivisionsBlock {
+.wrunner__scale-divisions-block_theme_default.wrunner__scale-divisions-block {
   position: absolute;
   display: flex;
 }
-.wrunner__scaleDivisionsBlock_theme_default.wrunner__scaleDivisionsBlock_direction_horizontal {
+.wrunner__scale-divisions-block_theme_default.wrunner__scale-divisions-block_direction_horizontal {
   top: 3.5rem;
   width: 100%;
   justify-content: space-between;
 }
-.wrunner__scaleDivisionsBlock_theme_default.wrunner__scaleDivisionsBlock_direction_vertical {
+.wrunner__scale-divisions-block_theme_default.wrunner__scale-divisions-block_direction_vertical {
   height: 100%;
   width: 0.5rem;
   left: 0;
   justify-content: space-between;
   flex-direction: column;
 }
-.wrunner__scaleDivision_theme_default.wrunner__scaleDivision {
+.wrunner__scale-division_theme_default.wrunner__scale-division {
   background-color: #cb73a4;
 }
-.wrunner__scaleDivision_theme_default.wrunner__scaleDivision_direction_horizontal {
+.wrunner__scale-division_theme_default.wrunner__scale-division_direction_horizontal {
   height: 0.5rem;
   width: 0.1rem;
 }
-.wrunner__scaleDivision_theme_default.wrunner__scaleDivision_direction_vertical {
+.wrunner__scale-division_theme_default.wrunner__scale-division_direction_vertical {
   height: 0.1rem;
   width: 0.5rem;
 }
