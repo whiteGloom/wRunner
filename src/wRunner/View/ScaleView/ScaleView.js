@@ -15,7 +15,7 @@ class ScaleView {
     this.scaleDivisionsList.length = 0;
 
     while (this.scaleDivisionsList.length < count) {
-      const division = Helper.makeElement(['wrunner__scaleDivision']);
+      const division = Helper.makeElement(['wrunner__scale-division']);
       this.scaleDivisionsList.push(division);
     }
 
@@ -35,7 +35,7 @@ class ScaleView {
   }
 
   _init() {
-    this.scaleDivisionsBlock = Helper.makeElement(['wrunner__scaleDivisionsBlock']);
+    this.scaleDivisionsBlock = Helper.makeElement(['wrunner__scale-divisions-block']);
 
     this.parent.appendChild(this.scaleDivisionsBlock);
   }
