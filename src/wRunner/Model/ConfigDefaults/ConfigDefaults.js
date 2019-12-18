@@ -1,4 +1,4 @@
-class ModelDefaults {
+class ConfigDefaults {
   constructor() {
     this.limits = {
       minLimit: 0,
@@ -40,7 +40,7 @@ class ModelDefaults {
     };
     this.roots = document.body;
     this.scaleDivisionsCount = 5;
-    this.valueNotesDisplay = true;
+    this.isValueNotesDisplayed = true;
     this.step = 1;
   }
 
@@ -61,4 +61,4 @@ class ModelDefaults {
 }
 
 
-export default ModelDefaults;
+export default ConfigDefaults;

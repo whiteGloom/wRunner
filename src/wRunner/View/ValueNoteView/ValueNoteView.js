@@ -34,10 +34,10 @@ class ValueNoteView {
     this.valueNote.style[positionProperty] = `${position}%`;
   }
 
-  applyDisplay(displayValue) {
+  applyDisplay(isDisplayed) {
     const classMark = this.valueNote.classList[0];
-    this.valueNote.classList[displayValue ? 'add' : 'remove'](`${classMark}_display_visible`);
-    this.valueNote.classList[displayValue ? 'remove' : 'add'](`${classMark}_display_hidden`);
+    this.valueNote.classList[isDisplayed ? 'add' : 'remove'](`${classMark}_display_visible`);
+    this.valueNote.classList[isDisplayed ? 'remove' : 'add'](`${classMark}_display_hidden`);
   }
 
   _init() {

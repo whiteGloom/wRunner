@@ -1,14 +1,14 @@
-import ModelModule from './Model/ModelMain/ModelMain';
-import ModelDefaults from './Model/ModelDefaults/ModelDefaults';
-import ViewModule from './View/MainView/MainView';
-import PresenterModule from './Presenter/Presenter';
+import Model from './Model/Model/Model';
+import ModelConfigDefaults from './Model/ConfigDefaults/ConfigDefaults';
+import View from './View/MainView/MainView';
+import Presenter from './Presenter/Presenter';
 
 function makeInstance(userOptions = {}) {
-  const model = new ModelModule();
-  const modelDefaults = new ModelDefaults();
+  const model = new Model();
+  const modelConfigDefaults = new ModelConfigDefaults();
 
-  const view = new ViewModule();
-  const presenter = new PresenterModule({ model, modelDefaults, view, userOptions });
+  const view = new View();
+  const presenter = new Presenter({ model, modelConfigDefaults, view, userOptions });
 
   return presenter.getPublicMethods();
 }

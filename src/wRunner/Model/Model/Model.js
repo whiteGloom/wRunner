@@ -1,24 +1,24 @@
 import { boundMethod } from 'autobind-decorator';
-import ModelDefaults from '../ModelDefaults/ModelDefaults';
+import ConfigDefaults from '../ConfigDefaults/ConfigDefaults';
 
 import makeEvent from '@event';
 import Helper from '@Helper';
 
-class ModelMain {
+class Model {
   constructor() {
-    const defaults = new ModelDefaults();
+    const defaults = new ConfigDefaults();
     this.limits = defaults.limits;
     this.values = defaults.values;
     this.type = defaults.type;
     this.step = defaults.step;
     this.roots = defaults.roots;
     this.scaleDivisionsCount = defaults.scaleDivisionsCount;
-    this.valueNotesDisplay = defaults.valueNotesDisplay;
+    this.isValueNotesDisplayed = defaults.isValueNotesDisplayed;
     this.valueNotesMode = defaults.valueNotesMode;
     this.theme = defaults.theme;
     this.direction = defaults.direction;
 
-    this._addEvents();
+    this._init();
   }
 
   recalculateValue() {
@@ -65,7 +65,7 @@ class ModelMain {
   setSingleValue(newValue) {
     const value = Helper.isNumber(newValue) ? Number(newValue) : this.values.singleValue;
 
-    this.values.singleValue = this._cutToLimits(this._calcStepped(value));
+    this.values.singleValue = this._cutValueToLimits(this._recalculateValueByStep(value));
     this.valueUpdateEvent.trigger({ ...this.values });
   }
 
@@ -81,8 +81,8 @@ class ModelMain {
     if (min === max) max += this.step;
     if (min > max) [min, max] = [max, min];
 
-    this.values.rangeValueMin = this._cutToLimits(this._calcStepped(min));
-    this.values.rangeValueMax = this._cutToLimits(this._calcStepped(max));
+    this.values.rangeValueMin = this._cutValueToLimits(this._recalculateValueByStep(min));
+    this.values.rangeValueMax = this._cutValueToLimits(this._recalculateValueByStep(max));
     this.valueUpdateEvent.trigger({ ...this.values });
   }
 
@@ -139,9 +139,9 @@ class ModelMain {
   @boundMethod
   setValueNotesDisplay(newValue) {
     if (typeof newValue !== 'boolean') return;
-    this.valueNotesDisplay = newValue;
+    this.isValueNotesDisplayed = newValue;
 
-    this.valueNotesDisplayUpdateEvent.trigger(this.valueNotesDisplay);
+    this.valueNotesDisplayUpdateEvent.trigger(this.isValueNotesDisplayed);
   }
 
   @boundMethod
@@ -204,7 +204,7 @@ class ModelMain {
 
   @boundMethod
   getValueNotesDisplay() {
-    return this.valueNotesDisplay;
+    return this.isValueNotesDisplayed;
   }
 
   @boundMethod
@@ -220,6 +220,16 @@ class ModelMain {
     return this.scaleDivisionsCount;
   }
 
+  _cutValueToLimits(value) {
+    if (value < this.limits.minLimit) return this.limits.minLimit;
+    if (value > this.limits.maxLimit) return this.limits.maxLimit;
+    return value;
+  }
+
+  _recalculateValueByStep(value) {
+    return Math.round((value) / this.step) * this.step;
+  }
+
   _addEvents() {
     this.valueUpdateEvent = makeEvent();
     this.limitsUpdateEvent = makeEvent();
@@ -233,15 +243,9 @@ class ModelMain {
     this.scaleDivisionsCountUpdateEvent = makeEvent();
   }
 
-  _cutToLimits(value) {
-    if (value < this.limits.minLimit) return this.limits.minLimit;
-    if (value > this.limits.maxLimit) return this.limits.maxLimit;
-    return value;
-  }
-
-  _calcStepped(value) {
-    return Math.round((value) / this.step) * this.step;
+  _init() {
+    this._addEvents();
   }
 }
 
-export default ModelMain;
+export default Model;

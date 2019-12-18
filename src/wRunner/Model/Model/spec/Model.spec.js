@@ -1,5 +1,5 @@
 import Helper from '@Helper';
-import ModelModule from '../ModelMain';
+import Model from '../Model';
 
 const jsdom = require('jsdom');
 
@@ -8,7 +8,7 @@ const { window } = (new JSDOM('<body><div id="root"></div></body>', { runScripts
 global.window = window;
 global.document = window.document;
 
-const model = new ModelModule();
+const model = new Model();
 
 describe('getLimits method.', () => {
   it('Returns { minLimit: *minimum limit*, maxLimit: *maximum limit*, valuesCount: *count of integer values* }', () => {

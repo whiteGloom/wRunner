@@ -7,8 +7,6 @@ class TrackView {
     this.parent = parent;
 
     this._init();
-    this._addEvents();
-    this._addListeners();
   }
 
   handleMouseAction(eventDown, direction, handlers) {
@@ -92,6 +90,9 @@ class TrackView {
     this.progress = Helper.makeElement(['wrunner__progress']);
     this.track.appendChild(this.progress);
     this.parent.appendChild(this.track);
+
+    this._addEvents();
+    this._addListeners();
   }
 }
 

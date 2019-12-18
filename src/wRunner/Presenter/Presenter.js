@@ -4,10 +4,10 @@ class Presenter {
   constructor({
     userOptions,
     model,
-    modelDefaults,
+    modelConfigDefaults,
     view,
   }) {
-    const combinedOptions = { ...modelDefaults.getOptionsPresets(), ...userOptions };
+    const combinedOptions = { ...modelConfigDefaults.getOptionsPresets(), ...userOptions };
 
     this.model = model;
     this.view = view;
@@ -165,7 +165,7 @@ class Presenter {
   }
 
   @boundMethod
-  _valueNoteModeUpdateEventHandler(value) {
+  _valueNotesModeUpdateEventHandler(value) {
     this.model.setValueNotesMode(value);
     this.view.applyValueNotesDisplay(
       this.model.getValueNotesDisplay(),
@@ -193,8 +193,8 @@ class Presenter {
     this.model.scaleDivisionsCountUpdateEvent
       .addHandler(this._scaleDivisionsCountUpdateEventHandler);
 
-    this.view.valueNoteModeUpdateEvent
-      .addHandler(this._valueNoteModeUpdateEventHandler);
+    this.view.valueNotesModeUpdateEvent
+      .addHandler(this._valueNotesModeUpdateEventHandler);
     this.view.windowResizeEvent
       .addHandler(this._windowResizeEventHandler);
     this.view.trackMousedownEvent

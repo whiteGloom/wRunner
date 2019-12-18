@@ -13,8 +13,6 @@ class View {
     this.valueNotesList = [];
 
     this._init();
-    this._addEvents();
-    this._addListenners();
   }
 
   append(roots) {
@@ -29,8 +27,8 @@ class View {
     this.scale.updateDivisions(count);
   }
 
-  applyValueNotesDisplay(display, valueNotesMode) {
-    if (!display) {
+  applyValueNotesDisplay(isDisplayed, valueNotesMode) {
+    if (!isDisplayed) {
       this.valueNotesList.forEach((el) => { el.applyDisplay(false); });
       return;
     }
@@ -105,7 +103,7 @@ class View {
           direction,
           valueNotesMode,
           this.track.track,
-          this.valueNoteModeUpdateEvent,
+          this.valueNotesModeUpdateEvent,
         );
       }
     });
@@ -143,6 +141,10 @@ class View {
     window.requestAnimationFrame(() => {
       this.mainNode.appendChild(this.outer);
     });
+
+
+    this._addEvents();
+    this._addListenners();
   }
 
   @boundMethod
@@ -152,7 +154,7 @@ class View {
 
   _addEvents() {
     this.windowResizeEvent = makeEvent();
-    this.valueNoteModeUpdateEvent = makeEvent();
+    this.valueNotesModeUpdateEvent = makeEvent();
 
     this.trackMousedownEvent = this.track.mousedownEvent;
     this.actionPositionCalculatedEvent = this.track.actionPositionCalculatedEvent;
