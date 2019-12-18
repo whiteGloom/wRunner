@@ -1,4 +1,4 @@
-import helper from '@helper';
+import Helper from '@Helper';
 import ScaleView from '../ScaleView';
 
 const jsdom = require('jsdom');
@@ -20,7 +20,7 @@ describe('updateDivisions method.', () => {
     expect(view.scaleDivisionsList.length).toEqual(3);
 
     for (let i = 0; i < view.scaleDivisionsList.length; i += 1) {
-      expect(helper.isDOMEl(view.scaleDivisionsList[i])).toBeTruthy();
+      expect(Helper.isDOMEl(view.scaleDivisionsList[i])).toBeTruthy();
       expect(view.scaleDivisionsList[i].parentNode).toEqual(view.scaleDivisionsBlock);
     }
   });

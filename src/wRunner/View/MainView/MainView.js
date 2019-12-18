@@ -1,6 +1,6 @@
 import { boundMethod } from 'autobind-decorator';
 import makeEvent from '@event';
-import helper from '@helper';
+import Helper from '@Helper';
 
 import TrackView from '../TrackView/TrackView';
 import HandlerView from '../HandlerView/HandlerView';
@@ -134,8 +134,8 @@ class View {
   }
 
   _init() {
-    this.mainNode = helper.makeElement(['wrunner']);
-    this.outer = helper.makeElement(['wrunner__outer']);
+    this.mainNode = Helper.makeElement(['wrunner']);
+    this.outer = Helper.makeElement(['wrunner__outer']);
 
     this.track = new TrackView({ parent: this.outer });
     this.scale = new ScaleView({ parent: this.outer });

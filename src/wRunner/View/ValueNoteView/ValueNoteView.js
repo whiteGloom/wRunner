@@ -1,5 +1,5 @@
 import makeEvent from '@event';
-import helper from '@helper';
+import Helper from '@Helper';
 
 class ValueNoteView {
   constructor(parent, type) {
@@ -41,7 +41,7 @@ class ValueNoteView {
   }
 
   _init() {
-    this.valueNote = helper.makeElement(['wrunner__value-note', `wrunner__value-note_type_${this.type}`]);
+    this.valueNote = Helper.makeElement(['wrunner__value-note', `wrunner__value-note_type_${this.type}`]);
     this.parent.appendChild(this.valueNote);
   }
 

@@ -1,4 +1,4 @@
-import helper from '@helper';
+import Helper from '@Helper';
 
 class HandlerView {
   constructor(parent, type) {
@@ -25,7 +25,7 @@ class HandlerView {
   }
 
   _init() {
-    this.handler = helper.makeElement(['wrunner__handle', `wrunner__handle_type_${this.type}`]);
+    this.handler = Helper.makeElement(['wrunner__handle', `wrunner__handle_type_${this.type}`]);
     this.parent.appendChild(this.handler);
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "wrunner",
-  "version": "1.13.3",
+  "version": "1.13.4",
   "description": "A slider plugin.",
   "homepage": "https://github.com/whiteGloom/wRunner",
   "main": "./prod/wrunner-native.js",
@@ -12,7 +12,7 @@
     "updBranches": "babel-node updateBranches.js"
   },
   "_moduleAliases": {
-    "@helper": "./src/Helper/Helper.js",
+    "@Helper": "./src/Helper/Helper.js",
     "@event": "./src/event.js",
     "@wrunner-native": "./src/wrunner-native",
     "@wrunner-jq": "./src/wrunner-jquery"

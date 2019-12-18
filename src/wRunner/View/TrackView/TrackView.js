@@ -1,5 +1,5 @@
 import { boundMethod } from 'autobind-decorator';
-import helper from '@helper';
+import Helper from '@Helper';
 import makeEvent from '@event';
 
 class TrackView {
@@ -88,8 +88,8 @@ class TrackView {
   }
 
   _init() {
-    this.track = helper.makeElement(['wrunner__track']);
-    this.progress = helper.makeElement(['wrunner__progress']);
+    this.track = Helper.makeElement(['wrunner__track']);
+    this.progress = Helper.makeElement(['wrunner__progress']);
     this.track.appendChild(this.progress);
     this.parent.appendChild(this.track);
   }

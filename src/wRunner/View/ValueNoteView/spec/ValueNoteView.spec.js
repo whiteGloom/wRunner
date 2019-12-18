@@ -1,4 +1,3 @@
-import helper from '@helper';
 import ValueNoteView from '../ValueNoteView';
 
 const jsdom = require('jsdom');

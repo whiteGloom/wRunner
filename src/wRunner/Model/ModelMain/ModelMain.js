@@ -2,7 +2,7 @@ import { boundMethod } from 'autobind-decorator';
 import ModelDefaults from '../ModelDefaults/ModelDefaults';
 
 import makeEvent from '@event';
-import helper from '@helper';
+import Helper from '@Helper';
 
 class ModelMain {
   constructor() {
@@ -40,9 +40,9 @@ class ModelMain {
 
   @boundMethod
   setLimits(newLimits) {
-    const limits = helper.isObject(newLimits) ? newLimits : {};
-    let min = helper.isNumber(limits.minLimit) ? +limits.minLimit : this.limits.minLimit;
-    let max = helper.isNumber(limits.maxLimit) ? +limits.maxLimit : this.limits.maxLimit;
+    const limits = Helper.isObject(newLimits) ? newLimits : {};
+    let min = Helper.isNumber(limits.minLimit) ? Number(limits.minLimit) : this.limits.minLimit;
+    let max = Helper.isNumber(limits.maxLimit) ? Number(limits.maxLimit) : this.limits.maxLimit;
 
     if (min > max) [min, max] = [max, min];
     if (max - min < this.step) max += this.step;
@@ -55,15 +55,15 @@ class ModelMain {
 
   @boundMethod
   setStep(newStep) {
-    if (!helper.isNumber(newStep) || +newStep < 1) return;
-    this.step = +newStep;
+    if (!Helper.isNumber(newStep) || newStep < 1) return;
+    this.step = Number(newStep);
 
     this.stepUpdateEvent.trigger(this.step);
   }
 
   @boundMethod
   setSingleValue(newValue) {
-    const value = helper.isNumber(newValue) ? +newValue : this.values.singleValue;
+    const value = Helper.isNumber(newValue) ? Number(newValue) : this.values.singleValue;
 
     this.values.singleValue = this._cutToLimits(this._calcStepped(value));
     this.valueUpdateEvent.trigger({ ...this.values });
@@ -71,12 +71,12 @@ class ModelMain {
 
   @boundMethod
   setRangeValues(newValues) {
-    const values = helper.isObject(newValues) ? newValues : {};
-    let min = helper.isNumber(values.minValue)
-      ? +values.minValue
+    const values = Helper.isObject(newValues) ? newValues : {};
+    let min = Helper.isNumber(values.minValue)
+      ? Number(values.minValue)
       : this.values.rangeValueMin;
-    let max = helper.isNumber(values.maxValue)
-      ? +values.maxValue
+    let max = Helper.isNumber(values.maxValue)
+      ? Number(values.maxValue)
       : this.values.rangeValueMax;
     if (min === max) max += this.step;
     if (min > max) [min, max] = [max, min];
@@ -88,12 +88,12 @@ class ModelMain {
 
   @boundMethod
   setNearestValue(newValue, viaPercents) {
-    if (!helper.isNumber(newValue)) return;
+    if (!Helper.isNumber(newValue)) return;
 
     const isSingle = this.type.value === this.type.constants.singleValue;
     const value = viaPercents === false
-      ? Math.round(+newValue)
-      : Math.round(this.limits.minLimit + (+newValue / 100) * this.limits.valuesCount);
+      ? Math.round(Number(newValue))
+      : Math.round(this.limits.minLimit + (Number(newValue) / 100) * this.limits.valuesCount);
 
     if (isSingle) this.setSingleValue(value);
 
@@ -108,7 +108,7 @@ class ModelMain {
 
   @boundMethod
   setRoots(newRoots) {
-    if (!helper.isDOMEl(newRoots)) return;
+    if (!Helper.isDOMEl(newRoots)) return;
     this.roots = newRoots;
 
     this.rootsUpdateEvent.trigger(this.roots);
@@ -153,11 +153,11 @@ class ModelMain {
 
   @boundMethod
   setScaleDivisionsCount(newCount) {
-    if (!helper.isNumber(newCount) || newCount < 0) return;
+    if (!Helper.isNumber(newCount) || newCount < 0) return;
 
-    this.scaleDivisionsCount = Math.round(+newCount) !== 1
-      ? Math.round(+newCount)
-      : Math.round(+newCount) + 1;
+    this.scaleDivisionsCount = Math.round(Number(newCount)) !== 1
+      ? Math.round(Number(newCount))
+      : Math.round(Number(newCount)) + 1;
     this.scaleDivisionsCountUpdateEvent.trigger(this.scaleDivisionsCount);
   }
 

@@ -1,4 +1,4 @@
-import helper from '@helper';
+import Helper from '@Helper';
 import MainView from '../MainView';
 
 const jsdom = require('jsdom');

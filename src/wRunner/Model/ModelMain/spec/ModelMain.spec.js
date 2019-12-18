@@ -1,4 +1,4 @@
-import helper from '@helper';
+import Helper from '@Helper';
 import ModelModule from '../ModelMain';
 
 const jsdom = require('jsdom');
@@ -14,15 +14,15 @@ describe('getLimits method.', () => {
   it('Returns { minLimit: *minimum limit*, maxLimit: *maximum limit*, valuesCount: *count of integer values* }', () => {
     const result = model.getLimits();
 
-    expect(helper.isObject(result)).toBeTruthy();
+    expect(Helper.isObject(result)).toBeTruthy();
 
-    expect(helper.isNumber(result.minLimit)).toBeTruthy();
+    expect(Helper.isNumber(result.minLimit)).toBeTruthy();
     expect(result.minLimit).toEqual(model.limits.minLimit);
 
-    expect(helper.isNumber(result.maxLimit)).toBeTruthy();
+    expect(Helper.isNumber(result.maxLimit)).toBeTruthy();
     expect(result.maxLimit).toEqual(model.limits.maxLimit);
 
-    expect(helper.isNumber(result.valuesCount)).toBeTruthy();
+    expect(Helper.isNumber(result.valuesCount)).toBeTruthy();
     expect(result.valuesCount).toEqual(result.maxLimit - result.minLimit);
     expect(result.valuesCount).toEqual(model.limits.valuesCount);
   });
@@ -33,11 +33,11 @@ describe('getValues method.', () => {
     model.setLimits({ minLimit: 0, maxLimit: 100 });
     const result = model.getValues();
 
-    expect(helper.isObject(result)).toBeTruthy();
+    expect(Helper.isObject(result)).toBeTruthy();
 
-    expect(helper.isNumber(result.singleValue)).toBeTruthy();
-    expect(helper.isNumber(result.rangeValueMin)).toBeTruthy();
-    expect(helper.isNumber(result.rangeValueMax)).toBeTruthy();
+    expect(Helper.isNumber(result.singleValue)).toBeTruthy();
+    expect(Helper.isNumber(result.rangeValueMin)).toBeTruthy();
+    expect(Helper.isNumber(result.rangeValueMax)).toBeTruthy();
 
     expect(result.singleValue).toEqual(model.values.singleValue);
     expect(result.rangeValueMin).toEqual(model.values.rangeValueMin);
@@ -49,7 +49,7 @@ describe('getStep method.', () => {
   it('Returns sliders step size.', () => {
     const result = model.getStep();
 
-    expect(helper.isNumber(result)).toBeTruthy();
+    expect(Helper.isNumber(result)).toBeTruthy();
   });
 });
 
@@ -57,12 +57,12 @@ describe('getType method.', () => {
   it('Returns { value: *sliders type*, constants: *object - list of reserved type names* }.', () => {
     const result = model.getType();
 
-    expect(helper.isObject(result)).toBeTruthy();
+    expect(Helper.isObject(result)).toBeTruthy();
 
     expect(typeof result.value === 'string').toBeTruthy();
     expect(result.value).toEqual(model.type.value);
 
-    expect(helper.isObject(result.constants)).toBeTruthy();
+    expect(Helper.isObject(result.constants)).toBeTruthy();
     expect(result.constants).toEqual(model.type.constants);
   });
 });
@@ -529,7 +529,7 @@ describe('getRoots method.', () => {
   it('Returns sliders roots.', () => {
     const result = model.getRoots();
 
-    expect(helper.isDOMEl(result)).toBeTruthy();
+    expect(Helper.isDOMEl(result)).toBeTruthy();
   });
 });
 

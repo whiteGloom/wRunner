@@ -1,4 +1,4 @@
-import helper from '@helper';
+import Helper from '@Helper';
 
 class ScaleView {
   constructor({ parent }) {
@@ -15,7 +15,7 @@ class ScaleView {
     this.scaleDivisionsList.length = 0;
 
     while (this.scaleDivisionsList.length < count) {
-      const division = helper.makeElement(['wrunner__scaleDivision']);
+      const division = Helper.makeElement(['wrunner__scaleDivision']);
       this.scaleDivisionsList.push(division);
     }
 
@@ -35,7 +35,7 @@ class ScaleView {
   }
 
   _init() {
-    this.scaleDivisionsBlock = helper.makeElement(['wrunner__scaleDivisionsBlock']);
+    this.scaleDivisionsBlock = Helper.makeElement(['wrunner__scaleDivisionsBlock']);
 
     this.parent.appendChild(this.scaleDivisionsBlock);
   }

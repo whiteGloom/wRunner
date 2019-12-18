@@ -1,32 +1,34 @@
 class Helper {
-  isNumber(value) {
-    if ((typeof value === 'number' || typeof value === 'string') && isFinite(+value)) return true;
+  static isNumber(value) {
+    if ((typeof value === 'number' || typeof value === 'string') && Number.isFinite(Number(value))) {
+      return true;
+    }
 
     return false;
   }
 
-  isObject(el) {
+  static isObject(el) {
     if (typeof el === 'object' && el !== null) return true;
 
     return false;
   }
 
-  toNumber(value) {
-    if (this.isNumber(value)) return +value;
+  static toNumber(value) {
+    if (Helper.isNumber(value)) return +value;
 
     return false;
   }
 
-  isDOMEl(el) {
-    if (this.isObject(el)
+  static isDOMEl(el) {
+    if (Helper.isObject(el)
       && el.constructor !== Object
-      && this.isNumber(el.nodeType)
+      && Helper.isNumber(el.nodeType)
       && +el.nodeType === 1) return true;
 
     return false;
   }
 
-  makeElement(classes) {
+  static makeElement(classes) {
     const el = document.createElement('div');
     classes.forEach((nodeClass) => {
       el.classList.add(nodeClass);
@@ -35,4 +37,4 @@ class Helper {
   }
 }
 
-export default new Helper();
+export default Helper;
