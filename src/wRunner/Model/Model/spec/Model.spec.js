@@ -68,7 +68,6 @@ describe('getType method.', () => {
 });
 
 
-
 describe('setLimits method.', () => {
   describe('Normal values.', () => {
     beforeEach(() => {

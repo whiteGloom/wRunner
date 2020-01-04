@@ -220,6 +220,42 @@ class Model {
     return this.scaleDivisionsCount;
   }
 
+  getPublicMethods() {
+    return {
+      setType: this.setType,
+      setLimits: this.setLimits,
+      setStep: this.setStep,
+      setSingleValue: this.setSingleValue,
+      setRangeValues: this.setRangeValues,
+      setNearestValue: this.setNearestValue,
+      setRoots: this.setRoots,
+      setTheme: this.setTheme,
+      setDirection: this.setDirection,
+      setValueNotesDisplay: this.setValueNotesDisplay,
+      setScaleDivisionsCount: this.setScaleDivisionsCount,
+
+      getType: this.getType,
+      getLimits: this.getLimits,
+      getStep: this.getStep,
+      getValues: this.getValues,
+      getRoots: this.getRoots,
+      getTheme: this.getTheme,
+      getDirection: this.getDirection,
+      getValueNotesDisplay: this.getValueNotesDisplay,
+      getScaleDivisionsCount: this.getScaleDivisionsCount,
+
+      onThemeUpdate: this.themeUpdateEvent.addHandler,
+      onDirectionUpdate: this.directionUpdateEvent.addHandler,
+      onValueNotesDisplayUpdate: this.valueNotesDisplayUpdateEvent.addHandler,
+      onRootsUpdate: this.rootsUpdateEvent.addHandler,
+      onScaleDivisionsCountUpdate: this.scaleDivisionsCountUpdateEvent.addHandler,
+      onValueUpdate: this.valueUpdateEvent.addHandler,
+      onStepUpdate: this.stepUpdateEvent.addHandler,
+      onLimitsUpdate: this.limitsUpdateEvent.addHandler,
+      onTypeUpdate: this.typeUpdateEvent.addHandler,
+    };
+  }
+
   _cutValueToLimits(value) {
     if (value < this.limits.minLimit) return this.limits.minLimit;
     if (value > this.limits.maxLimit) return this.limits.maxLimit;

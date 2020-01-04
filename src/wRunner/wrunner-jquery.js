@@ -22,9 +22,7 @@ import makeInstance from './makeInstance';
         if (result !== undefined) isMethodReturnResult = true;
       });
 
-      if (!isMethodReturnResult) {
-        return this;
-      } else {
+      if (isMethodReturnResult.length) {
         if (results.length === 1) return results[0];
         if (results.length > 1) return results;
       }

@@ -16,39 +16,7 @@ class Presenter {
   }
 
   getPublicMethods() {
-    return {
-      setType: this.model.setType,
-      setLimits: this.model.setLimits,
-      setStep: this.model.setStep,
-      setSingleValue: this.model.setSingleValue,
-      setRangeValues: this.model.setRangeValues,
-      setNearestValue: this.model.setNearestValue,
-      setRoots: this.model.setRoots,
-      setTheme: this.model.setTheme,
-      setDirection: this.model.setDirection,
-      setValueNotesDisplay: this.model.setValueNotesDisplay,
-      setScaleDivisionsCount: this.model.setScaleDivisionsCount,
-
-      getType: this.model.getType,
-      getLimits: this.model.getLimits,
-      getStep: this.model.getStep,
-      getValues: this.model.getValues,
-      getRoots: this.model.getRoots,
-      getTheme: this.model.getTheme,
-      getDirection: this.model.getDirection,
-      getValueNotesDisplay: this.model.getValueNotesDisplay,
-      getScaleDivisionsCount: this.model.getScaleDivisionsCount,
-
-      onThemeUpdate: this.model.themeUpdateEvent.addHandler,
-      onDirectionUpdate: this.model.directionUpdateEvent.addHandler,
-      onValueNotesDisplayUpdate: this.model.valueNotesDisplayUpdateEvent.addHandler,
-      onRootsUpdate: this.model.rootsUpdateEvent.addHandler,
-      onScaleDivisionsCountUpdate: this.model.scaleDivisionsCountUpdateEvent.addHandler,
-      onValueUpdate: this.model.valueUpdateEvent.addHandler,
-      onStepUpdate: this.model.stepUpdateEvent.addHandler,
-      onLimitsUpdate: this.model.limitsUpdateEvent.addHandler,
-      onTypeUpdate: this.model.typeUpdateEvent.addHandler,
-    };
+    return this.model.getPublicMethods();
   }
 
   _updatePositions() {
@@ -145,7 +113,7 @@ class Presenter {
     );
   }
 
-  _applyDefaultEvents() {
+  _applyDefaultEventHandlers() {
     this.model.typeUpdateEvent
       .addHandler(this._typeUpdateEventHandler);
     this.model.limitsUpdateEvent
@@ -226,7 +194,7 @@ class Presenter {
   }
 
   _init(options) {
-    this._applyDefaultEvents();
+    this._applyDefaultEventHandlers();
     this._applyUserEvents(options);
     this._applyUserOptions(options);
   }

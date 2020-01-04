@@ -11,7 +11,7 @@ window.requestAnimationFrame = function gag(callback) {
   callback();
 };
 
-const view = new ScaleView({parent: document.getElementById('root')});
+const view = new ScaleView({ parent: document.getElementById('root') });
 
 describe('updateDivisions method.', () => {
   it('Generate divisions for sliders.', () => {

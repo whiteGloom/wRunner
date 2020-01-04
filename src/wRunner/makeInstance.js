@@ -8,7 +8,12 @@ function makeInstance(userOptions = {}) {
   const modelConfigDefaults = new ModelConfigDefaults();
 
   const view = new View();
-  const presenter = new Presenter({ model, modelConfigDefaults, view, userOptions });
+  const presenter = new Presenter({
+    model,
+    modelConfigDefaults,
+    view,
+    userOptions,
+  });
 
   return presenter.getPublicMethods();
 }

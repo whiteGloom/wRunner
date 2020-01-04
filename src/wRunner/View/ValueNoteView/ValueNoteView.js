@@ -1,4 +1,3 @@
-import makeEvent from '@event';
 import Helper from '@Helper';
 
 class ValueNoteView {
@@ -46,7 +45,7 @@ class ValueNoteView {
   }
 
   static checkValueNotesMode(notes, limits, values, direction, mode, path, event) {
-    const [noteFirst, noteSecond] = notes;
+    const [noteMin, noteMax] = notes;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const sizeProperty = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const { minLimit, valuesCount } = limits;
@@ -57,8 +56,8 @@ class ValueNoteView {
       return percent * path[sizeProperty] + element.valueNote[sizeProperty] / 2;
     };
 
-    const sizes = (noteFirst.valueNote[sizeProperty] + noteSecond.valueNote[sizeProperty]) / 2;
-    const distance = calcPosition(noteSecond, rangeValueMax) - calcPosition(noteFirst, rangeValueMin);
+    const sizes = (noteMin.valueNote[sizeProperty] + noteMax.valueNote[sizeProperty]) / 2;
+    const distance = calcPosition(noteMax, rangeValueMax) - calcPosition(noteMin, rangeValueMin);
 
     if (distance >= sizes) {
       if (mode.value !== mode.constants.separateValue) {

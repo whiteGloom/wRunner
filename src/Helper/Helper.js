@@ -23,7 +23,7 @@ class Helper {
     if (Helper.isObject(el)
       && el.constructor !== Object
       && Helper.isNumber(el.nodeType)
-      && +el.nodeType === 1) return true;
+      && Number(el.nodeType) === 1) return true;
 
     return false;
   }

@@ -63,7 +63,13 @@ class View {
     }
   }
 
-  setPositions({values, limits, direction, type, valueNotesMode}) {
+  setPositions({
+    values,
+    limits,
+    direction,
+    type,
+    valueNotesMode,
+  }) {
     const { singleValue, rangeValueMin, rangeValueMax } = values;
     const isSingle = type.value === type.constants.singleValue;
     const setValueNotePosition = (note, positionValue, title) => {

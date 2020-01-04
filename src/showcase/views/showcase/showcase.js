@@ -12,9 +12,16 @@ class SliderExample {
 
   _makeSlider() {
     if (this.sliderType === 'native') {
-      this.slider = window.wRunner({ ...this._getDefaultOptions(), ...this.userOptions, roots: this.parent });
+      this.slider = window.wRunner({
+        ...this._getDefaultOptions(),
+        ...this.userOptions,
+        roots: this.parent,
+      });
     } else {
-      this.slider = $(this.parent).wRunner({ ...this._getDefaultOptions(), ...this.userOptions });
+      this.slider = $(this.parent).wRunner({
+        ...this._getDefaultOptions(),
+        ...this.userOptions,
+      });
     }
   }
 
@@ -57,7 +64,9 @@ class SliderExample {
         controller.on('keydown', { snapshot }, handleKeyDown);
         controller.on('blur', () => {
           controller.off('keydown', { snapshot }, handleKeyDown);
-          this._execute(data.method, data.action ? data.action(controller.val()) : controller.val());
+          this._execute(data.method, data.action
+            ? data.action(controller.val())
+            : controller.val());
         });
       });
     };
@@ -134,9 +143,9 @@ class SliderExample {
       onRootsUpdate: (roots) => {
         const $roots = $(roots);
         let str = '';
-        for (let i = 0; i < $roots[0].classList.length; i += 1) {
-          str += `.${$roots[0].classList[i]}`;
-        }
+        $roots[0].classList.forEach((clss) => {
+          str += `.${clss}`;
+        });
         this.$rootsController.val(str);
       },
 
