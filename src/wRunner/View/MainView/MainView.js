@@ -147,7 +147,7 @@ class View {
     this.actionPositionCalculatedEvent = this.track.actionPositionCalculatedEvent;
   }
 
-  _addListenners() {
+  _addListeners() {
     window.addEventListener('resize', this._resize);
   }
 
@@ -163,7 +163,7 @@ class View {
     });
 
     this._addEvents();
-    this._addListenners();
+    this._addListeners();
   }
 }
 

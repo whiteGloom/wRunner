@@ -27,7 +27,7 @@ class ValueNoteView {
     if (typeof title === 'object') {
       const [titleMin, titleMax] = title;
       this.addTextNode(titleMin);
-      this.addTextNode(isHorizontal ? ` - ` : '|');
+      this.addTextNode(isHorizontal ? ' - ' : '|');
       this.addTextNode(titleMax);
     } else {
       this.addTextNode(title);

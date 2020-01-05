@@ -9,25 +9,25 @@ class TrackView {
     this._init();
   }
 
-  handleMouseAction(eventDown, direction, handlers) {
-    eventDown.preventDefault();
-    if (eventDown.button !== 0) return;
+  handleMouseAction(mouseDownEvent, direction, handlers) {
+    mouseDownEvent.preventDefault();
+    if (mouseDownEvent.button !== 0) return;
     let wasDragged = false;
 
-    const handleMouseMove = (eventMove) => {
-      eventMove.preventDefault();
+    const handleMouseMove = (mouseMoveEvent) => {
+      mouseMoveEvent.preventDefault();
       if (!wasDragged) wasDragged = true;
-      this._calculateMouseActionPosition(eventMove, direction);
+      this._calculateMouseActionPosition(mouseMoveEvent, direction);
     };
 
-    const handleMouseUp = (eventUp) => {
-      eventUp.preventDefault();
-      const { target } = eventUp;
+    const handleMouseUp = (mouseUpEvent) => {
+      mouseUpEvent.preventDefault();
+      const { target } = mouseUpEvent;
       window.removeEventListener('mousemove', handleMouseMove);
 
       if (wasDragged || handlers.includes(target)) return;
 
-      this._calculateMouseActionPosition(eventUp, direction);
+      this._calculateMouseActionPosition(mouseUpEvent, direction);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
