@@ -119,6 +119,8 @@
   font-weight: 900;
   cursor: default;
   transition: 0.2s opacity;
+  display: flex;
+  white-space: pre;
 }
 .wrunner__value-note_theme_default.wrunner__value-note::after {
   content: '';
@@ -131,6 +133,7 @@
   top: 0;
   min-width: 1.5rem;
   border-radius: 0.8rem 0.3rem 0.8rem 0.3rem;
+  justify-content: center;
 }
 .wrunner__value-note_theme_default.wrunner__value-note_direction_horizontal::after {
   left: 50%;
@@ -143,6 +146,8 @@
   left: 2.4rem;
   min-width: 1.5rem;
   border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
+  justify-content: center;
+  flex-direction: column;
 }
 .wrunner__value-note_theme_default.wrunner__value-note_direction_vertical::after {
   top: 50%;
