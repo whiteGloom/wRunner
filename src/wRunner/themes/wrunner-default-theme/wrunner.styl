@@ -137,6 +137,8 @@ theme = "_theme_default"
       font-weight: 900
       cursor: default
       transition: .2s opacity
+      display: flex
+      white-space: pre
       
       &::after
         content: ''
@@ -150,6 +152,7 @@ theme = "_theme_default"
           top: 0
           min-width: 1.5rem
           border-radius: .8rem .3rem .8rem .3rem
+          justify-content: center
           
           &::after
             left: 50%
@@ -162,6 +165,8 @@ theme = "_theme_default"
           left: 2.4rem
           min-width: 1.5rem
           border-radius: .3rem .7rem .3rem .7rem
+          justify-content: center
+          flex-direction: column
           
           &::after
             top: 50%

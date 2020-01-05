@@ -191,7 +191,7 @@ function init() {
   }, 'jquery', document.getElementById('sample2'));
 
   makeSlider(3, {
-    valueNotesDisplay: false,
+    isValueNotesDisplayed: false,
     scaleDivisionsCount: 0,
   }, 'jquery', document.getElementById('sample3'));
 }

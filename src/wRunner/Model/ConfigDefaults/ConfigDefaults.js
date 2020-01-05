@@ -55,7 +55,7 @@ class ConfigDefaults {
       theme: this.theme.value,
       direction: this.direction.value,
       scaleDivisionsCount: this.scaleDivisionsCount,
-      valueNotesDisplay: this.valueNotesDisplay,
+      isValueNotesDisplayed: this.isValueNotesDisplayed,
     };
   }
 }

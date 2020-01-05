@@ -178,11 +178,11 @@ class Presenter {
       theme,
       direction,
       scaleDivisionsCount,
-      valueNotesDisplay,
+      isValueNotesDisplayed,
     } = options;
 
     this.model.setRoots(roots);
-    this.model.setValueNotesDisplay(valueNotesDisplay);
+    this.model.setValueNotesDisplay(isValueNotesDisplayed);
     this.model.setScaleDivisionsCount(scaleDivisionsCount);
     this.model.setTheme(theme);
     this.model.setDirection(direction);

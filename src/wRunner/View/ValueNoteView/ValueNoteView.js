@@ -12,22 +12,32 @@ class ValueNoteView {
     this.valueNote.remove();
   }
 
-  setPosition(positionValue, title, limits, direction, track) {
+  update(options = {}) {
+    const {
+      positionValue, title,
+      limits, direction, track,
+    } = options;
     const { minLimit, valuesCount } = limits;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const sizeProperty = isHorizontal ? 'offsetWidth' : 'offsetHeight';
     const positionProperty = isHorizontal ? 'left' : 'top';
     const trackScale = track[sizeProperty];
 
-    this.valueNote.innerHTML = typeof title === 'object'
-      ? `${title[0]}${isHorizontal ? ' - ' : '<br>|<br>'}${title[1]}`
-      : title;
+    this.clearTextNodes();
+    if (typeof title === 'object') {
+      const [titleMin, titleMax] = title;
+      this.addTextNode(titleMin);
+      this.addTextNode(isHorizontal ? ` - ` : '|');
+      this.addTextNode(titleMax);
+    } else {
+      this.addTextNode(title);
+    }
 
-    const noteHalfScale = this.valueNote[sizeProperty] / 2;
+    const noteHalfSize = this.valueNote[sizeProperty] / 2;
     const globalPosition = ((positionValue - minLimit) / valuesCount) * trackScale;
     const position = isHorizontal
-      ? ((globalPosition - noteHalfScale) / trackScale) * 100
-      : 100 - ((globalPosition + noteHalfScale) / trackScale) * 100;
+      ? ((globalPosition - noteHalfSize) / trackScale) * 100
+      : 100 - ((globalPosition + noteHalfSize) / trackScale) * 100;
 
     this.valueNote.style.cssText = '';
     this.valueNote.style[positionProperty] = `${position}%`;
@@ -39,21 +49,36 @@ class ValueNoteView {
     this.valueNote.classList[isDisplayed ? 'remove' : 'add'](`${classMark}_display_hidden`);
   }
 
+  addTextNode(str) {
+    const node = document.createElement("DIV");
+    node.innerHTML = str;
+    this.valueNote.appendChild(node);
+  }
+
+  clearTextNodes() {
+    this.valueNote.innerHTML = "";
+  }
+
   _init() {
     this.valueNote = Helper.makeElement(['wrunner__value-note', `wrunner__value-note_type_${this.type}`]);
     this.parent.appendChild(this.valueNote);
   }
 
-  static checkValueNotesMode(notes, limits, values, direction, mode, path, event) {
+  static checkValueNotesMode(options = {}) {
+    const {
+      notes, limits,
+      values, direction,
+      mode, track, event,
+    } = options;
+    const { minLimit, valuesCount } = limits;
+    const { rangeValueMin, rangeValueMax } = values;
     const [noteMin, noteMax] = notes;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
     const sizeProperty = isHorizontal ? 'offsetWidth' : 'offsetHeight';
-    const { minLimit, valuesCount } = limits;
-    const { rangeValueMin, rangeValueMax } = values;
 
     const calcPosition = (element, value) => {
       const percent = (value - minLimit) / valuesCount;
-      return percent * path[sizeProperty] + element.valueNote[sizeProperty] / 2;
+      return percent * track[sizeProperty] + element.valueNote[sizeProperty] / 2;
     };
 
     const sizes = (noteMin.valueNote[sizeProperty] + noteMax.valueNote[sizeProperty]) / 2;

@@ -72,45 +72,42 @@ class View {
   }) {
     const { singleValue, rangeValueMin, rangeValueMax } = values;
     const isSingle = type.value === type.constants.singleValue;
-    const setValueNotePosition = (note, positionValue, title) => {
-      note.setPosition(
+    const updateValueNote = (note, positionValue, title) => {
+      note.update({
+        title: title || positionValue,
+        track: this.track.track,
         positionValue,
-        title || positionValue,
         limits,
         direction,
-        this.track.track,
-      );
+      });
     };
 
     window.requestAnimationFrame(() => {
       this.track.setPosition(limits, values, direction, type);
       if (isSingle) {
         this.handlersList[0].setPosition(singleValue, limits, direction);
-        setValueNotePosition(this.valueNotesList[0], singleValue);
+        updateValueNote(this.valueNotesList[0], singleValue);
       }
       if (!isSingle) {
-        const [handlerFirst, handlerSecond] = this.handlersList;
-        const [noteFirst, noteSecond, noteThird] = this.valueNotesList;
+        const [handlerMin, handlerMax] = this.handlersList;
+        const [noteMin, noteCommon, noteMax] = this.valueNotesList;
+        const noteCommonPosition = (rangeValueMax + rangeValueMin) / 2;
 
-        handlerFirst.setPosition(rangeValueMin, limits, direction);
-        handlerSecond.setPosition(rangeValueMax, limits, direction);
+        handlerMin.setPosition(rangeValueMin, limits, direction);
+        handlerMax.setPosition(rangeValueMax, limits, direction);
 
-        setValueNotePosition(noteFirst, rangeValueMin);
-        setValueNotePosition(noteThird, rangeValueMax);
-        setValueNotePosition(
-          noteSecond,
-          (rangeValueMax + rangeValueMin) / 2,
-          [rangeValueMin, rangeValueMax],
-        );
-        ValueNoteView.checkValueNotesMode(
-          [noteFirst, noteThird],
+        updateValueNote(noteMin, rangeValueMin);
+        updateValueNote(noteMax, rangeValueMax);
+        updateValueNote(noteCommon, noteCommonPosition, [rangeValueMin, rangeValueMax]);
+        ValueNoteView.checkValueNotesMode({
+          event: this.valueNotesModeUpdateEvent,
+          notes: [noteMin, noteMax],
+          track: this.track.track,
+          mode: valueNotesMode,
+          direction,
           limits,
           values,
-          direction,
-          valueNotesMode,
-          this.track.track,
-          this.valueNotesModeUpdateEvent,
-        );
+        });
       }
     });
   }
