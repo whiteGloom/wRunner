@@ -1,3 +1,6 @@
+# Alert:
+**The README is outdated! It will be updated in a short time.**
+
 # Languages
 * **[Русский](#шо-ита-ru "Русский")**
 
