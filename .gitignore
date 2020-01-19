@@ -3,3 +3,4 @@ docs
 prod
 Favicon-project.psd
 .idea
+.nyc_output
