@@ -8,6 +8,8 @@ module.exports = {
     "jasmine": true
   },
   "rules": {
-  	"no-underscore-dangle": "off" 
+  	"no-underscore-dangle": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-unresolved": 0
   }
 };

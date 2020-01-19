@@ -799,13 +799,13 @@ describe('setValueNotesDisplay method.', () => {
     it('Taking true.', () => {
       model.setValueNotesDisplay(true);
 
-      expect(model.valueNotesDisplay).toBeTruthy();
+      expect(model.isValueNotesDisplayed).toBeTruthy();
     });
 
     it('Taking false.', () => {
       model.setValueNotesDisplay(false);
 
-      expect(model.valueNotesDisplay).toBeFalsy();
+      expect(model.isValueNotesDisplayed).toBeFalsy();
     });
   });
 
@@ -817,43 +817,43 @@ describe('setValueNotesDisplay method.', () => {
     it('Taking "123".', () => {
       model.setValueNotesDisplay('123');
 
-      expect(model.valueNotesDisplay).toEqual(true);
+      expect(model.isValueNotesDisplayed).toEqual(true);
     });
 
     it('Taking 123.', () => {
       model.setValueNotesDisplay(123);
 
-      expect(model.valueNotesDisplay).toEqual(true);
+      expect(model.isValueNotesDisplayed).toEqual(true);
     });
 
     it('Taking {}.', () => {
       model.setValueNotesDisplay({});
 
-      expect(model.valueNotesDisplay).toEqual(true);
+      expect(model.isValueNotesDisplayed).toEqual(true);
     });
 
     it('Taking [].', () => {
       model.setValueNotesDisplay([]);
 
-      expect(model.valueNotesDisplay).toEqual(true);
+      expect(model.isValueNotesDisplayed).toEqual(true);
     });
 
     it('Taking undefined.', () => {
       model.setValueNotesDisplay(undefined);
 
-      expect(model.valueNotesDisplay).toEqual(true);
+      expect(model.isValueNotesDisplayed).toEqual(true);
     });
 
     it('Taking null.', () => {
       model.setValueNotesDisplay(null);
 
-      expect(model.valueNotesDisplay).toEqual(true);
+      expect(model.isValueNotesDisplayed).toEqual(true);
     });
 
     it('Taking NaN.', () => {
       model.setValueNotesDisplay(NaN);
 
-      expect(model.valueNotesDisplay).toEqual(true);
+      expect(model.isValueNotesDisplayed).toEqual(true);
     });
   });
 });
@@ -863,6 +863,6 @@ describe('getValueNotesDisplay method.', () => {
   it('Returns display of value note.', () => {
     const result = model.getValueNotesDisplay();
 
-    expect(result).toEqual(model.valueNotesDisplay);
+    expect(result).toEqual(model.isValueNotesDisplayed);
   });
 });

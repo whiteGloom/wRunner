@@ -145,10 +145,14 @@ class Presenter {
 
   _applyUserEvents(options = {}) {
     const {
-      onTypeUpdate, onLimitsUpdate,
-      onStepUpdate, onValueUpdate,
-      onRootsUpdate, onThemeUpdate,
-      onDirectionUpdate, onScaleDivisionsCountUpdate,
+      onTypeUpdate,
+      onLimitsUpdate,
+      onStepUpdate,
+      onValueUpdate,
+      onRootsUpdate,
+      onThemeUpdate,
+      onDirectionUpdate,
+      onScaleDivisionsCountUpdate,
       onValueNotesDisplayUpdate,
     } = options;
 
@@ -165,10 +169,14 @@ class Presenter {
 
   _applyUserOptions(options = {}) {
     const {
-      type, limits,
-      step, singleValue,
-      rangeValues, roots,
-      theme, direction,
+      type,
+      limits,
+      step,
+      singleValue,
+      rangeValues,
+      roots,
+      theme,
+      direction,
       scaleDivisionsCount,
       isValueNotesDisplayed,
     } = options;

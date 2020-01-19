@@ -14,8 +14,11 @@ class ValueNoteView {
 
   update(options = {}) {
     const {
-      positionValue, title,
-      limits, direction, track,
+      positionValue,
+      title,
+      limits,
+      direction,
+      track,
     } = options;
     const { minLimit, valuesCount } = limits;
     const isHorizontal = direction.value === direction.constants.horizontalValue;
@@ -50,13 +53,13 @@ class ValueNoteView {
   }
 
   addTextNode(str) {
-    const node = document.createElement("DIV");
+    const node = document.createElement('DIV');
     node.innerHTML = str;
     this.valueNote.appendChild(node);
   }
 
   clearTextNodes() {
-    this.valueNote.innerHTML = "";
+    this.valueNote.innerHTML = '';
   }
 
   _init() {
@@ -66,9 +69,13 @@ class ValueNoteView {
 
   static checkValueNotesMode(options = {}) {
     const {
-      notes, limits,
-      values, direction,
-      mode, track, event,
+      notes,
+      limits,
+      values,
+      direction,
+      mode,
+      track,
+      event,
     } = options;
     const { minLimit, valuesCount } = limits;
     const { rangeValueMin, rangeValueMax } = values;

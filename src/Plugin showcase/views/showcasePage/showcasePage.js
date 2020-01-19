@@ -41,9 +41,11 @@ class SliderExample {
   }
 
   _execute(methodName, value) {
-    this.sliderType === 'native'
-      ? this.slider[methodName](value)
-      : $(this.parent).wRunner(methodName, value);
+    if (this.sliderType === 'native') {
+      this.slider[methodName](value);
+    } else {
+      $(this.parent).wRunner(methodName, value);
+    }
   }
 
   _addControllerLogics() {
