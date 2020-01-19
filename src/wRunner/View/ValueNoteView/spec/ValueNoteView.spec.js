@@ -28,3 +28,33 @@ describe('applyDisplay method.', () => {
     });
   });
 });
+
+describe('destroy method.', () => {
+  it('Removes dom el.', ()=>{
+     view.destroy();
+     expect(view.valueNote.parentNode !== document.getElementById('root')).toBe(true);
+  });
+});
+
+describe('addTextNode method.', () => {
+  it('Add div with text to valueNote.', ()=>{
+     view.addTextNode('some');
+     expect(view.valueNote.getElementsByTagName('DIV').length > 0).toBe(true);
+     expect(view.valueNote.getElementsByTagName('DIV')[0].innerHTML === 'some').toBe(true);
+  });
+});
+
+describe('clearTextNodes method.', () => {
+  it('Removes content of valueNote domEl.', ()=>{
+     view.clearTextNodes('some');
+     expect(view.valueNote.innerHTML === '').toBe(true);
+  });
+});
+
+describe('_init method.', () => {
+  it('Removes content of valueNote domEl.', ()=>{
+     view._init();
+     expect(view.valueNote.classList.length > 0).toBe(true);
+     expect(view.valueNote.parentNode === view.parent).toBe(true);
+  });
+});

@@ -9,6 +9,7 @@
     "build-watch": "webpack --watch",
     "build-live": "webpack-dev-server",
     "test": "babel-node spec/run.js",
+    "coverage": "nyc npm run test",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src",
     "updBranches": "babel-node updateBranches.js"
@@ -57,7 +58,8 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "nyc": "^15.0.0"
   },
   "contributors": [
     "whiteGloom <karabin.m@yandex.ru> (https://github.com/whiteGloom)"
