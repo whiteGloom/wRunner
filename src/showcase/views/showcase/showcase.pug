@@ -18,7 +18,38 @@ html
         link(rel="stylesheet" type="text/css" href="static/styles/styles.css")
         link(rel="stylesheet" type="text/css" href="static/styles/wrunner-default-theme.css")
     body
-        +content({ data: ["Js native", "Js native", "jQuery", "jQuery"] })
+        +content({
+            data: [
+                {
+                    title: "Js native",
+                    sampleOptions: {}
+                },
+                {
+                    title: "Js native",
+                    sampleOptions: {
+                        direction: 'vertical',
+                        step: 5,
+                        type: 'range',
+                    }
+                },
+                {
+                    title: "jQuery", 
+                    sampleOptions: {
+                        scaleDivisionsCount: 16,
+                        direction: 'vertical',
+                        step: 5,
+                        type: 'range',
+                    }
+                },
+                {
+                    title: "jQuery",
+                    sampleOptions: {
+                        isValueNotesDisplayed: false,
+                        scaleDivisionsCount: 0,
+                    }
+                }
+            ]
+        })
         script(src="./scripts/vendors.js")
         script(src="./scripts/scripts.js")
         script(src="./scripts/wrunner-native.js")

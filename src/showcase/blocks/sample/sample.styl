@@ -14,14 +14,26 @@
     width: 50%
     min-height: 5rem
     padding: .25rem
+  
+  &__group
+    margin-top: .5rem
+    border-radius: .7rem
+    border: 3px solid white
+  
+  &__group-legend
+    color: white
+    text-shadow: 3px 5px 4px rgba(0,0,0,0.6)
 
   &__parameter
-    margin-top: 1rem
+    margin-top: 0
     display: flex
     justify-content: space-between
+    border: 1px solid rgba(255,255,255,.5)
+    padding: .5rem
+    border-radius: .7rem
 
-    &:first-child
-      margin-top: 0
+    & ~ &
+      margin-top: .5rem
 
   &__parameter-name
     font-style: normal
@@ -30,6 +42,9 @@
     flex-shrink: 0
     margin-right: 1rem
     text-shadow: 3px 5px 4px rgba(0,0,0,.6)
+    
+    &::after
+      content: ":"
 
   &__parameter-value
     width: 100%

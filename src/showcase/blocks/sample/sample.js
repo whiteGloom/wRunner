@@ -1,9 +1,12 @@
-class SliderExample {
-  constructor(index, userOptions, sliderType, parent) {
+import defaults from "./defaults";
+
+class SliderSample {
+  constructor(index, userOptions, sliderType, $parent) {
+    this.$parent = $parent;
     this.userOptions = userOptions;
     this.sliderType = sliderType;
-    this.parent = parent;
     this.index = index;
+    this.userC
 
     this._findControllers();
     this._makeSlider();
@@ -15,10 +18,10 @@ class SliderExample {
       this.slider = window.wRunner({
         ...this._getDefaultOptions(),
         ...this.userOptions,
-        roots: this.parent,
+        roots: this.$parent[0],
       });
     } else {
-      this.slider = $(this.parent).wRunner({
+      this.slider = $(this.$parent).wRunner({
         ...this._getDefaultOptions(),
         ...this.userOptions,
       });
@@ -43,7 +46,7 @@ class SliderExample {
   _execute(methodName, value) {
     this.sliderType === 'native'
       ? this.slider[methodName](value)
-      : $(this.parent).wRunner(methodName, value);
+      : this.$parent.wRunner(methodName, value);
   }
 
   _addControllerLogics() {
@@ -169,31 +172,6 @@ class SliderExample {
   }
 }
 
-function makeSlider(...args) {
-  return new SliderExample(...args);
-}
+$('')
 
-
-function init() {
-  makeSlider(0, {}, 'native', document.getElementById('sample0'));
-
-  makeSlider(1, {
-    direction: 'vertical',
-    step: 5,
-    type: 'range',
-  }, 'native', document.getElementById('sample1'));
-
-  makeSlider(2, {
-    scaleDivisionsCount: 16,
-    direction: 'vertical',
-    step: 5,
-    type: 'range',
-  }, 'jquery', document.getElementById('sample2'));
-
-  makeSlider(3, {
-    isValueNotesDisplayed: false,
-    scaleDivisionsCount: 0,
-  }, 'jquery', document.getElementById('sample3'));
-}
-
-document.addEventListener('DOMContentLoaded', init);
+export default SliderSample;
