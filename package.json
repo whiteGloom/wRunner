@@ -58,7 +58,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "nyc": "^15.0.0"
   },
   "contributors": [
