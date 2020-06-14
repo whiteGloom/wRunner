@@ -1,6 +1,6 @@
 {
   "name": "wrunner",
-  "version": "1.13.11",
+  "version": "2.0.0",
   "description": "A slider plugin.",
   "homepage": "https://github.com/whiteGloom/wRunner",
   "main": "./prod/wrunner-native.js",
@@ -9,9 +9,7 @@
     "build-watch": "webpack --watch",
     "build-live": "webpack-dev-server",
     "test": "babel-node spec/run.js",
-    "coverage": "nyc npm run test",
     "lint": "eslint src",
-    "lint-fix": "eslint --fix src",
     "updBranches": "babel-node updateBranches.js"
   },
   "_moduleAliases": {
@@ -48,18 +46,17 @@
     "module-alias": "^2.2.2",
     "pug": "^2.0.3",
     "pug-loader": "^2.4.0",
-    "remove-service-outputs-plugin": "github:whiteGloom/remove-service-outputs-plugin#v0.1.4",
+    "remove-service-outputs-plugin": "github:whiteGloom/remove-service-outputs-plugin",
     "style-loader": "^0.23.1",
     "stylus": "^0.54.5",
     "stylus-relative-loader": "^4.0.0",
     "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.8.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "jquery": "^3.4.1",
-    "nyc": "^15.0.0"
+    "jquery": "^3.4.1"
   },
   "contributors": [
     "whiteGloom <karabin.m@yandex.ru> (https://github.com/whiteGloom)"
