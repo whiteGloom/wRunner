@@ -1,6 +1,3 @@
 node_modules
-docs
-prod
-Favicon-project.psd
 .idea
-.nyc_output
+dist

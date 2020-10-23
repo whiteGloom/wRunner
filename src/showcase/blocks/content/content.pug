@@ -1,9 +1,0 @@
-include ../sample/sample
-
-mixin content(options = {})
-    -
-        const {data = []} = options;
-    .content
-        for title, index in data
-            .content__el
-                +sample({title, id: "sample" + index})
