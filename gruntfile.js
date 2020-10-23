@@ -11,6 +11,7 @@ module.exports = function(grunt) {
        * Put here your concurrent scripts
        * Example: "web: ['scripts', 'styles']"
        */
+      web: ['scripts', 'styles']
     },
     clean: { // Be careful when setting this script.
       options: {
@@ -32,7 +33,7 @@ module.exports = function(grunt) {
    * For the first add the needed tasks into "build" task
    * Example: "grunt.registerTask('build', ['clean', 'concurrent:web']);"
    */
-  grunt.registerTask('build', ['clean']);
+  grunt.registerTask('build', ['clean', 'concurrent:web']);
   grunt.registerTask('watcher', ['build', 'watch']);
 
   grunt.registerTask('default', ['build']);
