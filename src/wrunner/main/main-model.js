@@ -68,9 +68,9 @@ class MainModel extends EventDispatcher {
     let nextValue = min;
     let i = 0;
     while (nextValue < max) {
-      i += 1;
-
       this._numericValuesArray.push(nextValue);
+
+      i += 1;
       nextValue = min + (this._numericStep * i);
     }
 
@@ -127,7 +127,7 @@ class MainModel extends EventDispatcher {
    * @public
    */
   setCustomValues(newCustomValues) {
-    if (Array.isArray(newCustomValues)) {
+    if (!Array.isArray(newCustomValues)) {
       return;
     }
 
