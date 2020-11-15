@@ -5,21 +5,6 @@ import EventDispatcher from '../abstracts/event-dispatcher';
  * @extends {EventDispatcher}
  */
 class MainModel extends EventDispatcher {
-  /** @enum {number} */
-  static VALUES_TYPES = {
-    NUMERIC: 0,
-    CUSTOM: 1
-  };
-
-  /** @const {number} */
-  static DEFAULT_NUMERIC_STEP = 1;
-
-  /** @const {MainModel.VALUES_TYPES} */
-  static DEFAULT_VALUES_TYPE = MainModel.VALUES_TYPES.NUMERIC;
-
-  /** @const {MainModel.VALUES_TYPES} */
-  static DEFAULT_NUMERIC_VALUES_LIMITS = MainModel.VALUES_TYPES.NUMERIC;
-
   constructor() {
     super();
 
@@ -57,11 +42,19 @@ class MainModel extends EventDispatcher {
     };
 
     /**
+     * @type {number}
+     * @protected
+     */
+    this._handlersCount = MainModel.DEFAULT_HANDLERS_COUNT;
+
+    /**
      * @type {Array<numbers>}
      * @protected
      */
     this._handlers = [];
   }
+
+  /* Private methods */
 
   /**
    * @protected
@@ -94,6 +87,24 @@ class MainModel extends EventDispatcher {
       case MainModel.VALUES_TYPES.CUSTOM:
         return this._customValuesArray;
     }
+  }
+
+  /* Public methods */
+
+  /**
+   * @param {number} newCount
+   * @protected
+   */
+  setHandlersCount(newCount) {
+    if (typeof newCount !== 'number') {
+      return;
+    }
+
+    if (newCount < 1) {
+      return;
+    }
+
+    this._handlersCount = newCount;
   }
 
   /**
@@ -152,6 +163,26 @@ class MainModel extends EventDispatcher {
 
     this._customValuesArray = newCustomValues;
   }
+
+  /* Static properties */
+
+  /** @enum {number} */
+  static VALUES_TYPES = {
+    NUMERIC: 0,
+    CUSTOM: 1
+  };
+
+  /** @const {number} */
+  static DEFAULT_NUMERIC_STEP = 1;
+
+  /** @const {number} */
+  static DEFAULT_HANDLERS_COUNT = 1;
+
+  /** @const {MainModel.VALUES_TYPES} */
+  static DEFAULT_VALUES_TYPE = MainModel.VALUES_TYPES.NUMERIC;
+
+  /** @const {MainModel.VALUES_TYPES} */
+  static DEFAULT_NUMERIC_VALUES_LIMITS = MainModel.VALUES_TYPES.NUMERIC;
 }
 
 export default MainModel;
