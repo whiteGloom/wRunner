@@ -32,7 +32,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "eslint": "^7.11.0",
-    "eslint-config-wgl-main": "github:whiteGloom/eslint-config-wgl-main",
+    "eslint-config-wgl-main": "github:whiteGloom/eslint-config-wgl-main#semver:^1.0.0",
     "grunt": "^1.3.0",
     "grunt-concurrent": "^3.0.0",
     "grunt-contrib-clean": "^2.0.0",
