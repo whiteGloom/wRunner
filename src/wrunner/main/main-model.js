@@ -55,6 +55,12 @@ class MainModel extends EventDispatcher {
       min: 0,
       max: 100
     };
+
+    /**
+     * @type {Array<numbers>}
+     * @protected
+     */
+    this._handlers = [];
   }
 
   /**
@@ -75,6 +81,19 @@ class MainModel extends EventDispatcher {
     }
 
     this._numericValuesArray.push(max);
+  }
+
+  /**
+   * @returns {Array}
+   * @protected
+   */
+  _getValuesArray() {
+    switch (this._valuesType) {
+      case MainModel.VALUES_TYPES.NUMERIC:
+        return this._numericValuesArray;
+      case MainModel.VALUES_TYPES.CUSTOM:
+        return this._customValuesArray;
+    }
   }
 
   /**
