@@ -46,7 +46,7 @@
     "jsdom": "^15.1.1",
     "mini-css-extract-plugin": "^0.5.0",
     "module-alias": "^2.2.2",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "pug-loader": "^2.4.0",
     "remove-service-outputs-plugin": "github:whiteGloom/remove-service-outputs-plugin#v0.1.4",
     "style-loader": "^0.23.1",
