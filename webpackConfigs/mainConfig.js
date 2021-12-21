@@ -1,10 +1,10 @@
 const RemoveServiceOutputsPlugin = require('remove-service-outputs-plugin').default;
+const merge = require('webpack-merge');
 const aliasesConfig = require('./vendors/aliasesConfig');
 const babelConfig = require('./vendors/babelConfig');
 const stylusConfig = require('./vendors/stylusConfig');
 const staticsConfig = require('./vendors/staticsConfig');
 const devserverConfig = require('./vendors/devserverConfig');
-const merge = require('webpack-merge');
 
 function config(options = {}) {
   const { workFolder } = options;
@@ -53,7 +53,7 @@ function config(options = {}) {
         },
       },
       devtool: 'none',
-    }
+    },
   ]);
 }
 

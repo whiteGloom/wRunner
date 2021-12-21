@@ -39,7 +39,7 @@ jQuery версия слайдера требует [jQuery](https://jquery.com/
 			- **[setLimits method](#setLimits-method "setLimits method")**
 			- **[setStep method](#setStep-method "setStep method")**
 			- **[setSingleValue method](#setSingleValue-method "setSingleValue method")**
-			- **[setRangeValue method](#setRangeValue-method "setRangeValue method")**
+			- **[setRangeValues method](#setRangeValues-method "setRangeValues method")**
 			- **[setValueNoteDisplay method](#setValueNoteDisplay-method "setValueNoteDisplay method")**
 			- **[setNearestValue method](#setNearestValue-method "setNearestValue method")**
 			- **[setDivisionsCount method](#setDivisionsCount-method "setDivisionsCount method")**
@@ -89,7 +89,7 @@ jQuery версия слайдера требует [jQuery](https://jquery.com/
 		+ Default: {minLimit: 0, maxLimit: 100}
 	- **singleValue** - (watch [setSingleValue method](#setSingleValue-method "setSingleValue method"))
 		+ Default: 50
-	- **rangeValue** - (watch [setRangeValue method](#setRangeValue-method "setRangeValue method"))
+	- **rangeValue** - (watch [setRangeValues method](#setRangeValues-method "setRangeValues method"))
 		+ Default: { minValue: 20, maxValue: 80 }
 	- **roots** - (watch [setRoots method](#setRoots-method "setRoots method")) **(Доступен только в JS Native версии)**
 		+ Default: document.body
@@ -256,11 +256,11 @@ Webpack и Jasmine автоматически подгрузят сокраще�
 
 ------------
 
-#### setRangeValue method
+#### setRangeValues method
 Меняет значение слайдера для типа "range". Если сменить тип слайдера, значение сохраняется. Можно использовать и тогда, когда тип слайдера иной.
 
 ```
-.setRangeValue([values])
+.setRangeValues([values])
 ```
 
 *Argumetns:*
@@ -332,7 +332,7 @@ Webpack и Jasmine автоматически подгрузят сокраще�
 ```
 .setLimits({minLimit: 0, maxLimit: 100}); // Минимальное значение: 0, максимальное: 100
 .setType("single") // Тип слайдера: "range"
-.setRangeValue({minValue: 20, maxValue: 80}); // Меньшее значение 20, большее 80
+.setRangeValues({minValue: 20, maxValue: 80}); // Меньшее значение 20, большее 80
 
 .setNearestValue(75) // Принимая 75, ближайшим будет большее значение слайдера, изменит его на 75
 .setNearestValue(75, true) // Принимая 75%, ближайшим будет большее значение слайдера, изменит его на 75
@@ -340,7 +340,7 @@ Webpack и Jasmine автоматически подгрузят сокраще�
 ```
 
 *Returns:*
-**Передаёт управление функциям setSingleValue или setRangeValue (В зависимости от текущего типа слайдера), возвращает результат их работы.**
+**Передаёт управление функциям setSingleValue или setRangeValues (В зависимости от текущего типа слайдера), возвращает результат их работы.**
 
 [↑ К навигации](#Навигация "↑ К навигации")
 

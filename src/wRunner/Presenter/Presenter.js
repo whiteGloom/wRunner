@@ -111,6 +111,7 @@ class Presenter {
       this.model.getValueNotesDisplay(),
       this.model.getValueNotesMode(),
     );
+    this._updatePositions();
   }
 
   _applyDefaultEventHandlers() {

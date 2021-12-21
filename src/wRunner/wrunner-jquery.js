@@ -1,6 +1,7 @@
 import makeInstance from './makeInstance';
 
 (function jqueryVersion($) {
+  // eslint-disable-next-line no-param-reassign
   $.fn.wRunner = function cover(...args) {
     if (typeof args[0] === 'object') {
       const options = args[0];
