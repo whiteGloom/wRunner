@@ -1,5 +1,9 @@
-# Alert:
-**The README is outdated! It will be updated in a short time.**
+# Alert!
+
+**The project is frozen and, most likely, will not receive updates in the future (at least until the release of a new major version).**
+
+---
+---
 
 # Languages
 * **[Русский](#шо-ита-ru "Русский")**
